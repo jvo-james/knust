@@ -14,161 +14,507 @@
   <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/> -->
 
   <style>
-    /*— Reset & Variables —*/
-    * { margin:0; padding:0; box-sizing:border-box; }
-    :root {
-      --primary: #007bff;
-      --primary-dark: #0056b3;
-      --secondary: #00274d;
-      --accent: #ff6f61;
-      --light-bg: #f5fcff;
-      --white: #fff;
-      --dark-text: #222;
-      --gap: 20px;
-      --radius: 12px;
-      --max-width: 1200px;
-      --shadow: 0 4px 16px rgba(0,0,0,0.1);
-      --transition: .3s ease;
-      --font: 'Poppins', sans-serif;
-    }
-    body {
-      font-family: var(--font);
-      background: linear-gradient(135deg, #e9f5ff, #f5fcff);
-      color: var(--dark-text);
-      line-height:1.5;
-      overflow-x:hidden;
-    }
-    img { display:block; max-width:100%; }
+   :root {
+  --primary: #007bff;
+  --primary-dark: #0056b3;
+  --secondary: #00274d;
+  --accent: #ff6f61;
+  --light-bg: #f5fcff;
+  --white: #ffffff;
+  --dark-text: #222222;
+  --muted-text: #666666;
+  --radius: 12px;
+  --gap: 20px;
+  --transition: 0.3s ease;
+  --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-dark: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --font-sans: 'Poppins', sans-serif;
+  --font-alt: 'Montserrat', sans-serif;
+}
 
-    /*— Header —*/
-    .app-header {
-      position:sticky; top:0; width:100%;
-      background:var(--secondary); color:var(--white);
-      box-shadow:var(--shadow); z-index:1000;
-    }
-    .header-inner {
-      max-width:var(--max-width); margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:1rem var(--gap);
-    }
-    .app-title { font-size:1.5rem; font-weight:700; display:flex; align-items:center; }
-    .app-title i { margin-right:0.5rem; color:var(--accent); }
-    .nav-btn {
-      background:none; border:none; color:var(--white);
-      font-size:1rem; margin-left:1rem; cursor:pointer; transition:color var(--transition);
-    }
-    .nav-btn.active, .nav-btn:hover { color:var(--accent); }
-    .hamburger { display:none; background:none; border:none; font-size:1.5rem; cursor:pointer; }
-    .mobile-sidebar {
-      position:fixed; top:0; left:-260px; width:260px; height:100%;
-      background:var(--secondary); padding:2rem 1rem;
-      transition:left var(--transition); z-index:2000;
-    }
-    .mobile-sidebar .nav-btn { display:block; width:100%; text-align:left; margin-bottom:1rem; }
-    .close-sidebar { background:none; border:none; color:var(--white); font-size:1.2rem; margin-bottom:2rem; cursor:pointer; }
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    /*— Hero —*/
-    .hero {
-      display:flex; align-items:center; justify-content:space-between;
-      background:var(--white); margin:var(--gap) auto; padding:2rem var(--gap);
-      border-radius:var(--radius); box-shadow:var(--shadow);
-      max-width:var(--max-width);
-    }
-    .hero-content { max-width:50%; }
-    .hero-content h2 { font-size:2rem; color:var(--secondary); margin-bottom:1rem; }
-    .hero-content p { margin-bottom:1.5rem; }
-    .hero-buttons button { margin-right:1rem; }
-    .hero-features {
-      list-style:none; margin-top:1rem; padding-left:0;
-    }
-    .hero-features li {
-      margin-bottom:.5rem; display:flex; align-items:center;
-    }
-    .hero-features li i { margin-right:.5rem; color:var(--accent); }
-    .hero-image img { border-radius:var(--radius); box-shadow:var(--shadow); }
+html {
+  scroll-behavior: smooth;
+}
 
-    /*— Sections —*/
-    .container { max-width:var(--max-width); margin:0 auto; padding:0 var(--gap); }
-    .section { margin-bottom:var(--gap*1.5); }
-    .section h2 {
-      font-size:1.4rem; margin-bottom:1rem; display:flex; align-items:center;
-    }
-    .section h2 i { margin-right:.5rem; color:var(--accent); }
+body {
+  font-family: var(--font-sans);
+  background: var(--light-bg);
+  color: var(--dark-text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
 
-    /*— Forms —*/
-    .form-row { display:flex; gap:var(--gap); flex-wrap:wrap; }
-    .form-group {
-      flex:1; min-width:200px; display:flex; flex-direction:column;
-      margin-bottom:1rem;
-    }
-    .form-group label { margin-bottom:.5rem; font-weight:600; }
-    .select, input[type="date"], input[type="number"], input[type="text"] {
-      padding:.75rem; border:1px solid #ccc; border-radius:var(--radius);
-      font-size:1rem; transition:border var(--transition);
-    }
-    .select:focus, input:focus { outline:none; border-color:var(--primary); }
+/* ---------------------------------------------------
+   HEADER & NAVIGATION
+--------------------------------------------------- */
+.app-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: var(--secondary);
+  color: var(--white);
+  z-index: 1000;
+  box-shadow: var(--shadow-light);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem var(--gap);
+}
+.logo {
+  width: 50px;
+  height: 50px;
+}
+.app-title {
+  font-family: var(--font-alt);
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+.app-title i {
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
+.header-nav {
+  display: flex;
+  align-items: center;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1rem;
+  margin-left: 1rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition);
+  border-radius: var(--radius);
+}
+.nav-btn:hover,
+.nav-btn.active {
+  background: rgba(255,255,255,0.1);
+  color: var(--accent);
+}
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100%;
+  background: var(--secondary);
+  padding: 2rem 1rem;
+  box-shadow: var(--shadow-dark);
+  transition: left var(--transition);
+  z-index: 1100;
+}
+.mobile-sidebar .close-sidebar {
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+.mobile-sidebar .nav-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 1rem;
+}
 
-    /*— Buttons —*/
-    .btn-primary, .btn-secondary {
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:.75rem 1.5rem; font-weight:600; border-radius:var(--radius);
-      cursor:pointer; transition:background var(--transition), box-shadow var(--transition);
-    }
-    .btn-primary {
-      background:var(--primary); color:var(--white); border:none;
-    }
-    .btn-primary:hover { background:var(--primary-dark); box-shadow:0 8px 24px rgba(0,0,0,.15); }
-    .btn-secondary {
-      background:transparent; color:var(--secondary);
-      border:2px solid var(--secondary);
-    }
-    .btn-secondary:hover { background:var(--secondary); color:var(--white); }
+/* ---------------------------------------------------
+   HERO SECTION
+--------------------------------------------------- */
+.hero-section {
+  position: relative;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-background img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+}
+.hero-content {
+  position: relative;
+  text-align: center;
+  color: var(--white);
+  max-width: 800px;
+  padding: 0 var(--gap);
+}
+.hero-title {
+  font-family: var(--font-alt);
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid var(--accent);
+}
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+.hero-buttons button {
+  margin: 0 0.5rem;
+}
+.bus-animations {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2rem;
+}
+.bus-animation {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+@keyframes busMove {
+  0% { transform: translateX(-100px) scale(0.8); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100px) scale(1); opacity: 0; }
+}
+.animate-bus {
+  animation: busMove 4s var(--transition) infinite;
+}
 
-    .small-note { font-size:.9rem; margin-top:.5rem; color:#555; }
+/* ---------------------------------------------------
+   MAIN CONTAINER & SECTIONS
+--------------------------------------------------- */
+.container {
+  max-width: 1200px;
+  margin: -10vh auto 2rem;
+  padding: 0 var(--gap);
+}
+.section {
+  margin: 4rem 0;
+}
+.section h2 {
+  font-family: var(--font-alt);
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  color: var(--secondary);
+}
+.section h2 i {
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
 
-    /*— Live List —*/
-    .live-controls { display:flex; gap:1rem; margin:1rem 0; flex-wrap:wrap; }
-    .live-list { list-style:none; display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:var(--gap); }
-    .live-item {
-      background:var(--white); padding:1rem; border-radius:var(--radius);
-      box-shadow:var(--shadow); display:flex; align-items:center; justify-content:space-between;
-      transition:transform var(--transition), box-shadow var(--transition);
-    }
-    .live-item:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.15); }
-    .live-item i { font-size:1.5rem; color:var(--primary); }
-    .live-item .eta i { margin-right:.25rem; color:var(--accent); }
+/* ---------------------------------------------------
+   LIVE SHUTTLES
+--------------------------------------------------- */
+.map-container {
+  height: 350px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-dark);
+}
+.live-table-container {
+  overflow-x: auto;
+}
+.live-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: var(--shadow-light);
+}
+.live-table th,
+.live-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.live-table th {
+  background: var(--secondary);
+  color: var(--white);
+  position: sticky;
+  top: 0;
+}
+.live-table tr:nth-child(even) {
+  background: #fafafa;
+}
+.live-table td {
+  border-bottom: 1px solid #eee;
+}
 
-    /*— History —*/
-    .history-controls { margin:1rem 0; }
-    .history-controls button { margin-right:1rem; }
-    .booking-list {
-      list-style:none; max-height:300px; overflow-y:auto; padding-left:0;
-    }
-    .booking-list li {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:.5rem 0; border-bottom:1px solid #eee;
-    }
-    .booking-list li span { flex:1; display:flex; align-items:center; }
-    .booking-list li span i { margin-right:.5rem; color:var(--primary); }
-    .badge { padding:.25rem .5rem; border-radius:8px; font-size:.8rem; }
+/* ---------------------------------------------------
+   BOOKING FORM
+--------------------------------------------------- */
+.booking-section form {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+}
+.form-row {
+  display: flex;
+  gap: var(--gap);
+  flex-wrap: wrap;
+}
+.form-group {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--secondary);
+}
+.select,
+input[type="date"] {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: border var(--transition);
+}
+.select:focus,
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
 
-    /*— Grid Cards —*/
-    .grid-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:var(--gap); }
-    .card {
-      background:var(--white); border-radius:var(--radius); overflow:hidden;
-      position:relative; box-shadow:var(--shadow); cursor:pointer;
-    }
-    .card-body { padding:1rem; text-align:center; }
-    .card-body p { margin-top:.5rem; font-weight:600; }
-    .quick-btn {
-      position:absolute; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.5); color:#fff; display:flex;
-      align-items:center; justify-content:center; opacity:0;
-      transition:opacity var(--transition);
-    }
-    .card:hover .quick-btn { opacity:1; }
+/* ---------------------------------------------------
+   HISTORY BUTTONS
+--------------------------------------------------- */
+.history-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+.history-buttons .btn-secondary {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  transition: background var(--transition), color var(--transition);
+}
+.history-buttons .btn-secondary.active,
+.history-buttons .btn-secondary:hover {
+  background: var(--secondary);
+  color: var(--white);
+}
 
-    /*— Accordion —*/
+/* ---------------------------------------------------
+   QUICK BOOK CARDS
+--------------------------------------------------- */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--gap);
+}
+.card {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-dark);
+}
+.card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+.card-body {
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--secondary);
+}
+.quick-modal .modal {
+  max-width: 320px;
+  text-align: center;
+}
+
+/* ---------------------------------------------------
+   MODALS (GENERAL)
+--------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+.modal {
+  background: var(--white);
+  border-radius: var(--radius);
+  max-width: 500px;
+  width: 90%;
+  padding: 2rem;
+  box-shadow: var(--shadow-dark);
+  position: relative;
+  transition: transform var(--transition);
+}
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--muted-text);
+  transition: color var(--transition);
+}
+.close-btn:hover {
+  color: var(--dark-text);
+}
+
+/* Ride History Modal Specific */
+.history-modal h3 {
+  margin-bottom: 1rem;
+  color: var(--secondary);
+}
+.history-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1.5rem;
+}
+.history-tabs .tab {
+  background: var(--light-bg);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.history-tabs .tab.active,
+.history-tabs .tab:hover {
+  background: var(--secondary);
+  color: var(--white);
+}
+.ride-list {
+  max-height: 250px;
+  overflow-y: auto;
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 1rem;
+}
+.ride-list li {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.ride-list li:hover {
+  background: var(--light-bg);
+}
+.ride-detail {
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: var(--radius);
+  text-align: center;
+}
+.ride-detail h4 {
+  margin-bottom: 0.5rem;
+  color: var(--secondary);
+}
+
+/* ---------------------------------------------------
+   SUPPORT CHAT BUTTON
+--------------------------------------------------- */
+.support-chat-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition);
+}
+.support-chat-btn:hover {
+  transform: scale(1.1);
+}
+
+/* ---------------------------------------------------
+   FOOTER
+--------------------------------------------------- */
+.app-footer {
+  text-align: center;
+  padding: 2rem var(--gap);
+  background: #f0f0f0;
+  color: #555;
+  font-size: 0.9rem;
+}
+.app-footer i {
+  color: var(--accent);
+  margin-left: 0.5rem;
+}
+
+/* ---------------------------------------------------
+   RESPONSIVE
+--------------------------------------------------- */
+@media (max-width: 768px) {
+  .header-inner { flex-wrap: wrap; text-align: center; }
+  .desktop-only { display: none; }
+  .hamburger { display: block; }
+  .form-row { flex-direction: column; }
+  .hero-title { font-size: 2.5rem; }
+}
+@media (max-width: 480px) {
+  :root { --gap: 12px; }
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .btn-primary, .btn-secondary { width: 100%; }
+}
+
+
     .accordion .accordion-item { margin-bottom:1rem; }
     .accordion-header {
       width:100%; background:var(--white); border:1px solid #ccc;
@@ -178,24 +524,7 @@
     }
     .accordion-body { display:none; padding:1rem; border-left:4px solid var(--accent); }
 
-    /*— Modals —*/
-    .modal-overlay {
-      position:fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.6); display:none;
-      align-items:center; justify-content:center; z-index:3000;
-      backdrop-filter:blur(4px);
-    }
-    .modal {
-      background:var(--white); border-radius:var(--radius);
-      padding:1.5rem; max-width:400px; width:90%; text-align:center;
-      box-shadow:0 8px 24px rgba(0,0,0,.15); position:relative;
-    }
-    .modal h3 { margin-bottom:1rem; display:flex; align-items:center; justify-content:center; }
-    .modal h3 i { margin-right:.5rem; color:var(--accent); }
-    .close-btn {
-      position:absolute; top:.75rem; right:.75rem; background:none;
-      border:none; font-size:1.2rem; cursor:pointer;
-    }
+   
 
     /*— Footer —*/
     .app-footer { text-align:center; padding:1.5rem var(--gap); background:#f0f0f0; color:#555; font-size:.9rem; }
@@ -243,58 +572,83 @@
   </div>
 
   <!-- Header & Nav -->
-  <header class="app-header">
+ <header class="app-header">
     <div class="header-inner">
       <img src="knust.png" alt="KNUST Logo" class="logo">
       <h1 class="app-title"><i class="fas fa-shuttle-van"></i> KNUST Shuttle Tracker</h1>
       <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
       <nav class="header-nav desktop-only">
-        <button class="nav-btn active" data-target="home"><i class="fas fa-home"></i> Home</button>
-        <button class="nav-btn" data-target="live"><i class="fas fa-route"></i> Live</button>
-        <button class="nav-btn" data-target="history"><i class="fas fa-history"></i> My Rides</button>
-        <button class="nav-btn" data-target="faq"><i class="fas fa-question-circle"></i> FAQ</button>
-        <button class="nav-btn" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+        <button class="nav-btn active" data-target="hero"><i class="fas fa-home"></i> Home</button>
+        <button class="nav-btn" data-target="live-shuttles"><i class="fas fa-route"></i> Live Shuttles</button>
+        <button class="nav-btn" data-target="book-ride"><i class="fas fa-paper-plane"></i> Book Ride</button>
+        <button class="nav-btn" data-target="quick-book"><i class="fas fa-thumbs-up"></i> Quick Book</button>
       </nav>
-      <aside class="mobile-sidebar" id="mobileSidebar">
-        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
-        <button class="nav-btn" data-target="home"><i class="fas fa-home"></i> Home</button>
-        <button class="nav-btn" data-target="live"><i class="fas fa-route"></i> Live</button>
-        <button class="nav-btn" data-target="history"><i class="fas fa-history"></i> My Rides</button>
-        <button class="nav-btn" data-target="faq"><i class="fas fa-question-circle"></i> FAQ</button>
-        <button class="nav-btn" id="mobileSignOut"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-      </aside>
     </div>
+    <aside class="mobile-sidebar" id="mobileSidebar">
+      <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+      <button class="nav-btn" data-target="hero"><i class="fas fa-home"></i> Home</button>
+      <button class="nav-btn" data-target="live-shuttles"><i class="fas fa-route"></i> Live Shuttles</button>
+      <button class="nav-btn" data-target="book-ride"><i class="fas fa-paper-plane"></i> Book Ride</button>
+      <button class="nav-btn" data-target="quick-book"><i class="fas fa-thumbs-up"></i> Quick Book</button>
+    </aside>
   </header>
 
+
   <!-- Hero -->
-  <section class="hero" id="hero">
-    <div class="hero-content">
-      <h2>Ride the KNUST Shuttle with Ease</h2>
-      <p>Real-time tracking, simple booking, proactive notifications, and trip history at your fingertips.</p>
-      <div class="hero-buttons">
-        <button class="btn-primary" data-scroll="home"><i class="fas fa-map-signs"></i> Book Now</button>
-        <button class="btn-secondary" data-scroll="live"><i class="fas fa-bus-alt"></i> Live Shuttles</button>
-      </div>
-      <ul class="hero-features">
-        <li><i class="fas fa-bell"></i> Notifications 5 min before pickup</li>
-        <li><i class="fas fa-ticket-alt"></i> QR code boarding</li>
-        <li><i class="fas fa-chart-line"></i> Usage stats & carbon offsets</li>
-      </ul>
+  <section id="hero" class="hero-section">
+    <div class="hero-background">
+      <img src="hero-bg.jpg" alt="Campus Shuttle Background">
+      <div class="hero-overlay"></div>
     </div>
-    <div class="hero-image">
-      <img src="shuttle.jpeg" alt="Campus Shuttle">
+    <div class="hero-content">
+      <h2 class="hero-title">Welcome to <span id="typewriter"></span></h2>
+      <p class="hero-subtitle">Track, book and ride with confidence.</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book a Ride</button>
+        <button class="btn-secondary" data-scroll="live-shuttles"><i class="fas fa-route"></i> See Live Shuttles</button>
+      </div>
+      <div class="bus-animations">
+        <div class="bus-animation bus-1"><i class="fas fa-shuttle-van"></i></div>
+        <div class="bus-animation bus-2"><i class="fas fa-bus"></i></div>
+        <div class="bus-animation bus-3"><i class="fas fa-bus-alt"></i></div>
+      </div>
     </div>
   </section>
 
+
   <main class="container">
-    <!-- Booking -->
-    <section class="section booking-section" id="home">
+
+    <!-- Live Shuttles -->
+    <section id="live-shuttles" class="section live-section">
+      <h2><i class="fas fa-route"></i> Live Shuttle Map & Status</h2>
+      <div id="map" class="map-container">
+        <!-- actual map will render here -->
+      </div>
+      <div class="live-table-container">
+        <table class="live-table">
+          <thead>
+            <tr>
+              <th>Route</th>
+              <th>ETA</th>
+              <th>Status</th>
+              <th>Capacity</th>
+            </tr>
+          </thead>
+          <tbody id="liveTableBody">
+            <!-- dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Book Your Ride -->
+    <section id="book-ride" class="section booking-section">
       <h2><i class="fas fa-paper-plane"></i> Book Your Ride</h2>
       <form id="bookingForm">
         <div class="form-row">
           <div class="form-group">
             <label for="pickup"><i class="fas fa-location-arrow"></i> Pick‑Up</label>
-            <select id="pickup" class="select" required>
+            <select id="pickup" required>
               <option value="">Select pick‑up</option>
               <option value="KSB">KSB</option>
               <option value="Medical Village">Medical Village</option>
@@ -306,7 +660,7 @@
           </div>
           <div class="form-group">
             <label for="destination"><i class="fas fa-flag-checkered"></i> Destination</label>
-            <select id="destination" class="select" required>
+            <select id="destination" required>
               <option value="">Select destination</option>
               <option value="KSB">KSB</option>
               <option value="Medical Village">Medical Village</option>
@@ -324,7 +678,7 @@
           </div>
           <div class="form-group">
             <label for="timeslot"><i class="fas fa-clock"></i> Time Slot</label>
-            <select id="timeslot" class="select" required>
+            <select id="timeslot" required>
               <option value="">Select time</option>
               <option>6:00 AM – 7:00 AM</option>
               <option>7:00 AM – 8:00 AM</option>
@@ -337,99 +691,124 @@
             </select>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="seats"><i class="fas fa-users"></i> Seats</label>
-            <input type="number" id="seats" min="1" max="4" value="1">
-          </div>
-          <div class="form-group">
-            <label for="notes"><i class="fas fa-comment-alt"></i> Special Notes</label>
-            <input type="text" id="notes" placeholder="e.g. wheelchair assistance">
-          </div>
-        </div>
-        <button type="submit" class="btn-primary">
-          <i class="fas fa-paper-plane"></i> Confirm Booking
-        </button>
+        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Confirm Booking</button>
       </form>
-      <p class="small-note">You’ll receive a QR code—show it when boarding.</p>
     </section>
 
-    <!-- Live Shuttles -->
-    <section class="section live-section" id="live">
-      <h2><i class="fas fa-route"></i> Live Shuttles</h2>
-      <div id="map" style="height:300px; background:#e0e0e0; border-radius:var(--radius); margin-bottom:1rem;">
-        <!-- Real map goes here -->
-      </div>
-      <div class="live-controls">
-        <input type="text" id="routeFilter" placeholder="Filter by route…">
-        <button id="pauseBtn" class="btn-secondary"><i class="fas fa-pause"></i> Pause</button>
-      </div>
-      <ul class="live-list"></ul>
-    </section>
+    <!-- Ride History Buttons -->
+    <div class="history-buttons">
+      <button id="prevRidesBtn" class="btn-secondary active"><i class="fas fa-archive"></i> Previous Rides</button>
+      <button id="upcomingRidesBtn" class="btn-secondary"><i class="fas fa-clock"></i> Upcoming Rides</button>
+      <button id="allRidesBtn" class="btn-secondary"><i class="fas fa-list"></i> All Rides</button>
+    </div>
 
-    <!-- My Ride History -->
-    <section class="section history-section" id="history">
-      <h2><i class="fas fa-history"></i> My Ride History</h2>
-      <p>Total rides: <strong id="totalRides">0</strong>; Upcoming: <strong id="upcomingRides">0</strong></p>
-      <div class="history-controls">
-        <button class="btn-secondary" data-filter="past"><i class="fas fa-archive"></i> Past</button>
-        <button class="btn-secondary" data-filter="upcoming"><i class="fas fa-clock"></i> Upcoming</button>
-      </div>
-      <ul id="historyList" class="booking-list">
-        <!-- Filled by JS -->
-      </ul>
-    </section>
-
-    <!-- Quick‑Book Popular -->
-    <section class="section popular-section">
-      <h2><i class="fas fa-thumbs-up"></i> Quick Book: Popular Routes</h2>
+    <!-- Quick Book Cards -->
+    <section id="quick-book" class="section quick-book-section">
+      <h2><i class="fas fa-thumbs-up"></i> Quick Book Popular Stops</h2>
       <div class="grid-cards">
-        <!-- Example Card -->
-        <div class="card" data-route="KSB">
+        <div class="card" data-page="ksbQuickModal">
           <img src="ksb.webp" alt="KSB">
-          <div class="card-body">
-            <i class="fas fa-university"></i>
-            <p>KSB</p>
-          </div>
-          <div class="quick-btn"><i class="fas fa-paper-plane"></i> Book</div>
+          <div class="card-body"><p>KSB</p></div>
         </div>
-        <div class="card" data-route="Medical Village">
+        <div class="card" data-page="medicalQuickModal">
           <img src="medical.jpg" alt="Medical Village">
-          <div class="card-body">
-            <i class="fas fa-hospital"></i><p>Medical Village</p>
-          </div>
-          <div class="quick-btn"><i class="fas fa-paper-plane"></i> Book</div>
+          <div class="card-body"><p>Medical Village</p></div>
         </div>
-        <div class="card" data-route="Brunei">
+        <div class="card" data-page="bruneiQuickModal">
           <img src="brunei.jpeg" alt="Brunei">
-          <div class="card-body">
-            <i class="fas fa-tree"></i><p>Brunei</p>
-          </div>
-          <div class="quick-btn"><i class="fas fa-paper-plane"></i> Book</div>
+          <div class="card-body"><p>Brunei</p></div>
         </div>
-        <div class="card" data-route="Casely Hayeford">
+        <div class="card" data-page="caselyQuickModal">
           <img src="casely.jpg" alt="Casely Hayeford">
-          <div class="card-body">
-            <i class="fas fa-university"></i><p>Casely Hayeford</p>
-          </div>
-          <div class="quick-btn"><i class="fas fa-paper-plane"></i> Book</div>
+          <div class="card-body"><p>Casely Hayeford</p></div>
         </div>
-        <div class="card" data-route="College of Science">
+        <div class="card" data-page="scienceQuickModal">
           <img src="science.jpg" alt="College of Science">
-          <div class="card-body">
-            <i class="fas fa-flask"></i><p>College of Science</p>
-          </div>
-          <div class="quick-btn"><i class="fas fa-paper-plane"></i> Book</div>
+          <div class="card-body"><p>College of Science</p></div>
         </div>
-        <div class="card" data-route="Commercial Area">
+        <div class="card" data-page="commerceQuickModal">
           <img src="commercial.jpg" alt="Commercial Area">
-          <div class="card-body">
-            <i class="fas fa-shopping-bag"></i><p>Commercial Area</p>
-          </div>
-          <div class="quick-btn"><i class="fas fa-paper-plane"></i> Book</div>
+          <div class="card-body"><p>Commercial Area</p></div>
         </div>
       </div>
     </section>
+
+  </main>
+
+  <!-- Ride History Modal -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal history-modal">
+      <button class="close-btn" data-close="historyModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-history"></i> My Rides</h3>
+      <div class="history-tabs">
+        <button class="tab active" data-tab="prev">Previous</button>
+        <button class="tab" data-tab="upcoming">Upcoming</button>
+        <button class="tab" data-tab="all">All</button>
+      </div>
+      <ul class="ride-list" id="rideList">
+        <!-- dynamic list items -->
+      </ul>
+      <div class="ride-detail" id="rideDetail">
+        <!-- when clicked: show ride info + QR code -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Book Modals -->
+  <div class="modal-overlay" id="ksbQuickModal">
+    <div class="modal quick-modal">
+      <button class="close-btn" data-close="ksbQuickModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-university"></i> Quick Book: KSB</h3>
+      <p>Secure your seat on the next shuttle departing to/from KSB.</p>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+    </div>
+  </div>
+  <div class="modal-overlay" id="medicalQuickModal">
+    <div class="modal quick-modal">
+      <button class="close-btn" data-close="medicalQuickModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-hospital"></i> Quick Book: Medical Village</h3>
+      <p>Reserve your spot for the next shuttle at Medical Village.</p>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+    </div>
+  </div>
+  <div class="modal-overlay" id="bruneiQuickModal">
+    <div class="modal quick-modal">
+      <button class="close-btn" data-close="bruneiQuickModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-tree"></i> Quick Book: Brunei</h3>
+      <p>Get on the green route—book your Brunei shuttle now.</p>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+    </div>
+  </div>
+  <div class="modal-overlay" id="caselyQuickModal">
+    <div class="modal quick-modal">
+      <button class="close-btn" data-close="caselyQuickModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-university"></i> Quick Book: Casely Hayeford</h3>
+      <p>Hop on the shuttle serving Casely Hayeford—reserve now.</p>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+    </div>
+  </div>
+  <div class="modal-overlay" id="scienceQuickModal">
+    <div class="modal quick-modal">
+      <button class="close-btn" data-close="scienceQuickModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-flask"></i> Quick Book: College of Science</h3>
+      <p>Lock in your seat to/from the College of Science shuttle.</p>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+    </div>
+  </div>
+  <div class="modal-overlay" id="commerceQuickModal">
+    <div class="modal quick-modal">
+      <button class="close-btn" data-close="commerceQuickModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-shopping-bag"></i> Quick Book: Commercial Area</h3>
+      <p>Secure your seat on the busy Commercial Area route.</p>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+    </div>
+  </div>
+
+  <!-- Floating Support Chat -->
+  <button id="supportChat" class="support-chat-btn">
+    <i class="fas fa-headset"></i> Live Support
+  </button>
+
 
     <!-- FAQ -->
     <section class="section faq-section" id="faq">
@@ -468,209 +847,211 @@
     </section>
   </main>
 
-  <!-- Modals -->
-  <div class="modal-overlay" id="confirmModal">
-    <div class="modal">
-      <button class="close-btn" data-close="confirmModal"><i class="fas fa-times"></i></button>
-      <h3><i class="fas fa-check-circle"></i> Booking Confirmed!</h3>
-      <p>Show this QR code when boarding:</p>
-      <canvas id="qrCanvas"></canvas>
-      <button class="btn-primary" data-close="confirmModal"><i class="fas fa-thumbs-up"></i> Done</button>
-    </div>
-  </div>
-  <div class="modal-overlay" id="errorModal">
-    <div class="modal">
-      <button class="close-btn" data-close="errorModal"><i class="fas fa-times"></i></button>
-      <h3><i class="fas fa-exclamation-triangle"></i> Oops!</h3>
-      <p id="errorMessage">Something went wrong—please try again.</p>
-      <button class="btn-primary" data-close="errorModal"><i class="fas fa-redo"></i> Retry</button>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer class="app-footer">
     <p>&copy; 2025 KNUST Shuttle Tracker — Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
   </footer>
 
-  <!-- QR Code lib (QRious) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-  <script>
-    //— Util: show/hide
-    function show(el){ el.style.display='flex'; }
-    function hide(el){ el.style.display='none'; }
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
-    //— Sign‑in logic
-    document.addEventListener('DOMContentLoaded',()=>{
-      if(localStorage.getItem('signedIn')==='true') {
-        hide(document.getElementById('signinOverlay'));
-      } else {
-        show(document.getElementById('signinOverlay'));
-      }
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // --- SIGN‑IN OVERLAY ---
+  const signinOverlay = document.getElementById('signinOverlay');
+  const signinForm    = document.getElementById('signinForm');
+  if (localStorage.getItem('signedIn') === 'true') {
+    signinOverlay.style.display = 'none';
+  } else {
+    signinOverlay.style.display = 'flex';
+  }
+  signinForm.addEventListener('submit', e => {
+    e.preventDefault();
+    localStorage.setItem('signedIn', 'true');
+    signinOverlay.style.display = 'none';
+  });
+
+  // --- MOBILE SIDEBAR ---
+  const hamBtn      = document.getElementById('hamburgerBtn');
+  const mobileNav   = document.getElementById('mobileSidebar');
+  const closeNavBtn = document.getElementById('closeSidebar');
+  hamBtn.addEventListener('click', () => mobileNav.style.left = '0');
+  closeNavBtn.addEventListener('click', () => mobileNav.style.left = '-260px');
+
+  // --- SMOOTH SCROLL & NAV ACTIVATION ---
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    mobileNav.style.left = '-260px';
+  }
+  document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      scrollToSection(btn.dataset.target);
     });
-    document.getElementById('signinForm').addEventListener('submit',e=>{
-      e.preventDefault();
-      localStorage.setItem('signedIn','true');
-      hide(document.getElementById('signinOverlay'));
+  });
+  document.querySelectorAll('[data-scroll]').forEach(btn => {
+    btn.addEventListener('click', () => scrollToSection(btn.dataset.scroll));
+  });
+
+  // --- TYPEWRITER EFFECT ---
+  const typeEl = document.getElementById('typewriter');
+  const words  = ['Your Campus Commute', 'The Smart Shuttle Tracker', 'KNUST Shuttle Tracker'];
+  let wIndex = 0, cIndex = 0, forward = true;
+  setInterval(() => {
+    const current = words[wIndex];
+    if (forward) {
+      typeEl.textContent = current.slice(0, ++cIndex);
+      if (cIndex === current.length) forward = false;
+    } else {
+      typeEl.textContent = current.slice(0, --cIndex);
+      if (cIndex === 0) { forward = true; wIndex = (wIndex + 1) % words.length; }
+    }
+  }, 150);
+
+  // --- BUS ICON ANIMATIONS TRIGGER ---
+  document.querySelectorAll('.bus-animation').forEach((bus, i) => {
+    bus.style.animationDelay = (i * 0.5) + 's';
+    bus.classList.add('animate-bus');
+  });
+
+  // --- INITIALIZE LEAFLET MAP ---
+  const map = L.map('map', { zoomControl: false }).setView([6.6667, -1.5833], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Predefine stops with coords
+  const stops = {
+    'KSB':               [6.6670, -1.5830],
+    'Medical Village':   [6.6680, -1.5800],
+    'Brunei':            [6.6660, -1.5850],
+    'Casely Hayeford':   [6.6720, -1.5805],
+    'College of Science':[6.6650, -1.5820],
+    'Commercial Area':   [6.6675, -1.5870]
+  };
+
+  // --- LIVE SHUTTLES TABLE & SIMULATION ---
+  let liveData = [
+    { route:'KSB → Medical Village',       eta:5,  cap:30 },
+    { route:'Brunei → Commercial Area',     eta:2,  cap:25 },
+    { route:'Medical Village → Brunei',     eta:8,  cap:28 },
+    { route:'Commercial Area → KSB',        eta:12, cap:22 },
+    { route:'Casely Hayeford → Science',    eta:7,  cap:35 },
+    { route:'College of Science → KSB',     eta:4,  cap:32 },
+  ];
+  const liveBody = document.getElementById('liveTableBody');
+  function renderLiveTable() {
+    liveBody.innerHTML = '';
+    liveData.forEach(item => {
+      const tr = document.createElement('tr');
+      const status = item.eta <= 3 ? 'Arriving' : 'On Route';
+      tr.innerHTML = `
+        <td>${item.route}</td>
+        <td>${item.eta} min</td>
+        <td>${status}</td>
+        <td>${item.cap} seats</td>
+      `;
+      liveBody.appendChild(tr);
     });
-    //— Sign out
-    document.getElementById('signOutBtn').onclick =
-    document.getElementById('mobileSignOut').onclick = () => {
-      localStorage.removeItem('signedIn');
-      show(document.getElementById('signinOverlay'));
-    };
+  }
+  // Update ETAs & capacities
+  setInterval(() => {
+    liveData = liveData.map(item => ({
+      route: item.route,
+      eta:   Math.max(1, item.eta - 1),
+      cap:   Math.max(0, item.cap - Math.floor(Math.random()*3))
+    }));
+    renderLiveTable();
+  }, 10000);
+  renderLiveTable();
 
-    //— Sidebar toggle
-    document.getElementById('hamburgerBtn').onclick = ()=>
-      document.getElementById('mobileSidebar').style.left='0';
-    document.getElementById('closeSidebar').onclick = ()=>
-      document.getElementById('mobileSidebar').style.left='-260px';
+  // Markers for each stop
+  Object.entries(stops).forEach(([name, coords]) => {
+    L.marker(coords).addTo(map).bindPopup(name);
+  });
 
-    //— Smooth scroll nav
-    document.querySelectorAll('.nav-btn[data-target]').forEach(btn=>{
-      btn.onclick = ()=> {
-        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.target).scrollIntoView({behavior:'smooth'});
-        hide(document.getElementById('mobileSidebar'));
-      };
-    });
-    document.querySelectorAll('[data-scroll]').forEach(btn=>{
-      btn.onclick = ()=>document.getElementById(btn.dataset.scroll).scrollIntoView({behavior:'smooth'});
-    });
+  // --- BOOKING & CONFIRMATION MODAL GENERATION ---
+  const bookings = [];
+  const bookingForm = document.getElementById('bookingForm');
+  bookingForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const p = pickup.value, d = destination.value, dt = date.value, ts = timeslot.value;
+    if (!p||!d||!dt||!ts|| p===d) {
+      alert('Please complete the form correctly.');
+      return;
+    }
+    const id = Date.now();
+    bookings.push({ id, p, d, dt, ts });
+    alert(`Booked: ${p} → ${d} on ${dt} at ${ts}`);
+    bookingForm.reset();
+  });
 
-    //— Booking & History
-    let bookings = [];
-    const bookingForm = document.getElementById('bookingForm');
-    const confModal = document.getElementById('confirmModal');
-    const errModal  = document.getElementById('errorModal');
-    const qr = new QRious({ element:document.getElementById('qrCanvas'), size:200 });
+  // --- RIDE HISTORY MODAL & CONTROLS ---
+  const historyModal = document.getElementById('historyModal');
+  const prevBtn  = document.getElementById('prevRidesBtn');
+  const upcBtn   = document.getElementById('upcomingRidesBtn');
+  const allBtn   = document.getElementById('allRidesBtn');
+  const rideList = document.getElementById('rideList');
+  const rideDetail = document.getElementById('rideDetail');
+  const qrious    = new QRious({ size: 180 });
 
-    bookingForm.onsubmit = e=>{
-      e.preventDefault();
-      const p = pickup.value, d=destination.value, dt=date.value, t=timeslot.value, s=seats.value;
-      if(!p||!d||!dt||!t) {
-        document.getElementById('errorMessage').innerText='Please fill all fields.';
-        return show(errModal);
-      }
-      if(p===d) {
-        document.getElementById('errorMessage').innerText='Pickup and destination cannot match.';
-        return show(errModal);
-      }
-      const id=Date.now();
-      bookings.push({ id,p,d,dt,t,s });
-      // generate QR = JSON string of booking
-      qr.value = JSON.stringify({id,p,d,dt,t,s});
-      show(confModal);
-      updateHistory();
-      bookingForm.reset();
-    };
-
-    //— Close modals
-    document.querySelectorAll('.close-btn').forEach(btn=>{
-      btn.onclick = ()=> hide(document.getElementById(btn.dataset.close));
-    });
-
-    //— History rendering & filtering
-    const historyList = document.getElementById('historyList');
-    const totalRides    = document.getElementById('totalRides');
-    const upcomingRides = document.getElementById('upcomingRides');
-    function updateHistory(filter='all'){
-      historyList.innerHTML='';
-      const now = new Date().toISOString().split('T')[0];
-      const filtered = bookings.filter(b=>{
-        if(filter==='past')    return b.dt < now;
-        if(filter==='upcoming')return b.dt >= now;
-        return true;
-      });
-      filtered.forEach(b=>{
+  function openHistory(type) {
+    [prevBtn, upcBtn, allBtn].forEach(b=>b.classList.remove('active'));
+    ({ prev: prevBtn, upcoming: upcBtn, all: allBtn })[type].classList.add('active');
+    rideList.innerHTML = '';
+    rideDetail.innerHTML = '<p>Select a ride to view details.</p>';
+    const today = new Date().toISOString().split('T')[0];
+    bookings
+      .filter(b => type==='all' || (type==='prev' ? b.dt < today : b.dt >= today))
+      .forEach(b => {
         const li = document.createElement('li');
-        const when = new Date(b.dt).toLocaleDateString()+' '+b.t;
-        li.innerHTML=`
-          <span><i class="fas fa-qrcode"></i> ${b.p} → ${b.d} (${when})</span>
-          <span><span class="badge">${b.dt<now?'Past':'Upcoming'}</span></span>
-        `;
-        historyList.appendChild(li);
+        li.textContent = `${b.p} → ${b.d} — ${b.dt} @ ${b.ts}`;
+        li.dataset.id = b.id;
+        rideList.appendChild(li);
       });
-      totalRides.innerText = bookings.length;
-      upcomingRides.innerText = bookings.filter(b=>b.dt>=now).length;
+    historyModal.style.display = 'flex';
+  }
+
+  prevBtn.addEventListener('click',  () => openHistory('prev'));
+  upcBtn.addEventListener('click',   () => openHistory('upcoming'));
+  allBtn.addEventListener('click',   () => openHistory('all'));
+  document.querySelectorAll('.close-btn[data-close="historyModal"]')[0]
+    .addEventListener('click', () => historyModal.style.display='none');
+
+  rideList.addEventListener('click', e => {
+    if (e.target.tagName === 'LI') {
+      const ride = bookings.find(b=>b.id==e.target.dataset.id);
+      qrious.value = JSON.stringify(ride);
+      rideDetail.innerHTML = `
+        <h4>Ride Details</h4>
+        <p><strong>From:</strong> ${ride.p}</p>
+        <p><strong>To:</strong> ${ride.d}</p>
+        <p><strong>Date:</strong> ${ride.dt}</p>
+        <p><strong>Time:</strong> ${ride.ts}</p>
+        <canvas id="rideQr"></canvas>
+      `;
+      // generate QR for this ride
+      new QRious({ element: document.getElementById('rideQr'), size: 200, value: JSON.stringify(ride) });
     }
-    document.querySelectorAll('.history-controls button').forEach(btn=>{
-      btn.onclick = ()=> updateHistory(btn.dataset.filter);
-    });
+  });
 
-    //— Live feed simulation
-    let liveData = [
-      { route:'KSB → Medical Village', eta:5 },
-      { route:'Brunei → Commercial Area', eta:2 },
-      { route:'Medical Village → Brunei', eta:8 },
-      { route:'Commercial Area → KSB', eta:12 },
-      { route:'Casely Hayeford → College of Science', eta:7 },
-      { route:'College of Science → KSB', eta:4 },
-    ];
-    const liveList = document.querySelector('.live-list');
-    function renderLive(){
-      liveList.innerHTML='';
-      liveData.forEach(i=>{
-        const li = document.createElement('li');
-        li.className='live-item';
-        li.innerHTML=`
-          <i class="fas fa-bus"></i>
-          <span class="route">${i.route}</span>
-          <span class="eta"><i class="fas fa-hourglass-half"></i> ${i.eta} min</span>
-        `;
-        liveList.appendChild(li);
-      });
-    }
-    let liveInterval = null;
-    function startLive(){
-      renderLive();
-      liveInterval = setInterval(()=>{
-        liveData = liveData.map(i=>{
-          let e=i.eta-1; if(e<=0) e=Math.floor(Math.random()*10)+1;
-          return {...i,eta:e};
-        });
-        renderLive();
-      },10000);
-    }
-    document.getElementById('pauseBtn').onclick = ()=>{
-      if(liveInterval){
-        clearInterval(liveInterval);
-        liveInterval=null;
-        pauseBtn.innerHTML='<i class="fas fa-play"></i> Resume';
-      } else {
-        startLive();
-        pauseBtn.innerHTML='<i class="fas fa-pause"></i> Pause';
-      }
-    };
-    document.getElementById('routeFilter').onkeyup = ()=>{
-      const q=routeFilter.value.toLowerCase();
-      document.querySelectorAll('.live-item').forEach(li=>{
-        li.style.display = li.querySelector('.route').innerText.toLowerCase().includes(q)?'flex':'none';
-      });
-    };
-
-    //— Quick‑book from cards
-    document.querySelectorAll('.card').forEach(card=>{
-      card.onclick = ()=>{
-        pickup.value = card.dataset.route;
-        document.getElementById('home').scrollIntoView({behavior:'smooth'});
-      };
+  // --- QUICK‑BOOK MODALS ---
+  document.querySelectorAll('.card[data-page]').forEach(card => {
+    const modalId = card.dataset.page;
+    const modal   = document.getElementById(modalId);
+    card.addEventListener('click', () => modal.style.display = 'flex');
+  });
+  document.querySelectorAll('.close-btn[data-close]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.close;
+      document.getElementById(id).style.display = 'none';
     });
+  });
 
-    //— Accordion
-    document.querySelectorAll('.accordion-header').forEach(h=>{
-      h.onclick = ()=>{
-        const body = h.nextElementSibling;
-        body.style.display = body.style.display==='block'?'none':'block';
-        h.querySelector('i').classList.toggle('fa-rotate-180');
-      };
-    });
+});
+</script>
 
-    //— Init all
-    document.addEventListener('DOMContentLoaded',()=>{
-      updateHistory();
-      startLive();
-    });
-  </script>
 </body>
 </html>
