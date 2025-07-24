@@ -1452,6 +1452,21 @@ document.addEventListener('DOMContentLoaded', function() {
     signinOverlay.style.display = 'none';
   });
 
+  const map = L.map('map', { zoomControl: false }).setView([6.6667, -1.5833], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const stops = {
+   'KSB':               [6.6670, -1.5830],
+    'Medical Village':   [6.6680, -1.5800],
+    'Brunei':            [6.6660, -1.5850],
+    'Casely Hayeford':   [6.6720, -1.5805],
+    'College of Science':[6.6650, -1.5820],
+    'Commercial Area':   [6.6675, -1.5870]
+  };
+
+  
   // --- MOBILE SIDEBAR ---
   const hamBtn      = document.getElementById('hamburgerBtn');
   const mobileNav   = document.getElementById('mobileSidebar');
@@ -1497,7 +1512,7 @@ document.addEventListener('DOMContentLoaded', function() {
   tick();
 
   // --- LIVE SHUTTLES DATA & RENDERING ---
-const liveData = [
+let liveData = [
   { route: 'KSB → Medical Village', eta: 5, cap: 30 },
   { route: 'Brunei → Commercial Area', eta: 2, cap: 25 },
   { route: 'Medical Village → Brunei', eta: 8, cap: 28 },
@@ -1509,8 +1524,6 @@ const liveData = [
 const liveCards = document.getElementById('liveCards');
 const liveSearch = document.getElementById('liveSearch');
 
-// Initialize Leaflet map (reuse your existing map instance)
-map.setView([6.6667, -1.5833], 15);
 
 // create a marker group so we can filter easily
 const shuttleMarkers = L.layerGroup().addTo(map);
