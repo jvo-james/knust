@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Vitra – Booking</title>
-  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
- /* ===== GLOBAL RESET & VARIABLES ===== */
 * {
   margin: 0;
   padding: 0;
@@ -34,7 +32,6 @@
   --font-stack: 'Poppins', sans-serif;
 }
 
-/* ===== BODY & TYPOGRAPHY ===== */
 body {
   font-family: var(--font-stack);
   background: linear-gradient(135deg, #e9f5ff 0%, #f5fcff 100%);
@@ -43,7 +40,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== HEADER ===== */
 .app-header {
   position: sticky;
   top: 0;
@@ -89,14 +85,12 @@ body {
   color: var(--accent);
 }
 
-/* ===== MAIN CONTAINER ===== */
 .container {
   max-width: var(--max-width);
   margin: 2rem auto;
   padding: 0 var(--gap);
 }
 
-/* ===== SECTION TITLES ===== */
 .section h2 {
   font-size: 1.4rem;
   margin-bottom: 1rem;
@@ -108,7 +102,6 @@ body {
   color: var(--accent);
 }
 
-/* ===== FORM GROUPS & BUTTONS ===== */
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -151,7 +144,6 @@ body {
   box-shadow: var(--shadow-hover);
 }
 
-/* ===== LIVE SHUTTLES LIST ===== */
 .live-list {
   list-style: none;
   display: grid;
@@ -186,7 +178,6 @@ body {
   color: var(--accent);
 }
 
-/* ===== POPULAR ROUTES GRID ===== */
 .grid-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -223,7 +214,6 @@ body {
   font-weight: 600;
 }
 
-/* ===== FAQ ACCORDION ===== */
 .accordion .accordion-item {
   margin-bottom: 1rem;
 }
@@ -255,7 +245,6 @@ body {
   border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
-/* ===== CONTACT & SOCIAL ===== */
 .contact-section p {
   margin-bottom: 0.75rem;
   display: flex;
@@ -279,7 +268,6 @@ body {
   color: var(--accent);
 }
 
-/* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -359,7 +347,6 @@ body {
   background-color: var(--primary-dark);
 }
 
-/* ===== FOOTER ===== */
 .app-footer {
   text-align: center;
   padding: 1.5rem var(--gap);
@@ -373,7 +360,6 @@ body {
   margin-left: 0.5rem;
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .header-inner {
     flex-direction: column;
@@ -408,7 +394,6 @@ body {
   }
 }
 
-/* —— SIGN IN OVERLAY & BLUR —— */
 .signin-overlay {
   position: fixed;
   top: 0;
@@ -479,7 +464,6 @@ body {
 .btn-forgot:hover {
   color: var(--primary-dark);
 }
-/* Spinner */
 .spinner {
   border: 3px solid rgba(255,255,255,0.3);
   border-top: 3px solid var(--text-light);
@@ -497,7 +481,6 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* —— HERO —— */
 .hero {
   display: flex;
   align-items: center;
@@ -531,7 +514,6 @@ body {
   box-shadow: var(--shadow-hover);
 }
 
-/* —— BTN SECONDARY —— */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -551,7 +533,6 @@ body {
   color: var(--text-light);
 }
 
-/* —— MODALS COMMON —— */
 .modal-overlay { backdrop-filter: blur(4px); }
 .modal { position: relative; padding-top: 2rem; }
 .close-btn {
@@ -575,7 +556,6 @@ body {
   color: var(--accent);
 }
 
-/* —— HAMBURGER & SIDEBAR —— */
 .hamburger {
   background: none; border: none;
   font-size: 1.5rem; color: var(--text-light);
@@ -606,7 +586,6 @@ body {
   .desktop-only { display: none; }
 }
 
-/* —— LIVE FILTER —— */
 .live-filter {
   display: flex; align-items: center;
   margin-bottom: 1rem;
@@ -625,7 +604,6 @@ body {
 
 </head>
 <body>
-<!-- SIGN‑IN MODAL + OVERLAY -->
 <div class="signin-overlay" id="signinOverlay">
   <div class="signin-modal">
     <h3><i class="fas fa-user-lock"></i> Student Sign In</h3>
@@ -677,7 +655,6 @@ body {
   </div>
 </div>
 
-  <!-- HEADER -->
   <header class="app-header">
     <div class="header-inner">
       <img src="knust.png" alt="KNUST Logo" class="logo">
@@ -693,7 +670,6 @@ body {
     <button class="nav-btn"><i class="fas fa-user-circle"></i></button>
   </div>
 </nav>
-<!-- MOBILE SIDEBAR -->
 <aside class="mobile-sidebar" id="mobileSidebar">
   <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
   <button class="nav-btn"><i class="fas fa-home"></i> Home</button>
@@ -706,7 +682,6 @@ body {
     </div>
   </header>
 
-<!-- HERO -->
 <section class="hero" id="hero">
   <div class="hero-content">
     <h2>Ride the KNUST Shuttle with Ease</h2>
@@ -727,7 +702,6 @@ body {
 
   <main class="container">
 
-    <!-- SHUTTLE BOOKING FORM -->
     <section class="section booking-section">
       <h2><i class="fas fa-map-signs"></i> Book Your Shuttle</h2>
       <div class="form-group">
@@ -769,7 +743,6 @@ body {
       </button>
     </section>
 
-<!-- BOOKING CONFIRMATION -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal confirm-modal">
     <button class="close-btn" onclick="closeModal('confirmModal')">
@@ -804,7 +777,6 @@ body {
   </div>
 </div>
 
-<!-- MEDICAL VILLAGE INFO -->
 <div class="modal-overlay" id="medicalModal">
   <div class="modal">
     <button class="close-btn" onclick="closeModal('medicalModal')"><i class="fas fa-times"></i></button>
@@ -822,7 +794,6 @@ body {
   </div>
 </div>
 
-<!-- BRUNEI INFO -->
 <div class="modal-overlay" id="bruneiModal">
   <div class="modal">
     <button class="close-btn" onclick="closeModal('bruneiModal')"><i class="fas fa-times"></i></button>
@@ -840,7 +811,6 @@ body {
   </div>
 </div>
 
-<!-- COMMERCIAL AREA INFO -->
 <div class="modal-overlay" id="commerceModal">
   <div class="modal">
     <button class="close-btn" onclick="closeModal('commerceModal')"><i class="fas fa-times"></i></button>
@@ -858,7 +828,6 @@ body {
   </div>
 </div>
 
-    <!-- LIVE SHUTTLES -->
     <section class="section live-section">
       <h2><i class="fas fa-bus-alt"></i> Live Shuttles</h2>
 <div class="live-filter">
@@ -890,7 +859,6 @@ body {
       </ul>
     </section>
 
-    <!-- POPULAR ROUTES -->
     <section class="section popular-section">
       <h2><i class="fas fa-thumbs-up"></i> Popular Routes</h2>
       <div class="grid-cards">
@@ -925,7 +893,6 @@ body {
       </div>
     </section>
 
-    <!-- FAQ ACCORDION -->
     <section class="section faq-section">
       <h2><i class="fas fa-question-circle"></i> FAQs</h2>
       <div class="accordion">
@@ -966,7 +933,6 @@ body {
       </div>
     </section>
 
-    <!-- CONTACT & SOCIAL -->
     <section class="section contact-section">
       <h2><i class="fas fa-envelope"></i> Contact & Support</h2>
       <p><i class="fas fa-phone-alt"></i> +233 24 123 4567</p>
@@ -981,14 +947,11 @@ body {
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="app-footer">
     <p>&copy; 2025 KNUST Shuttle Tracker — Built by a KNUST Student <i class="fas fa-heart"></i></p>
   </footer>
 <script>
-// —— SIGN‑IN FLOW ——
 
-// On page load: check if already signed in
 document.addEventListener('DOMContentLoaded', () => {
   const signedIn = localStorage.getItem('signedIn');
   if (signedIn === 'true') {
@@ -998,7 +961,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Show/hide helpers
 function showSignInModal() {
   document.getElementById('signinOverlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -1008,25 +970,21 @@ function hideSignInModal() {
   document.body.style.overflow = '';
 }
 
-// Form & buttons
 const signinForm = document.getElementById('signinForm');
 const forgotBtn   = document.getElementById('forgotBtn');
 const spinnerSign = document.getElementById('signinSpinner');
 const spinnerFog  = document.getElementById('forgotSpinner');
 
-// Validate & “sign in”
 signinForm.addEventListener('submit', e => {
   e.preventDefault();
   spinnerSign.classList.remove('hidden');
   setTimeout(() => {
     spinnerSign.classList.add('hidden');
-    // All HTML5 validations passed? then “sign in”
     localStorage.setItem('signedIn', 'true');
     hideSignInModal();
   }, 1500);
 });
 
-// Forgot password “flow”
 forgotBtn.addEventListener('click', () => {
   spinnerFog.classList.remove('hidden');
   setTimeout(() => {
@@ -1035,7 +993,6 @@ forgotBtn.addEventListener('click', () => {
   }, 1500);
 });
 
-// Sign‑out button (inject into your header nav or wherever)
 const signOutBtn = document.createElement('button');
 signOutBtn.className = 'nav-btn';
 signOutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
@@ -1048,7 +1005,6 @@ document.querySelector('.header-nav').appendChild(signOutBtn);
 </script>
  
 <script>
-  // ====== SECTION REFERENCES ======
   const sections = {
     home: document.querySelector('.booking-section'),
     live: document.querySelector('.live-section'),
@@ -1057,14 +1013,11 @@ document.querySelector('.header-nav').appendChild(signOutBtn);
     contact: document.querySelector('.contact-section'),
   };
 
-  // ====== NAV BUTTONS HANDLING ======
   document.querySelectorAll('.header-nav .nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      // Remove “active” state
       document.querySelectorAll('.header-nav .nav-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      // Determine target section by icon class
       if (btn.querySelector('.fa-home')) scrollToSection('home');
       if (btn.querySelector('.fa-route')) scrollToSection('live');
       if (btn.querySelector('.fa-info-circle')) scrollToSection('faq');
@@ -1076,7 +1029,6 @@ document.querySelector('.header-nav').appendChild(signOutBtn);
     sections[name].scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  // ====== BOOKING STORAGE & MODAL ======
   let bookings = [];
 
   function bookShuttle() {
@@ -1090,13 +1042,11 @@ document.querySelector('.header-nav').appendChild(signOutBtn);
     bookings.push({ id, pickup: p, destination: d, time: t });
     alert(`Shuttle booked: ${p} → ${d} at ${t}`);
 
-    // Clear fields
     document.getElementById('pickup').value = '';
     document.getElementById('destination').value = '';
     document.getElementById('time').value = '';
   }
 
-  // Create Bookings Modal container
   const modalHTML = `
     <div class="modal-overlay" id="bookings-modal">
       <div class="modal">
@@ -1142,7 +1092,6 @@ document.querySelector('.header-nav').appendChild(signOutBtn);
     });
   }
 
-  // ====== ACCORDION FAQ ======
   document.querySelectorAll('.accordion-header').forEach(header => {
     header.addEventListener('click', () => {
       const body = header.nextElementSibling;
@@ -1152,7 +1101,6 @@ document.querySelector('.header-nav').appendChild(signOutBtn);
     });
   });
 
-  // ====== LIVE SHUTTLES SIMULATION ======
   let liveData = [
     { route: 'KSB → Medical Village', eta: 5 },
     { route: 'Brunei → Commercial Area', eta: 2 },
@@ -1175,7 +1123,6 @@ document.querySelector('.header-nav').appendChild(signOutBtn);
     });
   }
 
-  // Every 10 seconds, decrement ETA & randomize new ones
   setInterval(() => {
     liveData = liveData.map(item => {
       let newEta = item.eta - 1;
@@ -1187,18 +1134,15 @@ document.querySelector('.header-nav').appendChild(signOutBtn);
     renderLiveList();
   }, 10000);
 
-  // ====== POPULAR ROUTE CARD CLICKS ======
   document.querySelectorAll('.popular-section .card').forEach(card => {
     card.addEventListener('click', () => {
       const loc = card.querySelector('p').innerText;
       document.getElementById('pickup').value = loc;
       scrollToSection('home');
-      // Focus destination next
       document.getElementById('destination').focus();
     });
   });
 
-// — Live filter by route text
 function filterLive() {
   const q = document.getElementById('routeFilter').value.toLowerCase();
   document.querySelectorAll('.live-item').forEach(li => {
@@ -1207,7 +1151,6 @@ function filterLive() {
   });
 }
 
-// — Pause/resume live updates
 let liveInterval = null;
 function startLive() {
   liveInterval = setInterval(updateLive, 10000);
@@ -1231,13 +1174,11 @@ function updateLive() {
   renderLiveList();
 }
 
-// Kick off
 document.addEventListener('DOMContentLoaded', () => {
   renderLiveList();
   startLive();
 });
 
-  // ====== SMOOTH SCROLL FOR INTERNAL LINKS ======
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', e => {
       e.preventDefault();
@@ -1247,7 +1188,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-// Hamburger toggle
 const hamBtn = document.getElementById('hamburgerBtn'),
       mobileNav = document.getElementById('mobileSidebar'),
       closeNav = document.getElementById('closeSidebar');
@@ -1258,7 +1198,6 @@ closeNav.addEventListener('click', () => {
   mobileNav.style.left = '-250px';
 });
 
-// Booking → confirmation
 const origBook = bookShuttle;
 bookShuttle = () => {
   const p = pickup.value, d = destination.value, t = time.value;
@@ -1269,7 +1208,6 @@ bookShuttle = () => {
   openModal('confirmModal');
 };
 
-// Popular cards → modals
 document.querySelectorAll('.popular-section .card').forEach(card => {
   card.addEventListener('click', () => {
     const loc = card.querySelector('p').innerText;
@@ -1280,7 +1218,6 @@ document.querySelectorAll('.popular-section .card').forEach(card => {
   });
 });
 
-// Generic open/close modal
 function openModal(id) {
   document.getElementById(id).style.display = 'flex';
 }
@@ -1288,10 +1225,8 @@ function closeModal(id) {
   document.getElementById(id).style.display = 'none';
 }
 
-  // ====== INITIAL RENDER ======
   document.addEventListener('DOMContentLoaded', () => {
     renderLiveList();
-    // Hide modal initially
     modalOverlay.style.display = 'none';
   });
 </script>
