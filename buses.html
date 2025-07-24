@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Vitra – KNUST Shuttle Tracker</title>
 
-  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <!-- (Optional) Leaflet CSS if you integrate a map later -->
-  <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/> -->
-
+ 
   <style>
    :root {
   --primary: #007bff;
@@ -52,9 +49,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ---------------------------------------------------
-   HEADER & NAVIGATION
---------------------------------------------------- */
 .app-header {
   position: sticky;
   top: 0;
@@ -977,7 +971,10 @@ input:focus {
 .support-options li:hover {
   color: var(--accent);
 }
-
+.history-modal {
+ max-height: 80vh;
+ overflow-y: auto;
+}
     /* Quick-Book Modal Button */
 .quick-modal .btn-primary {
   margin-top: 1.5rem;
@@ -1203,11 +1200,17 @@ input:focus {
   .hero-subtitle {
     font-size: 1rem;
   }
-  .hero-buttons button {
-    flex: 1 1 100%;
-  }
+ .hero-buttons button { flex: none; width: auto; }
 }
-
+.support-options li a {
+ color: var(--primary);
+ text-decoration: none;
+ font-weight: 600;
+}
+.support-options li a:hover {
+ color: var(--accent);
+}
+     .chat-widget.hidden { display: none !important; }
     /* Booking section form controls */
 .booking-section .form-group select,
 .booking-section .form-group input {
@@ -1749,8 +1752,10 @@ document.addEventListener('DOMContentLoaded', function() {
   closeNavBtn.addEventListener('click', () => mobileNav.style.left = '-260px');
 
   // --- SMOOTH SCROLL & NAV ACTIVATION ---
+   const headerHeight = document.querySelector('.app-header').offsetHeight;
   function scrollToSection(id) {
     document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+   window.scrollBy(0, -headerHeight);
     mobileNav.style.left = '-260px';
   }
   document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
@@ -1891,6 +1896,9 @@ const confDate       = document.getElementById('confDate');
 const confTime       = document.getElementById('confTime');
 const confirmQr      = new QRious({ element: document.getElementById('confirmQr'), size: 200 });
 
+ const saved = localStorage.getItem('ksbBookings');
+ if (saved) bookings.push(...JSON.parse(saved));
+  
 bookingForm.addEventListener('submit', e => {
   e.preventDefault();
   const p  = pickup.value;
@@ -1898,9 +1906,11 @@ bookingForm.addEventListener('submit', e => {
   const dt = date.value;
   const ts = timeslot.value;
 
-  if (!p || !d || !dt || !ts || p === d) {
-    return;
-  }
+  if (p === d) {
+     alert('Pickup and destination cannot be the same.');
+      return;
+    }
+    if (!p || !d || !dt || !ts) return;
 
   // Populate modal text
   confPickup.textContent      = p;
@@ -1999,11 +2009,11 @@ document.querySelector('[data-close="historyModal"]')
   .addEventListener('click', () => historyModal.style.display = 'none');
 
   // Open history modal from any of the three buttons
-['ridesBtnHeader','ridesBtnMobile','ridesBtnLive'].forEach(id => {
-  document.getElementById(id).addEventListener('click', () => {
-    renderHistory('all');           // default to “All”
-    historyModal.style.display = 'flex';
-  });
+['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
+ document.getElementById(id).addEventListener('click', () => {
+   renderHistory(id === 'prevRidesBtn' ? 'prev' : id === 'upcomingRidesBtn' ? 'upcoming' : 'all');
+   historyModal.style.display = 'flex';
+ });
 });
 
   // Live Support toggle
@@ -2085,11 +2095,13 @@ const chatMessages  = document.getElementById('chatMessages');
 
 chatAgentBtn.addEventListener('click', e => {
   e.preventDefault();
+  chatWidget.classList.remove('hidden');
   chatWidget.classList.add('visible');
 });
 
 closeChatBtn.addEventListener('click', () => {
   chatWidget.classList.remove('visible');
+  chatWidget.classList.remove('hidden');
 });
 
 // Send a message
