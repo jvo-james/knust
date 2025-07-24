@@ -1075,6 +1075,254 @@ input:focus {
   transform: translateY(-2px);
 }
 
+    /* Sign‑In Modal */
+.signin-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+}
+
+.signin-modal {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-dark);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.signin-modal h3 {
+  font-family: var(--font-alt);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: var(--secondary);
+}
+
+.signin-modal form .form-group {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.signin-modal form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--dark-text);
+}
+
+.signin-modal form input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  transition: border var(--transition), box-shadow var(--transition);
+}
+
+.signin-modal form input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
+}
+
+.signin-modal form button {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+  background: var(--primary);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.signin-modal form button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+    /* Allow the hero title to wrap instead of overflow */
+.hero-title {
+  white-space: normal;
+  font-size: 3rem;          /* adjust as needed */
+  line-height: 1.2;         /* improve readability */
+}
+
+/* Hero buttons styling */
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hero-buttons button {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-light);
+  transition: background var(--transition), transform var(--transition);
+}
+
+/* Primary button */
+.hero-buttons .btn-primary {
+  background: var(--primary);
+  color: var(--white);
+}
+.hero-buttons .btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Secondary button */
+.hero-buttons .btn-secondary {
+  background: var(--accent);
+  color: var(--white);
+}
+.hero-buttons .btn-secondary:hover {
+  background: #e65550;
+  transform: translateY(-2px);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  .hero-buttons button {
+    flex: 1 1 100%;
+  }
+}
+
+    /* Booking section form controls */
+.booking-section .form-group select,
+.booking-section .form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--white);
+  border: 1px solid var(--muted-text);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  font-size: 1rem;
+  transition: border var(--transition), box-shadow var(--transition);
+}
+
+.booking-section .form-group select:focus,
+.booking-section .form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255,111,97,0.2);
+}
+
+    /* Chat Widget Styles */
+.chat-widget {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  max-height: 400px;
+  background: var(--white);
+  border: 1px solid #ddd;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-dark);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform var(--transition);
+  transform: translateY(100%);
+  z-index: 3000;
+}
+
+.chat-widget.visible {
+  transform: translateY(0);
+}
+
+.chat-header {
+  background: var(--primary);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-close {
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.chat-messages .chat-user,
+.chat-messages .chat-system {
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.chat-messages .chat-user {
+  text-align: right;
+  color: var(--white);
+  background: var(--primary);
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+}
+
+.chat-messages .chat-system {
+  text-align: left;
+  background: #f1f1f1;
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+}
+
+.chat-input-area {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+
+#chatInputField {
+  flex: 1;
+  border: none;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+}
+
+#chatSendBtn {
+  background: var(--accent);
+  border: none;
+  color: var(--white);
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+#chatSendBtn:hover {
+  background: #e65550;
+}
+
   </style>
 </head>
 <body>
@@ -1341,9 +1589,9 @@ input:focus {
   </div>
 
   <!-- Floating Support Chat -->
-  <button id="supportChat" class="support-chat-btn">
-    <i class="fas fa-headset"></i> Live Support
-  </button>
+<button id="supportChat" class="support-chat-btn">
+  <i class="fas fa-headset"></i>
+</button>
 
 
     <!-- FAQ -->
@@ -1420,11 +1668,37 @@ input:focus {
     <h3><i class="fas fa-headset"></i> Live Support</h3>
     <p>Hi there! 👋 How can we assist you today?</p>
     <ul class="support-options">
-      <li><i class="fas fa-question-circle"></i> FAQ & Help Center</li>
-      <li><i class="fas fa-envelope"></i> Email Support: support@knust-shuttle.app</li>
-      <li><i class="fas fa-phone-alt"></i> Call Us: +233 24 123 4567</li>
-      <li><i class="fas fa-comments"></i> Chat with an Agent</li>
+      <li>
+    <i class="fas fa-question-circle"></i>
+    <a href="faq.html" target="_blank">FAQ &amp; Help Center</a>
+  </li>
+  <li>
+    <i class="fas fa-envelope"></i>
+    <a href="mailto:support@knust-shuttle.app">Email Support</a>
+  </li>
+  <li>
+    <i class="fas fa-phone-alt"></i>
+    <a href="tel:+233241234567">Call Us</a>
+  </li>
+  <li>
+    <i class="fas fa-comments"></i>
+    <a href="#" id="chatAgentBtn">Chat with an Agent</a>
+  </li>  
     </ul>
+  </div>
+</div>
+<!-- Chat Widget -->
+<div id="chatWidget" class="chat-widget hidden">
+  <div class="chat-header">
+    <span>Live Chat</span>
+    <button id="closeChatBtn" class="chat-close">&times;</button>
+  </div>
+  <div id="chatMessages" class="chat-messages">
+    <div class="chat-system">Hi there! 👋 How can we help you today?</div>
+  </div>
+  <div class="chat-input-area">
+    <input id="chatInputField" type="text" placeholder="Type your message…" />
+    <button id="chatSendBtn">Send</button>
   </div>
 </div>
 
@@ -1607,18 +1881,7 @@ liveSearch.addEventListener('input', () => {
   // --- BOOKING & CONFIRMATION MODAL GENERATION ---
   const bookings = [];
   const bookingForm = document.getElementById('bookingForm');
-  bookingForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const p = pickup.value, d = destination.value, dt = date.value, ts = timeslot.value;
-    if (!p||!d||!dt||!ts|| p===d) {
-      alert('Please complete the form correctly.');
-      return;
-    }
-    const id = Date.now();
-    bookings.push({ id, p, d, dt, ts });
-    alert(`Booked: ${p} → ${d} on ${dt} at ${ts}`);
-    bookingForm.reset();
-  });
+ 
 
   // Confirmation Modal Logic
 const confirmModal   = document.getElementById('confirmModal');
@@ -1636,7 +1899,6 @@ bookingForm.addEventListener('submit', e => {
   const ts = timeslot.value;
 
   if (!p || !d || !dt || !ts || p === d) {
-    alert('Please complete the form correctly.');
     return;
   }
 
@@ -1657,6 +1919,18 @@ bookingForm.addEventListener('submit', e => {
   bookingForm.reset();
 });
 
+  document.getElementById('prevRidesBtn')
+   .addEventListener('click', () => {
+     renderHistory('prev');
+   });
+ document.getElementById('upcomingRidesBtn')
+   .addEventListener('click', () => {
+     renderHistory('upcoming');
+   });
+ document.getElementById('allRidesBtn')
+   .addEventListener('click', () => {
+     renderHistory('all');
+   });
 // Close modal on any [data-close="confirmModal"] click
 document
   .querySelectorAll('[data-close="confirmModal"]')
@@ -1796,6 +2070,56 @@ document.addEventListener('click', e => {
       document.getElementById(id).style.display = 'none';
     });
   });
+document.getElementById('chatAgentBtn').addEventListener('click', e => {
+   e.preventDefault();
+   supportModal.style.display = 'flex';
+ });
+
+  // Chat widget toggle
+const chatWidget    = document.getElementById('chatWidget');
+const chatAgentBtn  = document.getElementById('chatAgentBtn');
+const closeChatBtn  = document.getElementById('closeChatBtn');
+const chatInput     = document.getElementById('chatInputField');
+const chatSendBtn   = document.getElementById('chatSendBtn');
+const chatMessages  = document.getElementById('chatMessages');
+
+chatAgentBtn.addEventListener('click', e => {
+  e.preventDefault();
+  chatWidget.classList.add('visible');
+});
+
+closeChatBtn.addEventListener('click', () => {
+  chatWidget.classList.remove('visible');
+});
+
+// Send a message
+function appendMessage(text, isUser) {
+  const div = document.createElement('div');
+  div.className = isUser ? 'chat-user' : 'chat-system';
+  div.textContent = text;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+chatSendBtn.addEventListener('click', () => {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+  appendMessage(msg, true);
+  chatInput.value = '';
+
+  // Simulated agent response after delay
+  setTimeout(() => {
+    appendMessage('Thanks for your message! An agent will be with you shortly.', false);
+  }, 1000);
+});
+
+// Allow Enter key to send
+chatInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    chatSendBtn.click();
+  }
+});
 
 });
 </script>
