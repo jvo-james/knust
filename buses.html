@@ -1146,14 +1146,59 @@ input:focus {
   transform: translateY(-2px);
 }
 
-    /* Allow the hero title to wrap instead of overflow */
-.hero-title {
-  white-space: normal;
-  font-size: 3rem;          /* adjust as needed */
-  line-height: 1.2;         /* improve readability */
+/* Ensure hero-content sits above animations */
+.hero-content {
+  position: relative;
+  z-index: 3;
 }
 
-/* Hero buttons styling */
+/* Fade-and-slide in for hero buttons */
+.hero-buttons {
+  opacity: 0;
+  animation: fadeInButtons 0.8s ease-out forwards 3s;
+}
+
+@keyframes fadeInButtons {
+  from   { opacity: 0; transform: translateY(20px); }
+  to     { opacity: 1; transform: translateY(0); }
+}
+
+.hero-buttons button {
+  transform: translateY(20px);
+  animation: slideUpBtn 0.8s ease-out forwards 3s;
+}
+
+@keyframes slideUpBtn {
+  from   { transform: translateY(20px); }
+  to     { transform: translateY(0); }
+}
+
+/* Push bus icons slightly below the button layer */
+.bus-animations {
+  position: absolute;
+  bottom: -5%;      /* lower so they don’t overlap buttons */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.bus-animation {
+  animation:
+    busMove 4s ease-in-out infinite,
+    pulseScale 2s ease-in-out infinite;
+}
+
+@keyframes pulseScale {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.1); }
+}
+
+    .hero-title {
+  white-space: normal;
+  font-size: 3rem;        
+  line-height: 1.2;        
+}
+
 .hero-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -1324,6 +1369,43 @@ input:focus {
 
 #chatSendBtn:hover {
   background: #e65550;
+}
+
+.info-sections {
+  display: block;
+  gap: var(--gap);
+  margin: 4rem 0;
+}
+
+@media (min-width: 924px) {
+  .info-sections {
+    display: flex;
+    justify-content: space-between;
+  }
+  .info-sections .faq-section,
+  .info-sections .contact-section {
+    flex: 1;
+    max-width: calc(50% - var(--gap)/2);
+  }
+}
+
+    .booking-confirm-modal button[data-close="confirmModal"] {
+  margin-top: 1.5rem;
+  padding: 0.75rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.booking-confirm-modal button[data-close="confirmModal"]:hover {
+  background: #e65550;
+  transform: translateY(-2px);
 }
 
   </style>
@@ -1596,8 +1678,7 @@ input:focus {
   <i class="fas fa-headset"></i>
 </button>
 
-
-    <!-- FAQ -->
+<div class="info-sections">
     <section class="section faq-section" id="faq">
       <h2><i class="fas fa-question-circle"></i> FAQs</h2>
       <div class="accordion">
@@ -1621,7 +1702,7 @@ input:focus {
     </section>
 
     <!-- Contact -->
-    <section class="section contact-section">
+    <section class="section contact-section" id="contact">
       <h2><i class="fas fa-envelope"></i> Contact & Support</h2>
       <p><i class="fas fa-phone-alt"></i> +233 24 123 4567</p>
       <p><i class="fas fa-envelope-open-text"></i> support@knust-shuttle.app</p>
@@ -1632,6 +1713,7 @@ input:focus {
         <a href="#"><i class="fab fa-linkedin"></i></a>
       </div>
     </section>
+</div>
   </main>
 
 <!-- Booking Confirmation Modal -->
@@ -1734,6 +1816,8 @@ document.addEventListener('DOMContentLoaded', function() {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
+  setTimeout(() => map.invalidateSize(), 200);
+  
   const stops = {
     'KSB':               [6.6670, -1.5830],
     'Medical Village':   [6.6680, -1.5800],
@@ -1743,6 +1827,25 @@ document.addEventListener('DOMContentLoaded', function() {
     'Commercial Area':   [6.6675, -1.5870]
   };
 
+   Object.entries(stops).forEach(([name, coords]) => {
+    L.marker(coords).addTo(map).bindPopup(name);
+  });
+
+  liveSearch.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const term = liveSearch.value.trim();
+      if (stops[term]) {
+        map.setView(stops[term], 17, { animate: true });
+        L.popup({ autoClose: true })
+          .setLatLng(stops[term])
+          .setContent(`<strong>${term}</strong>`)
+          .openOn(map);
+      } else {
+        renderLiveShuttles(term);
+      }
+    }
+  });
   
   // --- MOBILE SIDEBAR ---
   const hamBtn      = document.getElementById('hamburgerBtn');
@@ -1911,6 +2014,10 @@ bookingForm.addEventListener('submit', e => {
       return;
     }
     if (!p || !d || !dt || !ts) return;
+
+   const id = Date.now();
+  bookings.push({ id, p, d, dt, ts });
+ localStorage.setItem('ksbBookings', JSON.stringify(bookings));
 
   // Populate modal text
   confPickup.textContent      = p;
@@ -2095,13 +2202,14 @@ const chatMessages  = document.getElementById('chatMessages');
 
 chatAgentBtn.addEventListener('click', e => {
   e.preventDefault();
+  supportModal.style.display = 'none';
   chatWidget.classList.remove('hidden');
   chatWidget.classList.add('visible');
 });
 
 closeChatBtn.addEventListener('click', () => {
   chatWidget.classList.remove('visible');
-  chatWidget.classList.remove('hidden');
+  chatWidget.classList.add('hidden');
 });
 
 // Send a message
