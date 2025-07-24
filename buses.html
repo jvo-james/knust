@@ -1906,7 +1906,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'Enter') {
       e.preventDefault();
        const term = liveSearch.value.trim();
-      if (!stops[term]) {
+     if (!stops[term]) {
         return alert('Please pick one of the six predefined stops.');
       }
       map.setView(stops[term], 17, { animate: true });
@@ -1914,16 +1914,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .setLatLng(stops[term])
         .setContent(`<strong>${term}</strong>`)
         .openOn(map);
-        map.setView(stops[term], 17, { animate: true });
-        L.popup({ autoClose: true })
-          .setLatLng(stops[term])
-          .setContent(`<strong>${term}</strong>`)
-          .openOn(map);
-      } else {
-        renderLiveShuttles(term);
-      }
-    }
+    } 
+    
   });
+
+  liveSearch.addEventListener('input', () => {
+  renderLiveShuttles(liveSearch.value.trim());
+});
 
   // --- SIDE BAR (Mobile) ---
   const hamBtn      = document.getElementById('hamburgerBtn');
