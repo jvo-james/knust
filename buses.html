@@ -600,6 +600,93 @@ body {
   cursor: pointer;
 }
 
+@media only screen 
+  and (device-width: 414px) 
+  and (device-height: 896px) 
+  and (-webkit-device-pixel-ratio: 2) 
+{
+  .header-inner {
+    flex-direction: column;
+    padding: .75rem 1rem;
+  }
+  .app-title {
+    font-size: 1.25rem;
+    margin: .5rem 0;
+  }
+  .hamburger {
+    display: block; 
+  }
+  .desktop-only { display: none; }
+
+  .hero {
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+  }
+  .hero-content, .hero-image {
+    max-width: 100%;
+    text-align: center;
+  }
+  .hero-content h2 { font-size: 1.75rem; }
+  .hero-image img { max-width: 100%; height: auto; }
+
+  .select, .input-group input, .btn-primary, .btn-secondary {
+    width: 100%;
+  }
+
+  #map { height: 200px; }
+  .live-item { padding: .5rem; }
+
+  .grid-cards { grid-template-columns: 1fr; }
+
+  .modal {
+    max-width: 95%;
+    max-height: 90%;
+    overflow-y: auto;
+    padding: 1rem;
+  }
+  .modal-img { max-height: 150px; object-fit: cover; }
+
+  .accordion-header {
+    padding: 1rem;
+    font-size: .95rem;
+  }
+  .accordion-header i { margin-right: .75rem; }
+
+  .app-footer { padding: 1rem; font-size: .8rem; }
+
+  .btn-primary, .btn-secondary, .nav-btn {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root { --gap: 12px; }
+
+  .app-title { font-size: 1.1rem; }
+
+  .hero-content h2 { font-size: 1.5rem; }
+  .hero-content p  { font-size: .9rem; }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    font-size: 1.05rem;
+  }
+
+  .live-item i, .card-body i {
+    font-size: 1.25rem;
+  }
+
+  .form-group, .input-group {
+    margin-bottom: 1rem;
+  }
+
+  #carpoolList li {
+    padding: .75rem;
+    font-size: .9rem;
+  }
+}
+
 </style>
 
 </head>
