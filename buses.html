@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
    :root {
   --primary:   #006233;
@@ -444,9 +444,7 @@ input:focus {
   color: var(--secondary);
 }
 
-/* ---------------------------------------------------
-   SUPPORT CHAT BUTTON
---------------------------------------------------- */
+
 .support-chat-btn {
   position: fixed;
   bottom: 2rem;
@@ -469,9 +467,7 @@ input:focus {
   transform: scale(1.1);
 }
 
-/* ---------------------------------------------------
-   FOOTER
---------------------------------------------------- */
+
 .app-footer {
   text-align: center;
   padding: 2rem var(--gap);
@@ -484,9 +480,7 @@ input:focus {
   margin-left: 0.5rem;
 }
 
-/* ---------------------------------------------------
-   RESPONSIVE
---------------------------------------------------- */
+
 @media (max-width: 768px) {
   .header-inner { flex-wrap: wrap; text-align: center; }
   .desktop-only { display: none; }
@@ -513,11 +507,9 @@ input:focus {
 
    
 
-    /*— Footer —*/
     .app-footer { text-align:center; padding:1.5rem var(--gap); background:#f0f0f0; color:#555; font-size:.9rem; }
     .app-footer i { color:var(--accent); margin-left:.5rem; }
 
-    /*— Responsive —*/
     @media(max-width:768px){
       .header-inner { flex-wrap:wrap; text-align:center; }
       .desktop-only { display:none; }
@@ -532,7 +524,6 @@ input:focus {
       .btn-primary, .btn-secondary{width:100%;}
     }
 
-    /* Hero Section Enhancements */
 .hero-section {
   position: relative;
   height: 90vh;
@@ -615,7 +606,6 @@ input:focus {
   box-shadow: var(--shadow-dark);
 }
 
-/* Bus Icon Animations */
 .bus-animation {
   font-size: 2rem;
   opacity: 0.8;
@@ -625,8 +615,21 @@ input:focus {
 .bus-animations .bus-2 { animation-delay: 0.5s; }
 .bus-animations .bus-3 { animation-delay: 1s; }
 
-/* Keyframes */
-@keyframes fadeInHero {
+.bus-icon {
+  background: var(--accent);
+  color: var(--white);
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 1rem;
+  box-shadow: var(--shadow-dark);
+  transition: transform 0.3s ease;
+}
+.bus-icon:hover {
+  transform: scale(1.3);
+  z-index: 999;
+}
+
+    @keyframes fadeInHero {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
@@ -647,7 +650,6 @@ input:focus {
   100% { transform: translateX(100px) scale(1); opacity: 0; }
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
   .hero-title { font-size: 2.8rem; }
   .hero-subtitle { font-size: 1rem; }
@@ -660,7 +662,6 @@ input:focus {
   .hero-buttons button { padding: 0.75rem 1.5rem; font-size: 0.9rem; }
 }
 
-    /* Live Search */
 .live-search {
   position: relative;
   max-width: 400px;
@@ -687,13 +688,13 @@ input:focus {
   pointer-events: none;
 }
 
-/* Shuttle Cards */
 .live-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: var(--gap);
 }
 .shuttle-card {
+  position: relative;
   background: var(--white);
   border-radius: var(--radius);
   padding: 1rem;
@@ -701,10 +702,38 @@ input:focus {
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.6s ease-out forwards;
+  transition: transform var(--transition), box-shadow var(--transition);
 }
+    .shuttle-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-dark);
+}
+
+.occupancy {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+.occupancy span {
+  font-size: 0.875rem;
+  color: var(--muted-text);
+}
+.occ-bar {
+  flex: 1;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-left: 0.5rem;
+}
+.occ-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
 .shuttle-card h3 {
   margin-bottom: 0.5rem;
-  color: var(--secondary);
 }
 .shuttle-card p {
   margin-bottom: 0.5rem;
@@ -721,7 +750,6 @@ input:focus {
   transition: width var(--transition);
 }
 
-/* Pulsing marker */
 .leaflet-interactive.pulse-marker {
   animation: pulse 1.8s ease-out infinite;
 }
@@ -731,7 +759,6 @@ input:focus {
   100% { r: 6; opacity: 0.6; }
 }
 
-/* Card animation */
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -739,12 +766,10 @@ input:focus {
   }
 }
 
-/* Ensure map & cards are responsive */
 @media (max-width: 768px) {
   .live-cards { grid-template-columns: 1fr; }
 }
 
-    /* Booking Section */
 .booking-section form {
   background: var(--white);
   padding: 2.5rem;
@@ -792,7 +817,6 @@ input:focus {
   transform: translateY(-2px);
 }
 
-    /* Confirmation Modal Styles */
 .booking-confirm-modal {
   max-width: 380px;
   text-align: center;
@@ -822,7 +846,6 @@ input:focus {
   margin-bottom: 1.5rem;
 }
 
-    /* History Modal Enhancements */
 .history-modal {
   max-width: 500px;
   padding: 2rem;
@@ -883,7 +906,6 @@ input:focus {
 .ride-detail p {
   margin: 0.25rem 0;
 }
-/* Consistent button styling */
 #ridesBtnLive,
 #ridesBtnHeader,
 #ridesBtnMobile {
@@ -905,7 +927,6 @@ input:focus {
   color: var(--white);
 }
 
-    /* Support Chat Button */
 .support-chat-btn {
   position: fixed;
   bottom: 2rem;
@@ -929,7 +950,6 @@ input:focus {
   background: #e65550;
 }
 
-/* Support Modal */
 .support-modal {
   max-width: 360px;
   text-align: center;
@@ -968,7 +988,6 @@ input:focus {
  max-height: 80vh;
  overflow-y: auto;
 }
-    /* Quick-Book Modal Button */
 .quick-modal .btn-primary {
   margin-top: 1.5rem;
   padding: 0.75rem 2rem;
@@ -986,7 +1005,6 @@ input:focus {
   transform: translateY(-2px);
 }
 
-    /* FAQ Section */
 .faq-section {
   background: var(--white);
   padding: 2rem var(--gap);
@@ -1030,7 +1048,6 @@ input:focus {
   margin-bottom: 0.5rem;
 }
 
-/* Contact & Support Section */
 .contact-section {
   background: var(--white);
   padding: 2rem var(--gap);
@@ -1065,7 +1082,6 @@ input:focus {
   transform: translateY(-2px);
 }
 
-    /* Sign‑In Modal */
 .signin-overlay {
   display: flex;
   align-items: center;
@@ -1139,13 +1155,11 @@ input:focus {
   transform: translateY(-2px);
 }
 
-/* Ensure hero-content sits above animations */
 .hero-content {
   position: relative;
   z-index: 3;
 }
 
-/* Fade-and-slide in for hero buttons */
 .hero-buttons {
   opacity: 0;
   animation: fadeInButtons 0.8s ease-out forwards 3s;
@@ -1209,7 +1223,6 @@ input:focus {
   transition: background var(--transition), transform var(--transition);
 }
 
-/* Primary button */
 .hero-buttons .btn-primary {
   background: var(--primary);
   color: var(--white);
@@ -1219,7 +1232,6 @@ input:focus {
   transform: translateY(-2px);
 }
 
-/* Secondary button */
 .hero-buttons .btn-secondary {
   background: var(--accent);
   color: var(--white);
@@ -1229,7 +1241,6 @@ input:focus {
   transform: translateY(-2px);
 }
 
-/* Responsive tweaks */
 @media (max-width: 768px) {
   .hero-title {
     font-size: 2.5rem;
@@ -1248,7 +1259,6 @@ input:focus {
  color: var(--accent);
 }
      .chat-widget.hidden { display: none !important; }
-    /* Booking section form controls */
 .booking-section .form-group select,
 .booking-section .form-group input {
   width: 100%;
@@ -1268,7 +1278,6 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(255,111,97,0.2);
 }
 
-    /* Chat Widget Styles */
 .chat-widget {
   position: fixed;
   bottom: 80px;
@@ -1329,7 +1338,22 @@ input:focus {
   padding: 0.5rem 0.75rem;
   border-radius: var(--radius);
 }
-
+.view-map {
+   display: block;
+   margin: .75rem 0 0;
+   padding: .5rem 1rem;
+   background: var(--accent);
+   color: var(--white);
+   border: none;
+   border-radius: var(--radius);
+   font-size: .9rem;
+   cursor: pointer;
+   transition: background var(--transition), transform var(--transition);
+ }
+ .view-map:hover {
+   background: #e6bd00;  
+   transform: translateY(-2px);
+ }
 .chat-messages .chat-system {
   text-align: left;
   background: #f1f1f1;
@@ -1415,7 +1439,6 @@ input:focus {
   </style>
 </head>
 <body>
-  <!-- Sign-In Overlay -->
   <div class="signin-overlay" id="signinOverlay">
     <div class="modal signin-modal">
       <h3><i class="fas fa-user-lock"></i> Student Sign In</h3>
@@ -1439,7 +1462,6 @@ input:focus {
     </div>
   </div>
 
-  <!-- Header & Nav -->
  <header class="app-header">
     <div class="header-inner">
       <img src="knust1.png" alt="KNUST Logo" class="logo">
@@ -1464,7 +1486,6 @@ input:focus {
   </header>
 
 
-  <!-- Hero -->
   <section id="hero" class="hero-section">
     <div class="hero-background">
       <img src="shuttle.jpg" alt="Campus Shuttle Background">
@@ -1519,7 +1540,6 @@ input:focus {
 <button class="btn-secondary" id="ridesBtnLive" style="display:block; margin:2rem auto;">
   <i class="fas fa-history"></i> My Rides
 </button>
-    <!-- Book Your Ride -->
     <section id="book-ride" class="section booking-section">
       <h2><i class="fas fa-paper-plane"></i> Book Your Ride</h2>
       <form id="bookingForm">
@@ -1573,14 +1593,12 @@ input:focus {
       </form>
     </section>
 
-    <!-- Ride History Buttons -->
     <div class="history-buttons">
       <button id="prevRidesBtn" class="btn-secondary active"><i class="fas fa-archive"></i> Previous Rides</button>
       <button id="upcomingRidesBtn" class="btn-secondary"><i class="fas fa-clock"></i> Upcoming Rides</button>
       <button id="allRidesBtn" class="btn-secondary"><i class="fas fa-list"></i> All Rides</button>
     </div>
 
-    <!-- Quick Book Cards -->
     <section id="quick-book" class="section quick-book-section">
       <h2><i class="fas fa-thumbs-up"></i> Quick Book Popular Stops</h2>
       <div class="grid-cards">
@@ -1613,7 +1631,6 @@ input:focus {
 
   </main>
 
- <!-- Ride History Modal -->
 <div class="modal-overlay" id="historyModal">
   <div class="modal history-modal">
     <button class="close-btn" data-close="historyModal"><i class="fas fa-times"></i></button>
@@ -1624,7 +1641,6 @@ input:focus {
       <button class="tab" data-tab="all">All</button>
     </div>
     <ul class="ride-list" id="rideList">
-      <!-- filled by JS -->
     </ul>
     <div class="ride-detail" id="rideDetail">
       <p>Select a ride to view details.</p>
@@ -1633,7 +1649,6 @@ input:focus {
 </div>
 
 
-  <!-- Quick Book Modals -->
   <div class="modal-overlay" id="ksbQuickModal">
     <div class="modal quick-modal">
       <button class="close-btn" data-close="ksbQuickModal"><i class="fas fa-times"></i></button>
@@ -1683,7 +1698,6 @@ input:focus {
     </div>
   </div>
 
-  <!-- Floating Support Chat -->
 <button id="supportChat" class="support-chat-btn">
   <i class="fas fa-headset"></i>
 </button>
@@ -1711,7 +1725,6 @@ input:focus {
       </div>
     </section>
 
-    <!-- Contact -->
     <section class="section contact-section" id="contact">
       <h2><i class="fas fa-envelope"></i> Contact & Support</h2>
       <p><i class="fas fa-phone-alt"></i> +233 24 123 4567</p>
@@ -1726,7 +1739,6 @@ input:focus {
 </div>
   </main>
 
-<!-- Booking Confirmation Modal -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal booking-confirm-modal">
     <button class="close-btn" data-close="confirmModal">
@@ -1756,7 +1768,6 @@ input:focus {
   </div>
 </div>
 
-  <!-- Live Support Modal -->
 <div class="modal-overlay" id="supportModal">
   <div class="modal support-modal">
     <button class="close-btn" data-close="supportModal"><i class="fas fa-times"></i></button>
@@ -1782,7 +1793,7 @@ input:focus {
     </ul>
   </div>
 </div>
-<!-- Chat Widget -->
+
 <div id="chatWidget" class="chat-widget hidden">
   <div class="chat-header">
     <span>Live Chat</span>
@@ -1798,7 +1809,6 @@ input:focus {
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <!-- Footer -->
   <footer class="app-footer">
     <p>&copy; 2025 KNUST Shuttle Tracker — Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
   </footer>
@@ -1843,7 +1853,8 @@ input:focus {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // --- SIGN‑IN OVERLAY ---
+
+  const { jsPDF } = window.jspdf;
   const signinOverlay = document.getElementById('signinOverlay');
   const signinForm    = document.getElementById('signinForm');
   if (localStorage.getItem('signedIn') === 'true') {
@@ -1857,7 +1868,6 @@ document.addEventListener('DOMContentLoaded', function() {
     signinOverlay.style.display = 'none';
   });
 
-  // --- MAP SETUP ---
   const map = L.map('map', { zoomControl: true }).setView([6.6667, -1.5833], 15);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
@@ -1866,10 +1876,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function refreshMap() { setTimeout(()=> map.invalidateSize(), 200); }
   window.addEventListener('resize', refreshMap);
   
-  // Fix map container sizing
   setTimeout(() => map.invalidateSize(), 200);
 
-  // Stops coordinates
   const stops = {
     'KSB':               [6.6670, -1.5830],
     'Medical Village':   [6.6680, -1.5800],
@@ -1878,7 +1886,40 @@ document.addEventListener('DOMContentLoaded', function() {
     'College of Science':[6.6650, -1.5820],
     'Commercial Area':   [6.6675, -1.5870]
   };
-  // Add markers for each stop
+
+const routes = {
+  'KSB → Medical Village':   ['KSB','Medical Village'],
+  'Medical Village → Brunei': ['Medical Village','Brunei'],
+  'Brunei → Commercial Area': ['Brunei','Commercial Area'],
+  'Commercial Area → KSB':    ['Commercial Area','KSB'],
+  'Casely Hayeford → College of Science': ['Casely Hayeford','College of Science'],
+  'College of Science → KSB': ['College of Science','KSB']
+};
+
+const buses = [];       
+const busSpeed = 0.0005; 
+
+Object.entries(routes).forEach(([routeName, [from, to]], i) => {
+  const start = stops[from];
+  const end   = stops[to];
+  const marker = L.marker(start, {
+    icon: L.divIcon({ 
+      className: 'bus-icon', 
+      html: `<i class="fas fa-shuttle-van"></i>`,
+      iconSize: [24,24]
+    })
+  }).addTo(map);
+
+  marker.bindPopup(`
+    <strong>${routeName}</strong><br/>
+    ID: Bus-${100+i}<br/>
+    ETA: <span class="eta">—</span> min
+  `);
+
+  buses.push({ marker, fromCoords: start, toCoords: end, progress: 0 });
+});
+
+  
   Object.entries(stops).forEach(([name, coords]) => {
     L.marker(coords).addTo(map).bindPopup(name);
   });
@@ -1898,54 +1939,71 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   const liveSearch = document.getElementById('liveSearch');
-  liveSearch.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-       const term = liveSearch.value.trim();
-     if (!stops[term]) {
-        return alert('Please pick one of the six predefined stops.');
-      }
-      map.setView(stops[term], 17, { animate: true });
+   liveSearch.addEventListener('input', e => {
+    const term = e.target.value.trim();
+    if (stops[term]) {
+      map.flyTo(stops[term], 17, { animate: true, duration: 1.5 });
       L.popup({ autoClose: true })
         .setLatLng(stops[term])
         .setContent(`<strong>${term}</strong>`)
         .openOn(map);
-    } 
-    
+    } else {
+      renderLiveShuttles(term);
+    }
   });
 
-  liveSearch.addEventListener('input', () => {
-  renderLiveShuttles(liveSearch.value.trim());
-});
+  map.on('click', e => {
+    let min = Infinity, nearest = null;
+    Object.entries(stops).forEach(([name, coords]) => {
+      const d = map.distance(e.latlng, L.latLng(coords));
+      if (d < min) [min, nearest] = [d, { name, coords }];
+    });
+    if (nearest && min < 500) {
+      map.flyTo(nearest.coords, 17, { animate: true, duration: 1 });
+      L.popup({ autoClose: true })
+        .setLatLng(nearest.coords)
+        .setContent(`Stop: <strong>${nearest.name}</strong>`)
+        .openOn(map);
+    }
+  });
 
-  // --- SIDE BAR (Mobile) ---
   const hamBtn      = document.getElementById('hamburgerBtn');
   const mobileNav   = document.getElementById('mobileSidebar');
   const closeNavBtn = document.getElementById('closeSidebar');
   hamBtn.addEventListener('click', () => mobileNav.style.left = '0');
   closeNavBtn.addEventListener('click', () => mobileNav.style.left = '-260px');
 
-  // --- SMOOTH SCROLL & NAV ACTIVATION ---
   const headerHeight = document.querySelector('.app-header').offsetHeight;
   function scrollToSection(id) {
     document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     window.scrollBy(0, -headerHeight);
     mobileNav.style.left = '-260px';
   }
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    if (btn.dataset.target) {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        scrollToSection(btn.dataset.target);
-       if (btn.dataset.target === 'live-shuttles') refreshMap();
-      });
-    }
+ document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      scrollToSection(btn.dataset.target);
+      if (btn.dataset.target === 'live-shuttles') refreshMap();
+    });
   });
-  document.querySelectorAll('[data-scroll]').forEach(btn => {
-    btn.addEventListener('click', () => scrollToSection(btn.dataset.scroll));
+document.querySelectorAll('[data-scroll]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      scrollToSection(btn.dataset.scroll);
+    });
   });
 
+  document.querySelectorAll('.quick-modal .btn-primary').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const overlay = btn.closest('.modal-overlay');
+      if (overlay) overlay.style.display = 'none';
+      scrollToSection('book-ride');
+    });
+  });
+  
    ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {
       const filter = id === 'prevRidesBtn'
@@ -1958,7 +2016,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // --- TYPEWRITER ---
   const typeEl = document.getElementById('typewriter');
   const words  = ['Your Campus Commute', 'The Smart Shuttle Tracker', 'KNUST Shuttle Tracker'];
   let wIndex = 0, cIndex = 0, forward = true;
@@ -1980,7 +2037,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   tick();
 
-  // --- LIVE SHUTTLES DATA & RENDERING ---
   let liveData = [
     { route: 'KSB → Medical Village', eta: 5, cap: 30 },
     { route: 'Brunei → Commercial Area', eta: 2, cap: 25 },
@@ -2000,20 +2056,30 @@ document.addEventListener('DOMContentLoaded', function() {
       item.route.toLowerCase().includes(term)
     );
       filtered.forEach((item, i) => {
+      const maxCap = 40;
+      const occupancyPct = Math.round((maxCap - item.cap) / maxCap * 100);
       const busId = 'Bus-' + (i + 101);
       const routeColor = ['#007bff','#28a745','#ffc107','#17a2b8','#dc3545','#6f42c1'][i % 6];
       const card = document.createElement('div');
       card.className = 'shuttle-card';
+      card.querySelector?.('h3')?.style?.setProperty('--title-color', '');
+       const routeColor = item.eta <= 5
+      ? '#dc3545'       
+      : item.eta <= 10
+        ? '#ffc107'   
+        : '#28a745';   
       card.style.borderLeft = `4px solid ${routeColor}`;
       card.innerHTML = `
-        <h3>${item.route}</h3>
+         <h3 style="color:${routeColor}">${item.route}</h3>
+      <div class="occupancy">
+       <span>Occupancy</span>
+        <div class="occ-bar">
+          <div class="occ-fill" style="width:${occupancyPct}%"></div>
+        </div>
+      </div>
         <p><strong>ID:</strong> ${busId}</p>
         <p><strong>ETA:</strong> ${item.eta} min</p>
         <p><strong>Seats:</strong> ${item.cap}</p>
-        <div class="occupancy">
-          <span>Occupancy:</span>
-          <div class="occ-bar"><div class="occ-fill" style="width:${100 - item.cap}%"></div></div>
-        </div>
         <p class="updated"><small>Last updated: <span class="time">${new Date().toLocaleTimeString()}</span></small></p>
         <button class="view-map" data-route="${i}">View on map</button>`;
       card.style.animationDelay = `${i * 0.1}s`;
@@ -2041,15 +2107,35 @@ document.addEventListener('DOMContentLoaded', function() {
       item.eta = Math.max(1, item.eta - 1);
       item.cap = Math.max(0, item.cap - Math.floor(Math.random() * 2));
     });
-    renderLiveShuttles(liveSearch.value);
-    document.querySelectorAll('.shuttle-card .time').forEach(el =>
-    el.textContent = new Date().toLocaleTimeString()
-  );
-  }, 10000);
+   renderLiveShuttles(liveSearch.value);
+  document.querySelectorAll('.shuttle-card').forEach((card, i) => {
+    const item = liveData[i];
+    card.querySelector('.time').textContent = new Date().toLocaleTimeString();
+    const pct = Math.round((40 - item.cap) / 40 * 100);
+    card.querySelector('.occ-fill').style.width = pct + '%';
+    const title = card.querySelector('h3');
+    const newColor = item.eta <= 5 ? '#dc3545' : item.eta <= 10 ? '#ffc107' : '#28a745';
+    title.style.color = newColor;
+    card.style.borderLeft = `4px solid ${newColor}`;
+  });
+ }, 10000);
+
+  setInterval(() => {
+  buses.forEach(bus => {
+    bus.progress = Math.min(1, bus.progress + busSpeed);
+    const lat = bus.fromCoords[0] + (bus.toCoords[0]-bus.fromCoords[0]) * bus.progress;
+    const lng = bus.fromCoords[1] + (bus.toCoords[1]-bus.fromCoords[1]) * bus.progress;
+    bus.marker.setLatLng([lat, lng]);
+
+    const remaining = Math.round((1 - bus.progress) / busSpeed / 60); 
+    bus.marker.getPopup().setContent(bus.marker.getPopup().getContent().replace(/ETA:.*min/, `ETA: ${remaining} min`));
+    
+    if (bus.progress >= 1) bus.progress = 0;
+  });
+}, 1000);
 
   renderLiveShuttles();
 
-  // --- BOOKING & LOCALSTORAGE PERSISTENCE ---
   const bookings = JSON.parse(localStorage.getItem('ksbBookings') || '[]');
   const bookingForm = document.getElementById('bookingForm');
   const confirmModal    = document.getElementById('confirmModal');
@@ -2086,7 +2172,6 @@ document.addEventListener('DOMContentLoaded', function() {
     btn.addEventListener('click', () => confirmModal.style.display = 'none');
   });
 
-  // --- RIDE HISTORY MODAL ---
   const historyModal = document.getElementById('historyModal');
   const rideList     = document.getElementById('rideList');
   const rideDetail   = document.getElementById('rideDetail');
@@ -2135,18 +2220,13 @@ document.addEventListener('DOMContentLoaded', function() {
     <i id="exportRide" class="fas fa-download export-icon" title="Download ride details"></i>
   `;
     new QRious({ element: document.getElementById('rideQr'), size: 180, value: JSON.stringify(ride) });
-    document.getElementById('exportRide').addEventListener('click', () => {
-   html2canvas(rideDetail, { backgroundColor: null }).then(canvas => {
-      canvas.toBlob(blob => {
-        const url = URL.createObjectURL(blob);
-        const a   = document.createElement('a');
-        a.href    = url;
-        a.download = `ride-${ride.id}.png`;
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-    });
-  });
+    document.getElementById('exportRide').addEventListener('click', async () => {
+       const canvas = await html2canvas(rideDetail, { scale: 2 });
+       const imgData = canvas.toDataURL('image/png');
+       const pdf = new jsPDF({ unit: 'px', format: [canvas.width, canvas.height] });
+       pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+       pdf.save(`ride-${ride.id}.pdf`);
+     });
   });
 
   document.querySelector('[data-close="historyModal"]').addEventListener('click', () => {
@@ -2177,7 +2257,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
   
-  // --- QUICK BOOK MODALS ---
   document.querySelectorAll('.card[data-page]').forEach(card => {
     const modal = document.getElementById(card.dataset.page);
     card.addEventListener('click', () => modal.style.display = 'flex');
@@ -2188,7 +2267,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // --- FAQ ACCORDION ---
   document.querySelectorAll('.accordion-header').forEach(header => {
     header.addEventListener('click', () => {
       const body = header.nextElementSibling;
@@ -2203,7 +2281,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // --- LIVE SUPPORT & CHAT WIDGET ---
   const supportChat  = document.getElementById('supportChat');
   const supportModal = document.getElementById('supportModal');
   const chatWidget   = document.getElementById('chatWidget');
@@ -2229,7 +2306,6 @@ document.addEventListener('DOMContentLoaded', function() {
     chatWidget.classList.remove('visible');
   });
 
-  // CHAT MESSAGE HANDLER
   const chatInput   = document.getElementById('chatInputField');
   const chatSendBtn = document.getElementById('chatSendBtn');
   const chatMessages= document.getElementById('chatMessages');
@@ -2256,7 +2332,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Close mobile sidebar on outside click
   document.addEventListener('click', e => {
     if (!mobileNav.contains(e.target) && !hamBtn.contains(e.target)) {
       mobileNav.style.left = '-260px';
