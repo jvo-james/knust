@@ -1819,7 +1819,7 @@ input:focus {
   <script>
   const hero = document.querySelector('.hero-section');
   const bg    = hero.querySelector('.hero-background img');
-  const buses = hero.querySelectorAll('.bus-animation');
+ const gsapBuses = hero.querySelectorAll('.bus-animation');
 
   hero.addEventListener('mousemove', e => {
     const rect = hero.getBoundingClientRect();
@@ -1896,7 +1896,7 @@ const routes = {
   'College of Science → KSB': ['College of Science','KSB']
 };
 
-const buses = [];       
+const busObjects = [];  
 const busSpeed = 0.0005; 
 
 Object.entries(routes).forEach(([routeName, [from, to]], i) => {
@@ -1916,7 +1916,7 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     ETA: <span class="eta">—</span> min
   `);
 
-  buses.push({ marker, fromCoords: start, toCoords: end, progress: 0 });
+  busObjects.push({ marker, fromCoords: start, toCoords: end, progress: 0 });
 });
 
   
@@ -2062,9 +2062,7 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
       const routeColor = ['#007bff','#28a745','#ffc107','#17a2b8','#dc3545','#6f42c1'][i % 6];
       const card = document.createElement('div');
       card.className = 'shuttle-card';
-      card.querySelector?.('h3')?.style?.setProperty('--title-color', '');
-       const routeColor = item.eta <= 5
-      ? '#dc3545'       
+           ? '#dc3545'       
       : item.eta <= 10
         ? '#ffc107'   
         : '#28a745';   
@@ -2121,7 +2119,7 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
  }, 10000);
 
   setInterval(() => {
-  buses.forEach(bus => {
+   busObjects.forEach(bus => {
     bus.progress = Math.min(1, bus.progress + busSpeed);
     const lat = bus.fromCoords[0] + (bus.toCoords[0]-bus.fromCoords[0]) * bus.progress;
     const lng = bus.fromCoords[1] + (bus.toCoords[1]-bus.fromCoords[1]) * bus.progress;
