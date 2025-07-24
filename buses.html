@@ -1458,7 +1458,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }).addTo(map);
 
   const stops = {
-   'KSB':               [6.6670, -1.5830],
+    'KSB':               [6.6670, -1.5830],
     'Medical Village':   [6.6680, -1.5800],
     'Brunei':            [6.6660, -1.5850],
     'Casely Hayeford':   [6.6720, -1.5805],
@@ -1563,12 +1563,12 @@ function renderLiveShuttles(filter = '') {
       const lat = (coordA[0] + coordB[0]) / 2;
       const lng = (coordA[1] + coordB[1]) / 2;
       const marker = L.circleMarker([lat, lng], {
-        radius: 12,
-        color: '--accent',
-        fillColor: '--accent',
-        fillOpacity: 0.7,
-        className: 'pulse-marker'
-      }).addTo(shuttleMarkers);
+       radius: 12,
+       color: getComputedStyle(document.documentElement).getPropertyValue('--accent'),
+       fillColor: getComputedStyle(document.documentElement).getPropertyValue('--accent'),
+       fillOpacity: 0.7,
+       className: 'pulse-marker'
+     }).addTo(shuttleMarkers);
       marker.bindPopup(`${item.route}<br>ETA: ${item.eta} min`);
     }
   });
@@ -1597,56 +1597,7 @@ liveSearch.addEventListener('input', () => {
     bus.classList.add('animate-bus');
   });
 
-  // --- INITIALIZE LEAFLET MAP ---
-  const map = L.map('map', { zoomControl: false }).setView([6.6667, -1.5833], 15);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
 
-  // Predefine stops with coords
-  const stops = {
-    'KSB':               [6.6670, -1.5830],
-    'Medical Village':   [6.6680, -1.5800],
-    'Brunei':            [6.6660, -1.5850],
-    'Casely Hayeford':   [6.6720, -1.5805],
-    'College of Science':[6.6650, -1.5820],
-    'Commercial Area':   [6.6675, -1.5870]
-  };
-
-  // --- LIVE SHUTTLES TABLE & SIMULATION ---
-  let liveData = [
-    { route:'KSB → Medical Village',       eta:5,  cap:30 },
-    { route:'Brunei → Commercial Area',     eta:2,  cap:25 },
-    { route:'Medical Village → Brunei',     eta:8,  cap:28 },
-    { route:'Commercial Area → KSB',        eta:12, cap:22 },
-    { route:'Casely Hayeford → Science',    eta:7,  cap:35 },
-    { route:'College of Science → KSB',     eta:4,  cap:32 },
-  ];
-  const liveBody = document.getElementById('liveTableBody');
-  function renderLiveTable() {
-    liveBody.innerHTML = '';
-    liveData.forEach(item => {
-      const tr = document.createElement('tr');
-      const status = item.eta <= 3 ? 'Arriving' : 'On Route';
-      tr.innerHTML = `
-        <td>${item.route}</td>
-        <td>${item.eta} min</td>
-        <td>${status}</td>
-        <td>${item.cap} seats</td>
-      `;
-      liveBody.appendChild(tr);
-    });
-  }
-  // Update ETAs & capacities
-  setInterval(() => {
-    liveData = liveData.map(item => ({
-      route: item.route,
-      eta:   Math.max(1, item.eta - 1),
-      cap:   Math.max(0, item.cap - Math.floor(Math.random()*3))
-    }));
-    renderLiveTable();
-  }, 10000);
-  renderLiveTable();
 
   // Markers for each stop
   Object.entries(stops).forEach(([name, coords]) => {
