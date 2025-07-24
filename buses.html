@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Vitra – Booking</title>
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+ /* ===== GLOBAL RESET & VARIABLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --primary-color: #007bff;
+  --primary-dark: #0056b3;
+  --secondary-color: #00274d;
+  --bg-light: #f5fcff;
+  --bg-white: #ffffff;
+  --text-dark: #222222;
+  --text-light: #ffffff;
+  --accent: #ff6f61;
+  --border-radius: 12px;
+  --transition: 0.3s ease;
+  --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --max-width: 1200px;
+  --gap: 20px;
+  --font-stack: 'Poppins', sans-serif;
+}
+
+/* ===== BODY & TYPOGRAPHY ===== */
+body {
+  font-family: var(--font-stack);
+  background: linear-gradient(135deg, #e9f5ff 0%, #f5fcff 100%);
+  color: var(--text-dark);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+.app-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--secondary-color);
+  color: var(--text-light);
+  z-index: 1000;
+  box-shadow: var(--shadow-light);
+}
+.header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem var(--gap);
+}
+.app-header .logo {
+  width: 50px;
+  height: 50px;
+}
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+.app-title i {
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
+.header-nav .nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.header-nav .nav-btn.active,
+.header-nav .nav-btn:hover {
+  color: var(--accent);
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+  max-width: var(--max-width);
+  margin: 2rem auto;
+  padding: 0 var(--gap);
+}
+
+/* ===== SECTION TITLES ===== */
+.section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+.section h2 i {
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
+
+/* ===== FORM GROUPS & BUTTONS ===== */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: border-color var(--transition);
+}
+.select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color var(--transition), box-shadow var(--transition);
+}
+.btn-primary i {
+  margin-right: 0.5rem;
+}
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  box-shadow: var(--shadow-hover);
+}
+
+/* ===== LIVE SHUTTLES LIST ===== */
+.live-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--gap);
+}
+.live-item {
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-light);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.live-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.live-item i {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+.live-item .route {
+  flex: 1;
+  margin: 0 1rem;
+  font-weight: 600;
+}
+.live-item .eta i {
+  margin-right: 0.25rem;
+  color: var(--accent);
+}
+
+/* ===== POPULAR ROUTES GRID ===== */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap);
+}
+.grid-cards .card {
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-light);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.grid-cards .card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+.card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+.card-body {
+  padding: 1rem;
+  text-align: center;
+}
+.card-body i {
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.card-body p {
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+/* ===== FAQ ACCORDION ===== */
+.accordion .accordion-item {
+  margin-bottom: 1rem;
+}
+.accordion-header {
+  width: 100%;
+  background: var(--bg-white);
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.accordion-header:hover {
+  background: #f0f0f0;
+}
+.accordion-header i {
+  transition: transform var(--transition);
+}
+.accordion-body {
+  display: none;
+  padding: 1rem;
+  background: var(--bg-white);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+/* ===== CONTACT & SOCIAL ===== */
+.contact-section p {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+.contact-section i {
+  margin-right: 0.5rem;
+  color: var(--primary-color);
+}
+.social-icons {
+  margin-top: 1rem;
+}
+.social-icons a {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  color: var(--secondary-color);
+  transition: color var(--transition);
+}
+.social-icons a:hover {
+  color: var(--accent);
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal {
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  max-width: 400px;
+  width: 90%;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-hover);
+  text-align: center;
+}
+.modal h3 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal h3 i {
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
+.booking-list {
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+.booking-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+.booking-list li span {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.booking-list li span i {
+  margin-right: 0.5rem;
+  color: var(--primary-color);
+}
+.cancel-booking {
+  background: none;
+  border: none;
+  color: #e63946;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.cancel-booking:hover {
+  color: #b22222;
+}
+.close-modal {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.close-modal:hover {
+  background-color: var(--primary-dark);
+}
+
+/* ===== FOOTER ===== */
+.app-footer {
+  text-align: center;
+  padding: 1.5rem var(--gap);
+  background: #f0f0f0;
+  color: #555;
+  font-size: 0.9rem;
+  margin-top: 2rem;
+}
+.app-footer i {
+  color: var(--accent);
+  margin-left: 0.5rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .header-nav {
+    margin-top: 0.5rem;
+  }
+  .form-group {
+    flex-direction: column;
+  }
+  .live-list {
+    grid-template-columns: 1fr;
+  }
+  .grid-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 1.2rem;
+  }
+  .btn-primary {
+    width: 100%;
+  }
+  .accordion-header {
+    font-size: 0.95rem;
+  }
+  .modal {
+    padding: 1rem;
+  }
+}
+
+/* —— SIGN IN OVERLAY & BLUR —— */
+.signin-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+.signin-modal {
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: var(--shadow-hover);
+  text-align: center;
+}
+.signin-modal h3 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: var(--secondary-color);
+}
+.input-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+.input-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+.input-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+}
+.btn-signin,
+.btn-forgot {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  cursor: pointer;
+  position: relative;
+  transition: background var(--transition);
+}
+.btn-signin {
+  background: var(--primary-color);
+  color: var(--text-light);
+}
+.btn-forgot {
+  background: transparent;
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+.btn-signin:hover {
+  background: var(--primary-dark);
+}
+.btn-forgot:hover {
+  color: var(--primary-dark);
+}
+/* Spinner */
+.spinner {
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top: 3px solid var(--text-light);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-left: 0.5rem;
+  animation: spin 0.8s linear infinite;
+}
+.hidden {
+  display: none;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* —— HERO —— */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem var(--gap);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-light);
+  border-radius: var(--border-radius);
+  margin: var(--gap) 0;
+}
+.hero-content {
+  max-width: 50%;
+}
+.hero-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--secondary-color);
+}
+.hero-content p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #555;
+}
+.hero-buttons button {
+  margin-right: 1rem;
+}
+.hero-image img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-hover);
+}
+
+/* —— BTN SECONDARY —— */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: var(--secondary-color);
+  border: 2px solid var(--secondary-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  transition: background var(--transition), color var(--transition);
+}
+.btn-secondary i {
+  margin-right: 0.5rem;
+}
+.btn-secondary:hover {
+  background: var(--secondary-color);
+  color: var(--text-light);
+}
+
+/* —— MODALS COMMON —— */
+.modal-overlay { backdrop-filter: blur(4px); }
+.modal { position: relative; padding-top: 2rem; }
+.close-btn {
+  position: absolute;
+  top: 0.75rem; right: 0.75rem;
+  background: none; border: none;
+  font-size: 1.2rem; cursor: pointer;
+}
+.modal-img {
+  width: 100%; margin: 1rem 0; border-radius: var(--border-radius);
+}
+.features {
+  list-style: none; text-align: left; padding-left: 0;
+}
+.features li {
+  margin-bottom: 0.5rem;
+  display: flex; align-items: center;
+}
+.features li i {
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
+
+/* —— HAMBURGER & SIDEBAR —— */
+.hamburger {
+  background: none; border: none;
+  font-size: 1.5rem; color: var(--text-light);
+  cursor: pointer; display: none;
+}
+.mobile-sidebar {
+  position: fixed; top: 0; left: -250px;
+  width: 250px; height: 100%;
+  background: var(--secondary-color);
+  padding: 2rem 1rem;
+  transition: left var(--transition);
+  z-index: 4000;
+}
+.mobile-sidebar .nav-btn {
+  width: 100%; text-align: left;
+  color: var(--text-light); margin-bottom: 1rem;
+}
+.mobile-sidebar .close-sidebar {
+  background: none; border: none;
+  color: var(--text-light); font-size: 1.2rem;
+  margin-bottom: 2rem; cursor: pointer;
+}
+.desktop-only { display: flex; }
+@media (max-width: 768px) {
+  .hero { flex-direction: column; text-align: center; }
+  .hero-content { max-width: 100%; }
+  .hamburger { display: block; }
+  .desktop-only { display: none; }
+}
+
+/* —— LIVE FILTER —— */
+.live-filter {
+  display: flex; align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+.live-filter input {
+  flex: 1; padding: 0.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid #ccc;
+}
+.pause-btn {
+  cursor: pointer;
+}
+
+</style>
+
+</head>
+<body>
+<!-- SIGN‑IN MODAL + OVERLAY -->
+<div class="signin-overlay" id="signinOverlay">
+  <div class="signin-modal">
+    <h3><i class="fas fa-user-lock"></i> Student Sign In</h3>
+    <form id="signinForm">
+      <div class="input-group">
+        <label for="studentId">Student ID</label>
+        <input
+          type="text"
+          id="studentId"
+          placeholder="8‑digit ID"
+          maxlength="8"
+          required
+        />
+      </div>
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="Letters only"
+          pattern="[A-Za-z]+"
+          required
+        />
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="At least 6 chars"
+          minlength="6"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-signin">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+        <span class="spinner hidden" id="signinSpinner"></span>
+      </button>
+      <button
+        type="button"
+        class="btn-forgot"
+        id="forgotBtn"
+      >
+        <i class="fas fa-question-circle"></i> Forgot Password
+        <span class="spinner hidden" id="forgotSpinner"></span>
+      </button>
+    </form>
+  </div>
+</div>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <img src="knust.png" alt="KNUST Logo" class="logo">
+      <h1 class="app-title"><i class="fas fa-shuttle-van"></i> KNUST Shuttle Tracker</h1>
+    <nav class="header-nav">
+  <button class="hamburger" id="hamburgerBtn">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="nav-links desktop-only">
+    <button class="nav-btn"><i class="fas fa-home"></i></button>
+    <button class="nav-btn"><i class="fas fa-route"></i></button>
+    <button class="nav-btn"><i class="fas fa-info-circle"></i></button>
+    <button class="nav-btn"><i class="fas fa-user-circle"></i></button>
+  </div>
+</nav>
+<!-- MOBILE SIDEBAR -->
+<aside class="mobile-sidebar" id="mobileSidebar">
+  <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+  <button class="nav-btn"><i class="fas fa-home"></i> Home</button>
+  <button class="nav-btn"><i class="fas fa-route"></i> Live</button>
+  <button class="nav-btn"><i class="fas fa-thumbs-up"></i> Popular</button>
+  <button class="nav-btn"><i class="fas fa-question-circle"></i> FAQ</button>
+  <button class="nav-btn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+</aside>
+
+    </div>
+  </header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <h2>Ride the KNUST Shuttle with Ease</h2>
+    <p>Real‑time tracking, simple booking, and campus navigation—all in one place.</p>
+    <div class="hero-buttons">
+      <button class="btn-primary" onclick="scrollToSection('home')">
+        <i class="fas fa-map-signs"></i> Book Now
+      </button>
+      <button class="btn-secondary" onclick="scrollToSection('live')">
+        <i class="fas fa-bus-alt"></i> Live Shuttles
+      </button>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="shuttle.jpeg" alt="Campus Shuttle">
+  </div>
+</section>
+
+  <main class="container">
+
+    <!-- SHUTTLE BOOKING FORM -->
+    <section class="section booking-section">
+      <h2><i class="fas fa-map-signs"></i> Book Your Shuttle</h2>
+      <div class="form-group">
+        <label for="pickup"><i class="fas fa-location-arrow"></i> Pick-Up</label>
+        <select id="pickup" class="select">
+          <option value="">Select pick-up</option>
+          <option value="KSB"><i class="fas fa-university"></i> KSB</option>
+          <option value="Medical Village"><i class="fas fa-hospital"></i> Medical Village</option>
+          <option value="Brunei"><i class="fas fa-tree"></i> Brunei</option>
+          <option value="Commercial Area"><i class="fas fa-shopping-bag"></i> Commercial Area</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="destination"><i class="fas fa-flag-checkered"></i> Destination</label>
+        <select id="destination" class="select">
+          <option value="">Select destination</option>
+          <option value="KSB"><i class="fas fa-university"></i> KSB</option>
+          <option value="Medical Village"><i class="fas fa-hospital"></i> Medical Village</option>
+          <option value="Brunei"><i class="fas fa-tree"></i> Brunei</option>
+          <option value="Commercial Area"><i class="fas fa-shopping-bag"></i> Commercial Area</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="time"><i class="fas fa-clock"></i> Time Slot</label>
+        <select id="time" class="select">
+          <option value="">Select time</option>
+          <option>6:00 AM - 7:00 AM</option>
+          <option>7:00 AM - 8:00 AM</option>
+          <option>8:00 AM - 9:00 AM</option>
+          <option>9:00 AM - 10:00 AM</option>
+          <option>10:00 AM - 11:00 AM</option>
+          <option>12:00 PM - 1:00 PM</option>
+          <option>1:00 PM - 2:00 PM</option>
+          <option>3:00 PM - 4:00 PM</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="bookShuttle()">
+        <i class="fas fa-paper-plane"></i> Book Shuttle
+      </button>
+    </section>
+
+<!-- BOOKING CONFIRMATION -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal confirm-modal">
+    <button class="close-btn" onclick="closeModal('confirmModal')">
+      <i class="fas fa-times"></i>
+    </button>
+    <h3><i class="fas fa-check-circle"></i> Booking Confirmed!</h3>
+    <p>Your shuttle from <strong id="confPickup"></strong> to
+      <strong id="confDestination"></strong> at <strong id="confTime"></strong>
+      has been reserved.</p>
+    <img src="https://i.imgur.com/Tu7XQ8K.png" alt="Shuttle" class="modal-img"/>
+    <button class="btn-primary" onclick="closeModal('confirmModal')">
+      <i class="fas fa-thumbs-up"></i> Great!
+    </button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="ksbModal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal('ksbModal')"><i class="fas fa-times"></i></button>
+    <h3><i class="fas fa-university"></i> KNUST School of Business</h3>
+    <img src="ksb.webp" class="modal-img" alt="KSB Building"/>
+    <p>
+      The KSB is the flagship business school on campus, offering undergraduate and 
+      postgraduate programs in Management, Finance, and Marketing. Located at
+      the heart of KNUST’s South Campus.
+    </p>
+    <ul class="features">
+      <li><i class="fas fa-graduation-cap"></i> Accredited AACSB–level curriculum</li>
+      <li><i class="fas fa-book"></i> Modern library & collaboration spaces</li>
+      <li><i class="fas fa-coffee"></i> Café & student lounges</li>
+    </ul>
+  </div>
+</div>
+
+<!-- MEDICAL VILLAGE INFO -->
+<div class="modal-overlay" id="medicalModal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal('medicalModal')"><i class="fas fa-times"></i></button>
+    <h3><i class="fas fa-hospital"></i> Medical Village</h3>
+    <img src="medical.jpg" class="modal-img" alt="Medical Village"/>
+    <p>
+      Home to the University Hospital and allied health centers. The Medical Village
+      provides multi‑specialty care and clinical training facilities.
+    </p>
+    <ul class="features">
+      <li><i class="fas fa-user-md"></i> 500+ bed capacity</li>
+      <li><i class="fas fa-flask"></i> Teaching laboratories & research wing</li>
+      <li><i class="fas fa-ambulance"></i> 24/7 emergency services</li>
+    </ul>
+  </div>
+</div>
+
+<!-- BRUNEI INFO -->
+<div class="modal-overlay" id="bruneiModal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal('bruneiModal')"><i class="fas fa-times"></i></button>
+    <h3><i class="fas fa-tree"></i> Brunei</h3>
+    <img src="brunei.jpeg" class="modal-img" alt="Brunei Campus"/>
+    <p>
+      Brunei is the lush, green zone on campus known for its woodlands and
+      quiet study spots. Perfect for evening strolls and outdoor lectures.
+    </p>
+    <ul class="features">
+      <li><i class="fas fa-leaf"></i> Nature trails & picnic areas</li>
+      <li><i class="fas fa-wifi"></i> Outdoor Wi‑Fi hotspots</li>
+      <li><i class="fas fa-chalkboard-teacher"></i> Open‑air classrooms</li>
+    </ul>
+  </div>
+</div>
+
+<!-- COMMERCIAL AREA INFO -->
+<div class="modal-overlay" id="commerceModal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal('commerceModal')"><i class="fas fa-times"></i></button>
+    <h3><i class="fas fa-shopping-bag"></i> Commercial Area</h3>
+    <img src="commercial.jpg" class="modal-img" alt="Commercial Area"/>
+    <p>
+      The bustling marketplace with shops, eateries, and banks. A favorite
+      spot for lunch breaks and weekend hangouts.
+    </p>
+    <ul class="features">
+      <li><i class="fas fa-utensils"></i> 20+ restaurants & cafes</li>
+      <li><i class="fas fa-store"></i> Retail outlets & convenience stores</li>
+      <li><i class="fas fa-bank"></i> ATMs & banking services</li>
+    </ul>
+  </div>
+</div>
+
+    <!-- LIVE SHUTTLES -->
+    <section class="section live-section">
+      <h2><i class="fas fa-bus-alt"></i> Live Shuttles</h2>
+<div class="live-filter">
+  <input type="text" id="routeFilter" placeholder="Search route…" onkeyup="filterLive()" />
+  <button onclick="pauseLive()" id="pauseBtn"><i class="fas fa-pause"></i> Pause</button>
+</div>
+
+      <ul class="live-list">
+        <li class="live-item">
+          <i class="fas fa-bus"></i>
+          <span class="route">KSB → Medical Village</span>
+          <span class="eta"><i class="fas fa-hourglass-half"></i> 5 min</span>
+        </li>
+        <li class="live-item">
+          <i class="fas fa-bus"></i>
+          <span class="route">Brunei → Commercial Area</span>
+          <span class="eta"><i class="fas fa-hourglass-half"></i> 2 min</span>
+        </li>
+        <li class="live-item">
+          <i class="fas fa-bus"></i>
+          <span class="route">Medical Village → Brunei</span>
+          <span class="eta"><i class="fas fa-hourglass-half"></i> 8 min</span>
+        </li>
+        <li class="live-item">
+          <i class="fas fa-bus"></i>
+          <span class="route">Commercial Area → KSB</span>
+          <span class="eta"><i class="fas fa-hourglass-half"></i> 12 min</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- POPULAR ROUTES -->
+    <section class="section popular-section">
+      <h2><i class="fas fa-thumbs-up"></i> Popular Routes</h2>
+      <div class="grid-cards">
+        <div class="card">
+          <img src="ksb.webp" alt="KSB">
+          <div class="card-body">
+            <i class="fas fa-university"></i>
+            <p>KSB</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="medical.jpg" alt="Medical Village">
+          <div class="card-body">
+            <i class="fas fa-hospital"></i>
+            <p>Medical Village</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="brunei.jpeg" alt="Brunei">
+          <div class="card-body">
+            <i class="fas fa-tree"></i>
+            <p>Brunei</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="commercial.jpg" alt="Commercial Area">
+          <div class="card-body">
+            <i class="fas fa-shopping-bag"></i>
+            <p>Commercial Area</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ ACCORDION -->
+    <section class="section faq-section">
+      <h2><i class="fas fa-question-circle"></i> FAQs</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <i class="fas fa-chevron-down"></i> How do I cancel my booking?
+          </button>
+          <div class="accordion-body">
+            Just click the <i class="fas fa-trash-alt"></i> icon next to your booking in “My Bookings.”
+          </div>
+        </div>
+<div class="accordion-item">
+  <button class="accordion-header">
+    <i class="fas fa-chevron-down"></i> Can I reserve a shuttle for someone else?
+  </button>
+  <div class="accordion-body">
+    Yes—you can enter a different student ID when booking. They will receive an
+    email confirmation with their details.
+  </div>
+</div>
+<div class="accordion-item">
+  <button class="accordion-header">
+    <i class="fas fa-chevron-down"></i> Do shuttles run on weekends?
+  </button>
+  <div class="accordion-body">
+    On Saturdays, service runs from 7 AM to 2 PM. No service on Sundays.
+  </div>
+</div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <i class="fas fa-chevron-down"></i> Are there night shuttles?
+          </button>
+          <div class="accordion-body">
+            Yes! Night slots from <strong>8:00 PM</strong> to <strong>11:00 PM</strong> are available under “Late Rides.”
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT & SOCIAL -->
+    <section class="section contact-section">
+      <h2><i class="fas fa-envelope"></i> Contact & Support</h2>
+      <p><i class="fas fa-phone-alt"></i> +233 24 123 4567</p>
+      <p><i class="fas fa-envelope-open-text"></i> support@knust-shuttle.app</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-square"></i></a>
+        <a href="#"><i class="fab fa-twitter-square"></i></a>
+        <a href="#"><i class="fab fa-instagram-square"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <p>&copy; 2025 KNUST Shuttle Tracker — Built by a KNUST Student <i class="fas fa-heart"></i></p>
+  </footer>
+<script>
+// —— SIGN‑IN FLOW ——
+
+// On page load: check if already signed in
+document.addEventListener('DOMContentLoaded', () => {
+  const signedIn = localStorage.getItem('signedIn');
+  if (signedIn === 'true') {
+    hideSignInModal();
+  } else {
+    showSignInModal();
+  }
+});
+
+// Show/hide helpers
+function showSignInModal() {
+  document.getElementById('signinOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function hideSignInModal() {
+  document.getElementById('signinOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Form & buttons
+const signinForm = document.getElementById('signinForm');
+const forgotBtn   = document.getElementById('forgotBtn');
+const spinnerSign = document.getElementById('signinSpinner');
+const spinnerFog  = document.getElementById('forgotSpinner');
+
+// Validate & “sign in”
+signinForm.addEventListener('submit', e => {
+  e.preventDefault();
+  spinnerSign.classList.remove('hidden');
+  setTimeout(() => {
+    spinnerSign.classList.add('hidden');
+    // All HTML5 validations passed? then “sign in”
+    localStorage.setItem('signedIn', 'true');
+    hideSignInModal();
+  }, 1500);
+});
+
+// Forgot password “flow”
+forgotBtn.addEventListener('click', () => {
+  spinnerFog.classList.remove('hidden');
+  setTimeout(() => {
+    spinnerFog.classList.add('hidden');
+    alert('Password reset link sent to your student email.');
+  }, 1500);
+});
+
+// Sign‑out button (inject into your header nav or wherever)
+const signOutBtn = document.createElement('button');
+signOutBtn.className = 'nav-btn';
+signOutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+signOutBtn.title = 'Sign Out';
+signOutBtn.addEventListener('click', () => {
+  localStorage.removeItem('signedIn');
+  showSignInModal();
+});
+document.querySelector('.header-nav').appendChild(signOutBtn);
+</script>
+ 
+<script>
+  // ====== SECTION REFERENCES ======
+  const sections = {
+    home: document.querySelector('.booking-section'),
+    live: document.querySelector('.live-section'),
+    popular: document.querySelector('.popular-section'),
+    faq: document.querySelector('.faq-section'),
+    contact: document.querySelector('.contact-section'),
+  };
+
+  // ====== NAV BUTTONS HANDLING ======
+  document.querySelectorAll('.header-nav .nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Remove “active” state
+      document.querySelectorAll('.header-nav .nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Determine target section by icon class
+      if (btn.querySelector('.fa-home')) scrollToSection('home');
+      if (btn.querySelector('.fa-route')) scrollToSection('live');
+      if (btn.querySelector('.fa-info-circle')) scrollToSection('faq');
+      if (btn.querySelector('.fa-user-circle')) openBookingsModal();
+    });
+  });
+
+  function scrollToSection(name) {
+    sections[name].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ====== BOOKING STORAGE & MODAL ======
+  let bookings = [];
+
+  function bookShuttle() {
+    const p = document.getElementById('pickup').value;
+    const d = document.getElementById('destination').value;
+    const t = document.getElementById('time').value;
+    if (!p || !d || !t) return alert('Please fill all fields.');
+    if (p === d) return alert('Pickup and destination cannot be the same.');
+
+    const id = Date.now();
+    bookings.push({ id, pickup: p, destination: d, time: t });
+    alert(`Shuttle booked: ${p} → ${d} at ${t}`);
+
+    // Clear fields
+    document.getElementById('pickup').value = '';
+    document.getElementById('destination').value = '';
+    document.getElementById('time').value = '';
+  }
+
+  // Create Bookings Modal container
+  const modalHTML = `
+    <div class="modal-overlay" id="bookings-modal">
+      <div class="modal">
+        <h3><i class="fas fa-user-circle"></i> My Bookings</h3>
+        <ul class="booking-list"></ul>
+        <button class="close-modal"><i class="fas fa-times"></i> Close</button>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  const modalOverlay = document.getElementById('bookings-modal');
+  const bookingList = modalOverlay.querySelector('.booking-list');
+  modalOverlay.querySelector('.close-modal').addEventListener('click', () => {
+    modalOverlay.style.display = 'none';
+  });
+
+  function openBookingsModal() {
+    renderBookings();
+    modalOverlay.style.display = 'flex';
+  }
+
+  function renderBookings() {
+    bookingList.innerHTML = '';
+    if (!bookings.length) {
+      bookingList.innerHTML = '<li>No bookings yet.</li>';
+      return;
+    }
+    bookings.forEach(b => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span><i class="fas fa-map-marker-alt"></i> ${b.pickup} → ${b.destination}</span>
+        <span><i class="fas fa-clock"></i> ${b.time}</span>
+        <button class="cancel-booking" data-id="${b.id}">
+          <i class="fas fa-trash-alt"></i>
+        </button>`;
+      bookingList.appendChild(li);
+    });
+    document.querySelectorAll('.cancel-booking').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = Number(btn.dataset.id);
+        bookings = bookings.filter(x => x.id !== id);
+        renderBookings();
+      });
+    });
+  }
+
+  // ====== ACCORDION FAQ ======
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const body = header.nextElementSibling;
+      body.style.display = (body.style.display === 'block') ? 'none' : 'block';
+      const icon = header.querySelector('.fas.fa-chevron-down');
+      icon.classList.toggle('fa-rotate-180');
+    });
+  });
+
+  // ====== LIVE SHUTTLES SIMULATION ======
+  let liveData = [
+    { route: 'KSB → Medical Village', eta: 5 },
+    { route: 'Brunei → Commercial Area', eta: 2 },
+    { route: 'Medical Village → Brunei', eta: 8 },
+    { route: 'Commercial Area → KSB', eta: 12 },
+  ];
+
+  function renderLiveList() {
+    const list = document.querySelector('.live-list');
+    list.innerHTML = '';
+    liveData.forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'live-item';
+      li.innerHTML = `
+        <i class="fas fa-bus"></i>
+        <span class="route">${item.route}</span>
+        <span class="eta"><i class="fas fa-hourglass-half"></i> ${item.eta} min</span>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  // Every 10 seconds, decrement ETA & randomize new ones
+  setInterval(() => {
+    liveData = liveData.map(item => {
+      let newEta = item.eta - 1;
+      if (newEta <= 0) {
+        newEta = Math.floor(Math.random() * 10) + 1;
+      }
+      return { ...item, eta: newEta };
+    });
+    renderLiveList();
+  }, 10000);
+
+  // ====== POPULAR ROUTE CARD CLICKS ======
+  document.querySelectorAll('.popular-section .card').forEach(card => {
+    card.addEventListener('click', () => {
+      const loc = card.querySelector('p').innerText;
+      document.getElementById('pickup').value = loc;
+      scrollToSection('home');
+      // Focus destination next
+      document.getElementById('destination').focus();
+    });
+  });
+
+// — Live filter by route text
+function filterLive() {
+  const q = document.getElementById('routeFilter').value.toLowerCase();
+  document.querySelectorAll('.live-item').forEach(li => {
+    const text = li.querySelector('.route').innerText.toLowerCase();
+    li.style.display = text.includes(q) ? '' : 'none';
+  });
+}
+
+// — Pause/resume live updates
+let liveInterval = null;
+function startLive() {
+  liveInterval = setInterval(updateLive, 10000);
+}
+function pauseLive() {
+  if (liveInterval) {
+    clearInterval(liveInterval);
+    liveInterval = null;
+    document.getElementById('pauseBtn').innerHTML = '<i class="fas fa-play"></i> Resume';
+  } else {
+    startLive();
+    document.getElementById('pauseBtn').innerHTML = '<i class="fas fa-pause"></i> Pause';
+  }
+}
+function updateLive() {
+  liveData = liveData.map(item => {
+    let newEta = item.eta - 1;
+    if (newEta <= 0) newEta = Math.floor(Math.random()*10)+1;
+    return { ...item, eta: newEta };
+  });
+  renderLiveList();
+}
+
+// Kick off
+document.addEventListener('DOMContentLoaded', () => {
+  renderLiveList();
+  startLive();
+});
+
+  // ====== SMOOTH SCROLL FOR INTERNAL LINKS ======
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(anchor.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+
+// Hamburger toggle
+const hamBtn = document.getElementById('hamburgerBtn'),
+      mobileNav = document.getElementById('mobileSidebar'),
+      closeNav = document.getElementById('closeSidebar');
+hamBtn.addEventListener('click', () => {
+  mobileNav.style.left = '0';
+});
+closeNav.addEventListener('click', () => {
+  mobileNav.style.left = '-250px';
+});
+
+// Booking → confirmation
+const origBook = bookShuttle;
+bookShuttle = () => {
+  const p = pickup.value, d = destination.value, t = time.value;
+  if (!p||!d||!t|| p===d) return origBook();
+  document.getElementById('confPickup').innerText = p;
+  document.getElementById('confDestination').innerText = d;
+  document.getElementById('confTime').innerText = t;
+  openModal('confirmModal');
+};
+
+// Popular cards → modals
+document.querySelectorAll('.popular-section .card').forEach(card => {
+  card.addEventListener('click', () => {
+    const loc = card.querySelector('p').innerText;
+    if (loc==='KSB') openModal('ksbModal');
+    if (loc==='Medical Village') openModal('medicalModal');
+    if (loc==='Brunei') openModal('bruneiModal');
+    if (loc==='Commercial Area') openModal('commerceModal');
+  });
+});
+
+// Generic open/close modal
+function openModal(id) {
+  document.getElementById(id).style.display = 'flex';
+}
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+  // ====== INITIAL RENDER ======
+  document.addEventListener('DOMContentLoaded', () => {
+    renderLiveList();
+    // Hide modal initially
+    modalOverlay.style.display = 'none';
+  });
+</script>
+</body>
+</html>
