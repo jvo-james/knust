@@ -1583,21 +1583,7 @@ input:focus {
   margin: 0.5rem 0;
 }
 
-    @media (min-width: 769px) {
-  .header-nav .nav-btn:not(#ridesBtnHeader):not(#openTracker) {
-    width: 2.5rem;         
-    padding: 0.5rem;      
-    overflow: hidden;      
-    position: relative;
-  }
-  .header-nav .nav-btn:not(#ridesBtnHeader):not(#openTracker) i {
-    margin: 0 auto;      
-    display: block;
-  }
-  .header-nav .nav-btn:not(#ridesBtnHeader):not(#openTracker)::after {
-    content: '';        
-  }
-}
+
 #signOutMobile,
 #signOutFooter {
   display: inline-flex;
@@ -1655,10 +1641,10 @@ input:focus {
       <h1 class="app-title"> KNUST Shuttle Tracker</h1>
       <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
       <nav class="header-nav desktop-only">
-        <button class="nav-btn active" data-target="hero"><i class="fas fa-home"></i> Home</button>
-        <button class="nav-btn" data-target="live-shuttles"><i class="fas fa-route"></i> Live Shuttles</button>
-        <button class="nav-btn" data-target="book-ride"><i class="fas fa-paper-plane"></i> Book Ride</button>
-        <button class="nav-btn" data-target="quick-book"><i class="fas fa-thumbs-up"></i> Quick Book</button>
+        <button class="nav-btn active" data-target="hero"><i class="fas fa-home"></i> </button>
+        <button class="nav-btn" data-target="live-shuttles"><i class="fas fa-route"></i> </button>
+        <button class="nav-btn" data-target="book-ride"><i class="fas fa-paper-plane"></i> </button>
+        <button class="nav-btn" data-target="quick-book"><i class="fas fa-thumbs-up"></i> </button>
         <button class="nav-btn" id="ridesBtnHeader"><i class="fas fa-history"></i> My Rides</button>
       </nav>
     </div>
@@ -2103,18 +2089,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const stops = {
     'Kumasi School of Business (KSB)':    [6.672800, -1.580500],
     'Medical Village':               [6.667800, -1.583200],
-    'Brunei Roundabout':                  [6.667900, -1.578000],
+    'Brunei':                  [6.667900, -1.578000],
     'Casely Hayford Building':            [6.670800, -1.579400],
-    'College of Science Entrance':        [6.669200, -1.579000],
+    'College of Science':        [6.669200, -1.579000],
     'Commercial Area':     [6.665500, -1.590000]
   };
+
+  const boundsCoords = Object.values(stops);
+  const lats = boundsCoords.map(c=>c[0]), lngs = boundsCoords.map(c=>c[1]);
+  const southWest = [ Math.min(...lats), Math.min(...lngs) ];
+  const northEast = [ Math.max(...lats), Math.max(...lngs) ];
+  const campusBounds = [ southWest, northEast ];
+  
 const routes = {
-  'KSB → Medical Village':   ['KSB','Medical Village'],
+  'Kumasi School of Business (KSB) → Medical Village':   ['KSB','Medical Village'],
   'Medical Village → Brunei': ['Medical Village','Brunei'],
   'Brunei → Commercial Area': ['Brunei','Commercial Area'],
-  'Commercial Area → KSB':    ['Commercial Area','KSB'],
+  'Commercial Area → Kumasi School of Business (KSB)':    ['Commercial Area','KSB'],
   'Casely Hayeford → College of Science': ['Casely Hayeford','College of Science'],
-  'College of Science → KSB': ['College of Science','KSB']
+  'College of Science → Kumasi School of Business (KSB)': ['College of Science','KSB']
 };
 
 const busObjects = [];  
@@ -2143,7 +2136,7 @@ const busSpeed = 0.0005;
         const perm = await Notification.requestPermission();
         if (perm === 'granted') {
           notifyEnabled = true;
-          notifyToggle.textContent = 'Disable ETA Alerts';t
+          notifyToggle.textContent = 'Disable ETA Alerts';
            refreshTracker();
         }
       } else {
@@ -2156,11 +2149,8 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
   const start = stops[from];
   const end   = stops[to];
   const marker = L.marker(start, {
-    icon: L.divIcon({ 
-      className: 'bus-icon', 
-      html: `<i class="fas fa-shuttle-van"></i>`,
-      iconSize: [24,24]
-    })
+    icon: L.divIcon({ className:'bus-icon', html:`<i class="fas fa-shuttle-van"></i>` }),
+    routeName: routeName    
   }).addTo(map);
 
   marker.bindPopup(`
