@@ -1833,7 +1833,7 @@ input:focus {
       ease: 'power3.out'
     });
 
-    buses.forEach((bus, i) => {
+    gsapBuses.forEach((bus, i) => {
       gsap.to(bus, {
         x: xPct * (20 + i * 10),
         y: yPct * (10 + i * 5),
@@ -2061,11 +2061,7 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
       const busId = 'Bus-' + (i + 101);
       const routeColor = ['#007bff','#28a745','#ffc107','#17a2b8','#dc3545','#6f42c1'][i % 6];
       const card = document.createElement('div');
-      card.className = 'shuttle-card';
-           ? '#dc3545'       
-      : item.eta <= 10
-        ? '#ffc107'   
-        : '#28a745';   
+      card.className = 'shuttle-card'; 
       card.style.borderLeft = `4px solid ${routeColor}`;
       card.innerHTML = `
          <h3 style="color:${routeColor}">${item.route}</h3>
