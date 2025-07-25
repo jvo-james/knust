@@ -2087,12 +2087,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // (pulled from campus GIS data)
   const stops = {
-    'Kumasi School of Business (KSB)':    [6.672800, -1.580500],
-    'Medical Village':               [6.667800, -1.583200],
-    'Brunei':                  [6.667900, -1.578000],
-    'Casely Hayford Building':            [6.670800, -1.579400],
-    'College of Science':        [6.669200, -1.579000],
-    'Commercial Area':     [6.665500, -1.590000]
+    KSB:                  [6.672800, -1.580500],
+    'Medical Village':    [6.667800, -1.583200],
+    Brunei:               [6.667900, -1.578000],
+    'Casely Hayeford':    [6.670800, -1.579400],
+    'College of Science': [6.669200, -1.579000],
+    'Commercial Area':    [6.665500, -1.590000]
   };
 
   const boundsCoords = Object.values(stops);
@@ -2102,13 +2102,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const campusBounds = [ southWest, northEast ];
   
 const routes = {
-  'Kumasi School of Business (KSB) → Medical Village':   ['KSB','Medical Village'],
-  'Medical Village → Brunei': ['Medical Village','Brunei'],
-  'Brunei → Commercial Area': ['Brunei','Commercial Area'],
-  'Commercial Area → Kumasi School of Business (KSB)':    ['Commercial Area','KSB'],
+  'KSB → Medical Village':         ['KSB','Medical Village'],
+  'Medical Village → Brunei':      ['Medical Village','Brunei'],
+  'Brunei → Commercial Area':      ['Brunei','Commercial Area'],
+  'Commercial Area → KSB':         ['Commercial Area','KSB'],
   'Casely Hayeford → College of Science': ['Casely Hayeford','College of Science'],
-  'College of Science → Kumasi School of Business (KSB)': ['College of Science','KSB']
+  'College of Science → KSB':      ['College of Science','KSB']
 };
+
 
 const busObjects = [];  
 const busSpeed = 0.0005; 
