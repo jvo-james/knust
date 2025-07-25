@@ -1448,8 +1448,8 @@ input:focus {
 }
 
 .bus-tracker {
-  position: fixed; top: 80px; right: 0;
-  width: 300px; max-height: calc(100vh-100px);
+  position: fixed; top: 80px; right: 0; bottom: 0;
+  width: 300px; max-height: calc(100vh - 80px);
   background: var(--white); box-shadow: var(--shadow-dark);
   border-radius: var(--radius) 0 0 var(--radius);
   overflow-y: auto; transition: transform .3s;  z-index: 2500;   
@@ -1562,6 +1562,60 @@ input:focus {
   background: #e65550;
   transform: translateY(-2px);
 }
+    .eta-note {
+  font-size: 0.9rem;
+  color: var(--muted-text);
+  margin: 0.25rem 0 1rem;
+  text-align: center;
+    }
+    .ride-detail-modal {
+  max-width: 360px;
+  width: 90%;
+  padding: 1.5rem;
+  text-align: left;
+}
+.ride-detail-modal h3 {
+  margin-bottom: 1rem;
+  color: var(--secondary);
+  font-family: var(--font-alt);
+}
+#rideDetailContent p {
+  margin: 0.5rem 0;
+}
+
+    @media (min-width: 769px) {
+  .header-nav .nav-btn:not(#ridesBtnHeader):not(#openTracker) {
+    width: 2.5rem;         
+    padding: 0.5rem;      
+    overflow: hidden;      
+    position: relative;
+  }
+  .header-nav .nav-btn:not(#ridesBtnHeader):not(#openTracker) i {
+    margin: 0 auto;      
+    display: block;
+  }
+  .header-nav .nav-btn:not(#ridesBtnHeader):not(#openTracker)::after {
+    content: '';        
+  }
+}
+#signOutMobile,
+#signOutFooter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition);
+}
+#signOutMobile:hover,
+#signOutFooter:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--accent);
+}
+
   </style>
 </head>
 <body>
@@ -1645,7 +1699,7 @@ input:focus {
 
     <section id="live-shuttles" class="section live-section">
   <h2><i class="fas fa-route"></i> Live Shuttle Map & Status</h2>
-
+ <p class="eta-note"><em>ETA means Estimated Time of Arrival</em></p>
   <div class="live-search">
    <input
     type="text"
@@ -1781,7 +1835,16 @@ input:focus {
   </div>
 </div>
 
-
+<div class="modal-overlay" id="rideDetailModal">
+  <div class="modal ride-detail-modal">
+    <button class="close-btn" data-close="rideDetailModal">
+      <i class="fas fa-times"></i>
+    </button>
+    <h3><i class="fas fa-info-circle"></i> Ride Details</h3>
+    <div id="rideDetailContent"></div>
+  </div>
+</div>
+  
   <div class="modal-overlay" id="ksbQuickModal">
     <div class="modal quick-modal">
       <button class="close-btn" data-close="ksbQuickModal"><i class="fas fa-times"></i></button>
@@ -1944,6 +2007,9 @@ input:focus {
 
   <footer class="app-footer">
     <p>&copy; 2025 KNUST Shuttle Tracker — Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
+  <button id="signOutFooter" class="btn-secondary" style="margin-top:1rem;">
+    <i class="fas fa-sign-out-alt"></i> Sign Out
+  </button>
   </footer>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -2033,15 +2099,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   setTimeout(() => map.invalidateSize(), 200);
 
+// (pulled from campus GIS data)
   const stops = {
-    'KSB':               [6.6670, -1.5830],
-    'Medical Village':   [6.6680, -1.5800],
-    'Brunei':            [6.6660, -1.5850],
-    'Casely Hayeford':   [6.6720, -1.5805],
-    'College of Science':[6.6650, -1.5820],
-    'Commercial Area':   [6.6675, -1.5870]
+    'Kumasi School of Business (KSB)':    [6.672800, -1.580500],
+    'Medical Village':               [6.667800, -1.583200],
+    'Brunei Roundabout':                  [6.667900, -1.578000],
+    'Casely Hayford Building':            [6.670800, -1.579400],
+    'College of Science Entrance':        [6.669200, -1.579000],
+    'Commercial Area':     [6.665500, -1.590000]
   };
-
 const routes = {
   'KSB → Medical Village':   ['KSB','Medical Village'],
   'Medical Village → Brunei': ['Medical Village','Brunei'],
@@ -2064,10 +2130,7 @@ const busSpeed = 0.0005;
     openTracker.onclick = () => tracker.classList.remove('hidden');
     closeTracker.onclick = () => tracker.classList.add('hidden');
 
-   document.getElementById('ridesBtnLive').addEventListener('click', () => openTracker.click());
-   document.getElementById('ridesBtnHeader').addEventListener('click', () => openTracker.click());
-   document.getElementById('ridesBtnMobile').addEventListener('click', () => openTracker.click());
-
+  
   const mobileOpen = document.createElement('button');
   mobileOpen.id = 'openTrackerMobile';
   mobileOpen.className = 'nav-btn';
@@ -2080,7 +2143,8 @@ const busSpeed = 0.0005;
         const perm = await Notification.requestPermission();
         if (perm === 'granted') {
           notifyEnabled = true;
-          notifyToggle.textContent = 'Disable ETA Alerts';
+          notifyToggle.textContent = 'Disable ETA Alerts';t
+           refreshTracker();
         }
       } else {
         notifyEnabled = false;
@@ -2105,14 +2169,27 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     ETA: <span class="eta">—</span> min
   `);
 
-  busObjects.push({ marker, fromCoords: start, toCoords: end, progress: 0 });
+ busObjects.push({
+    marker,
+    from: L.latLng(start),
+    to:   L.latLng(end),
+    progress: Math.random()*0.7, 
+    speed: 0.0008 + Math.random()*0.0004
+  });
 });
 
   
-  Object.entries(stops).forEach(([name, coords]) => {
-    L.marker(coords).addTo(map).bindPopup(name);
-  });
+   Object.entries(stops).forEach(([name, coords]) => {
+     L.marker(coords)
+       .addTo(map)
+       .bindPopup(`<strong>${name}</strong>`)
+      .openPopup();
+   });
 
+  L.rectangle(campusBounds, {
+    color: '#006233', weight: 2, fillOpacity: 0.05
+  }).addTo(map);
+  
    map.on('click', e => {
     let minDist = Infinity, nearest = null;
     Object.entries(stops).forEach(([name, coords]) => {
@@ -2177,12 +2254,15 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
       if (btn.dataset.target === 'live-shuttles') refreshMap();
     });
   });
-document.querySelectorAll('[data-scroll]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      scrollToSection(btn.dataset.scroll);
-    });
-  });
+ document.body.addEventListener('click', e => {
+   const btn = e.target.closest('[data-scroll]');
+   if (!btn) return;
+   e.preventDefault();
+   const dest = btn.dataset.scroll;
+   const overlay = btn.closest('.modal-overlay');
+   if (overlay) overlay.style.display = 'none';
+   scrollToSection(dest);
+ });
 
   document.querySelectorAll('.quick-modal .btn-primary[data-scroll]').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -2324,20 +2404,24 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
      refreshTracker();
  }, 10000);
 
-  setInterval(() => {
-   busObjects.forEach(bus => {
-    bus.progress = Math.min(1, bus.progress + busSpeed);
-    const lat = bus.fromCoords[0] + (bus.toCoords[0]-bus.fromCoords[0]) * bus.progress;
-    const lng = bus.fromCoords[1] + (bus.toCoords[1]-bus.fromCoords[1]) * bus.progress;
-    bus.marker.setLatLng([lat, lng]);
+   setInterval(() => {
+     busObjects.forEach(bus => {
+       bus.progress = (bus.progress + bus.speed) % 1;
+      const lat = bus.from.lat + (bus.to.lat - bus.from.lat) * bus.progress;
+      const lng = bus.from.lng + (bus.to.lng - bus.from.lng) * bus.progress;
+      bus.marker.setLatLng([lat, lng]);
+      const remaining = Math.ceil((1 - bus.progress) * 15);
+      bus.marker.getPopup().setContent(`
+        <strong>${bus.marker.options.routeName}</strong><br/>
+        ETA: ${remaining} min
+      `);
+     });
+   }, 1000);
 
-    const remaining = Math.round((1 - bus.progress) / busSpeed / 60); 
-    bus.marker.getPopup().setContent(bus.marker.getPopup().getContent().replace(/ETA:.*min/, `ETA: ${remaining} min`));
-    
-    if (bus.progress >= 1) bus.progress = 0;
-  });
-}, 1000);
-
+   map.zoomControl.setPosition('bottomright');
+   document.querySelector('.leaflet-control-attribution').style.fontSize = '0.7rem';
+   document.querySelector('.leaflet-control-attribution').style.opacity  = '0.5';
+  
   renderLiveShuttles();
 
   const bookings = JSON.parse(localStorage.getItem('ksbBookings') || '[]');
@@ -2413,35 +2497,31 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
   });
 
   rideList.addEventListener('click', e => {
-    if (e.target.tagName !== 'LI') return;
-    rideList.querySelectorAll('li').forEach(li => li.classList.remove('active'));
-    e.target.classList.add('active');
-    const ride = bookings.find(b => b.id == e.target.dataset.id);
-   rideDetail.innerHTML = `
-   <h4>Ride Details</h4>
-    <p><strong>From:</strong> ${ride.p}</p>
-    <p><strong>To:</strong> ${ride.d}</p>
-    <p><strong>Date:</strong> ${ride.dt}</p>
-    <p><strong>Time:</strong> ${ride.ts}</p>
-    <canvas id="rideQr"></canvas>
-    <i id="exportRide" class="fas fa-download export-icon" title="Download ride details"></i>
-  `;
-    new QRious({ element: document.getElementById('rideQr'), size: 180, value: JSON.stringify(ride) });
-    document.getElementById('exportRide').addEventListener('click', async () => {
-      const exportBtn = document.getElementById('exportRide');
-      exportBtn.style.display = 'none';
-      const canvas = await html2canvas(rideDetail, { scale: 3, backgroundColor: '#ffffff' });
-      exportBtn.style.display = '';
+   const li = e.target.closest('li');
+   if (!li) return;
+   rideList.querySelectorAll('li').forEach(x => x.classList.remove('active'));
+   li.classList.add('active');
 
-      const imgWidth  = canvas.width;
-      const imgHeight = canvas.height;
-      const imgData   = canvas.toDataURL('image/png');
+   const ride = bookings.find(b => b.id == li.dataset.id);
+   const html = `
+     <p><strong>From:</strong> ${ride.p}</p>
+     <p><strong>To:</strong> ${ride.d}</p>
+     <p><strong>Date:</strong> ${ride.dt}</p>
+     <p><strong>Time:</strong> ${ride.ts}</p>
+     <div class="qr-container"><canvas id="rideQrSmall"></canvas></div>
+   `;
+   document.getElementById('rideDetailContent').innerHTML = html;
 
-      const pdf = new jsPDF({ unit: 'px', format: [imgWidth, imgHeight] });
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`ride-${ride.id}.pdf`);
-    });
-  });
+   new QRious({ element: document.getElementById('rideQrSmall'), size: 150, value: JSON.stringify(ride) });
+
+   document.getElementById('rideDetailModal').style.display = 'flex';
+ });
+
+document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
+  btn.addEventListener('click', () => {
+    document.getElementById('rideDetailModal').style.display = 'none';
+  })
+);
 
    const deleteModal = document.createElement('div');
   deleteModal.id = 'deleteConfirmModal';
@@ -2497,11 +2577,12 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
   });
 
   ['ridesBtnHeader','ridesBtnLive','ridesBtnMobile'].forEach(id => {
-    document.getElementById(id).addEventListener('click', () => {
-      renderHistory('all');
-      historyModal.style.display = 'flex';
-    });
-  });
+   document.getElementById(id).addEventListener('click', e => {
+     e.preventDefault();
+     renderHistory('all');
+     historyModal.style.display = 'flex';
+   });
+ });
 
   document.addEventListener('click', e => {
   const btn = e.target.closest('.view-map');
@@ -2599,10 +2680,22 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     }
   });
 
+  function signOut() {
+    localStorage.removeItem('signedIn');
+    window.location.reload();
+  }
+
+  document.getElementById('signOutMobile').addEventListener('click', signOut);
+  document.getElementById('signOutFooter').addEventListener('click', signOut);
+
+  
   document.addEventListener('click', e => {
-    if (!mobileNav.contains(e.target) && !hamBtn.contains(e.target)) {
-      mobileNav.style.left = '-260px';
-    }
+   if (!mobileNav.contains(e.target) && !hamBtn.contains(e.target)) {
+    mobileNav.style.left = '-260px';
+  }
+  if (window.busTracker && !busTracker.contains(e.target) && e.target.id !== 'openTracker' && e.target.id !== 'openTrackerMobile') {
+    busTracker.classList.add('hidden');
+  }
   });
 });
 </script>
