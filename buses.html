@@ -1950,7 +1950,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
    map.once('load', () => {
     map.invalidateSize();
-    map.flyTo([6.6667, -1.5833], 15, { animate: true, duration: 1.2 });+  });
+    map.flyTo([6.6667, -1.5833], 15, { animate: true, duration: 1.2 });
+   });
   
   function refreshMap() { setTimeout(()=> map.invalidateSize(), 200); }
   window.addEventListener('resize', refreshMap);
