@@ -235,11 +235,13 @@ body {
 
 
     .map-container {
-  height: 350px;
+  height: 100%
+  min-height: 400px;
   border-radius: var(--radius);
   overflow: hidden;
   margin-bottom: 1rem;
   box-shadow: var(--shadow-dark);
+ background: #e5e3df;
 }
 .live-table-container {
   overflow-x: auto;
@@ -610,12 +612,19 @@ input:focus {
 .bus-animation {
   font-size: 2rem;
   opacity: 0.8;
-  animation: busMove 4s ease-in-out infinite;
+ animation:
+    busMove     6s ease-in-out infinite,
+    float       3s ease-in-out infinite,
+    spin        8s linear infinite;
 }
 .bus-animations .bus-1 { animation-delay: 0s; }
 .bus-animations .bus-2 { animation-delay: 0.5s; }
 .bus-animations .bus-3 { animation-delay: 1s; }
 
+    @keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 .bus-icon {
   background: var(--accent);
   color: var(--white);
@@ -1442,7 +1451,7 @@ input:focus {
   width: 300px; max-height: calc(100vh-100px);
   background: var(--white); box-shadow: var(--shadow-dark);
   border-radius: var(--radius) 0 0 var(--radius);
-  overflow-y: auto; transition: transform .3s;
+  overflow-y: auto; transition: transform .3s;  z-index: 2500;   
 }
 .bus-tracker.hidden { transform: translateX(100%); }
 .bus-tracker header {
@@ -1459,6 +1468,44 @@ input:focus {
 .bus-tracker li:hover { background: var(--light-bg); }
 #notifyToggle { width:100%; margin:1rem 0; }
 
+    #closeTracker {
+  background: none;
+  border: none;
+  color: var(--dark-text);
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  transition: background var(--transition), color var(--transition);
+ }
+ #closeTracker:hover {
+ background: var(--secondary);
+  color: var(--white);
+ }
+
+ #notifyToggle {
+  display: block;
+  width: calc(100% - 2rem);
+  margin: 1rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  text-align: center;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  transition: background var(--transition), transform var(--transition);
+ }
+ #notifyToggle:hover {
+  background: #e6bd00;
+  transform: translateY(-2px);
+ }
+
+    .mobile-sidebar #openTrackerMobile {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-top: 1rem;
+}
  .ride-list li {
   display: flex;
   justify-content: space-between;
@@ -1487,6 +1534,33 @@ input:focus {
   margin-top: 1.5rem;
 }
 
+    #deleteConfirmModal .modal-actions .btn-secondary {
+  background: var(--light-bg);
+  color: var(--secondary);
+  padding: 0.6rem 1.2rem;
+  border: 2px solid var(--secondary);
+  border-radius: var(--radius);
+  font-weight: 600;
+  transition: background var(--transition), color var(--transition);
+}
+#deleteConfirmModal .modal-actions .btn-secondary:hover {
+  background: var(--secondary);
+  color: var(--white);
+}
+
+#deleteConfirmModal .modal-actions .btn-primary {
+  background: var(--accent);
+  color: var(--white);
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 700;
+  transition: background var(--transition), transform var(--transition);
+}
+#deleteConfirmModal .modal-actions .btn-primary:hover {
+  background: #e65550;
+  transform: translateY(-2px);
+}
   </style>
 </head>
 <body>
@@ -1989,6 +2063,17 @@ const busSpeed = 0.0005;
     openTracker.onclick = () => tracker.classList.remove('hidden');
     closeTracker.onclick = () => tracker.classList.add('hidden');
 
+   document.getElementById('ridesBtnLive').addEventListener('click', () => openTracker.click());
+   document.getElementById('ridesBtnHeader').addEventListener('click', () => openTracker.click());
+   document.getElementById('ridesBtnMobile').addEventListener('click', () => openTracker.click());
+
+  const mobileOpen = document.createElement('button');
+  mobileOpen.id = 'openTrackerMobile';
+  mobileOpen.className = 'nav-btn';
+  mobileOpen.innerHTML = '<i class="fas fa-shuttle-van"></i> Tracker';
+  document.getElementById('mobileSidebar').append(mobileOpen);
+  mobileOpen.addEventListener('click', () => openTracker.click());
+
     notifyToggle.onclick = async () => {
       if (!notifyEnabled) {
         const perm = await Notification.requestPermission();
@@ -2380,14 +2465,27 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     }
   });
 
-   document.getElementById('confirmDelete').addEventListener('click', () => {
-    const id = deleteModal.dataset.toDelete;
-     const idx = bookings.findIndex(b => b.id == id);
-    if (idx > -1) bookings.splice(idx, 1);
-    localStorage.setItem('ksbBookings', JSON.stringify(bookings));
-    renderHistory(currentFilter);
-    deleteModal.style.display = 'none';
-  });
+   let currentFilter = 'all';
+ ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
+   document.getElementById(id).addEventListener('click', () => {
+     currentFilter = id === 'prevRidesBtn' ? 'prev'
+                   : id === 'upcomingRidesBtn' ? 'upcoming'
+                   : 'all';
+     renderHistory(currentFilter);
+     historyModal.style.display = 'flex';
+   });
+ });
+
+ document.getElementById('confirmDelete').addEventListener('click', () => {
+   const id = deleteModal.dataset.toDelete;
+   const idx = bookings.findIndex(b => b.id == id);
+   if (idx > -1) {
+     bookings.splice(idx, 1);
+     localStorage.setItem('ksbBookings', JSON.stringify(bookings));
+     renderHistory(currentFilter);
+   }
+   deleteModal.style.display = 'none';
+ });
 
    document.querySelectorAll('[data-close="deleteConfirmModal"]').forEach(btn => {
     btn.addEventListener('click', () => deleteModal.style.display = 'none');
@@ -2413,7 +2511,11 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
   const coordA = stops[from], coordB = stops[to];
   if (coordA && coordB) {
     const mid = [(coordA[0]+coordB[0])/2, (coordA[1]+coordB[1])/2];
-    map.setView(mid, 16, { animate: true });
+    document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+   setTimeout(() => {
+     map.invalidateSize();
+     map.flyTo(mid, 16, { animate: true, duration: 1.2 });
+   }, 500);
     L.popup()
       .setLatLng(mid)
       .setContent(`<strong>${item.route}</strong><br/>ETA: ${item.eta} min`)
