@@ -523,6 +523,8 @@ input:focus {
       .btn-primary, .btn-secondary{width:100%;}
     }
 
+     #map { will-change: transform; }
+    
 .hero-section {
   position: relative;
   height: 90vh;
@@ -1435,9 +1437,66 @@ input:focus {
   color: var(--accent-dark, #e6bd00);
 }
 
+.bus-tracker {
+  position: fixed; top: 80px; right: 0;
+  width: 300px; max-height: calc(100vh-100px);
+  background: var(--white); box-shadow: var(--shadow-dark);
+  border-radius: var(--radius) 0 0 var(--radius);
+  overflow-y: auto; transition: transform .3s;
+}
+.bus-tracker.hidden { transform: translateX(100%); }
+.bus-tracker header {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: .5rem 1rem;
+  background: var(--secondary); color: var(--white);
+  border-radius: var(--radius) 0 0 0;
+}
+.bus-tracker ul { list-style: none; margin:0; padding:0; }
+.bus-tracker li {
+  padding: .75rem 1rem; border-bottom:1px solid #eee;
+  cursor: pointer; transition: background var(--transition);
+}
+.bus-tracker li:hover { background: var(--light-bg); }
+#notifyToggle { width:100%; margin:1rem 0; }
+
+ .ride-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.trash-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.trash-btn:hover {
+  transform: scale(1.2);
+}
+
+ #deleteConfirmModal .modal {
+  max-width: 360px;
+  text-align: center;
+}
+#deleteConfirmModal .modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
   </style>
 </head>
 <body>
+  <aside id="busTracker" class="bus-tracker hidden">
+    <header>
+      <h3><i class="fas fa-shuttle-van"></i> Bus Tracker</h3><button id="closeTracker"><i class="fas fa-times"></i></button>
+    </header>
+    <ul id="trackerList"></ul>
+    <button id="notifyToggle" class="btn-secondary">Enable ETA Alerts</button>
+  </aside>
   <div class="signin-overlay" id="signinOverlay">
     <div class="modal signin-modal">
       <h3><i class="fas fa-user-lock"></i> Student Sign In</h3>
@@ -1818,7 +1877,7 @@ input:focus {
   <script>
   const hero = document.querySelector('.hero-section');
   const bg    = hero.querySelector('.hero-background img');
- const gsapBuses = hero.querySelectorAll('.bus-animation');
+  const gsapBuses = hero.querySelectorAll('.bus-animation');
 
   hero.addEventListener('mousemove', e => {
     const rect = hero.getBoundingClientRect();
@@ -1844,7 +1903,7 @@ input:focus {
   });
 
   hero.addEventListener('mouseleave', () => {
-    gsap.to([bg, ...buses], {
+    gsap.to([bg, ...gsapBuses], {
       x: 0, y: 0, rotationY: 0, duration: 1, ease: 'power3.out'
     });
   });
@@ -1852,6 +1911,12 @@ input:focus {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+  const openTrackerBtn = document.createElement('button');
+    openTrackerBtn.id = 'openTracker';
+    openTrackerBtn.className = 'nav-btn desktop-only';
+    openTrackerBtn.innerHTML = '<i class="fas fa-shuttle-van"></i> Tracker';
+    document.querySelector('.header-nav').append(openTrackerBtn);
 
   const { jsPDF } = window.jspdf;
   const signinOverlay = document.getElementById('signinOverlay');
@@ -1867,11 +1932,26 @@ document.addEventListener('DOMContentLoaded', function() {
     signinOverlay.style.display = 'none';
   });
 
-  const map = L.map('map', { zoomControl: true }).setView([6.6667, -1.5833], 15);
+ const map = L.map('map', {
+    zoomControl: true,
+    zoomAnimation: true,     
+    fadeAnimation: true,        
+    markerZoomAnimation: true,   
+    zoomSnap: 0.25,              
+    zoomDelta: 0.25,            
+    inertia: true,            
+    inertiaDeceleration: 600,   
+    inertiaMaxSpeed: 1500
+  }).setView([6.6667, -1.5833], 15);
+
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
+   map.once('load', () => {
+    map.invalidateSize();
+    map.flyTo([6.6667, -1.5833], 15, { animate: true, duration: 1.2 });+  });
+  
   function refreshMap() { setTimeout(()=> map.invalidateSize(), 200); }
   window.addEventListener('resize', refreshMap);
   
@@ -1897,6 +1977,29 @@ const routes = {
 
 const busObjects = [];  
 const busSpeed = 0.0005; 
+
+   const tracker = document.getElementById('busTracker');
+    const trackerList = document.getElementById('trackerList');
+    const closeTracker = document.getElementById('closeTracker');
+    const openTracker = document.getElementById('openTracker');
+    const notifyToggle = document.getElementById('notifyToggle');
+    let notifyEnabled = false;
+
+    openTracker.onclick = () => tracker.classList.remove('hidden');
+    closeTracker.onclick = () => tracker.classList.add('hidden');
+
+    notifyToggle.onclick = async () => {
+      if (!notifyEnabled) {
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') {
+          notifyEnabled = true;
+          notifyToggle.textContent = 'Disable ETA Alerts';
+        }
+      } else {
+        notifyEnabled = false;
+        notifyToggle.textContent = 'Enable ETA Alerts';
+      }
+    };
 
 Object.entries(routes).forEach(([routeName, [from, to]], i) => {
   const start = stops[from];
@@ -1978,7 +2081,7 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     window.scrollBy(0, -headerHeight);
     mobileNav.style.left = '-260px';
   }
- document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
+   document.querySelectorAll('.header-nav .nav-btn[data-target], .mobile-sidebar .nav-btn[data-target]').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1994,7 +2097,7 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     });
   });
 
-  document.querySelectorAll('.quick-modal .btn-primary').forEach(btn => {
+  document.querySelectorAll('.quick-modal .btn-primary[data-scroll]').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
       const overlay = btn.closest('.modal-overlay');
@@ -2095,6 +2198,26 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     });
   }
 
+   function refreshTracker() {
+      trackerList.innerHTML = '';
+      liveData.forEach((bus, i) => {
+       const li = document.createElement('li');
+        li.innerHTML = `<strong>${bus.route}</strong><br/>
+          ETA: <span class="eta-${i}">${bus.eta}</span> min &bull; Seats: ${bus.cap}`;
+        li.onclick = () => {
+          const [from, to] = bus.route.split(' → ');
+          const { fromCoords, toCoords, progress } = busObjects[i];
+          const lat = fromCoords[0] + (toCoords[0]-fromCoords[0])*progress;
+         const lng = fromCoords[1] + (toCoords[1]-fromCoords[1])*progress;
+          map.panTo([lat, lng], { animate: true });
+        };
+        trackerList.appendChild(li);
+        if (notifyEnabled && bus.eta <= 2) {
+          new Notification(`${bus.route} arriving in ${bus.eta} min`);
+        }
+      });
+    }
+  
   setInterval(() => {
     liveData.forEach(item => {
       item.eta = Math.max(1, item.eta - 1);
@@ -2111,6 +2234,7 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     title.style.color = newColor;
     card.style.borderLeft = `4px solid ${newColor}`;
   });
+     refreshTracker();
  }, 10000);
 
   setInterval(() => {
@@ -2188,8 +2312,11 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     });
     filtered.forEach(b => {
       const li = document.createElement('li');
-      li.textContent = `${b.p} → ${b.d} — ${b.dt} @ ${b.ts}`;
       li.dataset.id = b.id;
+      li.innerHTML = `
+        <span class="ride-text">${b.p} → ${b.d} — ${b.dt} @ ${b.ts}</span>
+        ${filter !== 'prev' ? '<button class="trash-btn" data-id="'+b.id+'"><i class="fas fa-trash"></i></button>' : ''}
+      `;
       rideList.appendChild(li);
     });
   }
@@ -2214,14 +2341,57 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
   `;
     new QRious({ element: document.getElementById('rideQr'), size: 180, value: JSON.stringify(ride) });
     document.getElementById('exportRide').addEventListener('click', async () => {
-       const canvas = await html2canvas(rideDetail, { scale: 2 });
-       const imgData = canvas.toDataURL('image/png');
-       const pdf = new jsPDF({ unit: 'px', format: [canvas.width, canvas.height] });
-       pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-       pdf.save(`ride-${ride.id}.pdf`);
-     });
+      const exportBtn = document.getElementById('exportRide');
+      exportBtn.style.display = 'none';
+      const canvas = await html2canvas(rideDetail, { scale: 3, backgroundColor: '#ffffff' });
+      exportBtn.style.display = '';
+
+      const imgWidth  = canvas.width;
+      const imgHeight = canvas.height;
+      const imgData   = canvas.toDataURL('image/png');
+
+      const pdf = new jsPDF({ unit: 'px', format: [imgWidth, imgHeight] });
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save(`ride-${ride.id}.pdf`);
+    });
   });
 
+   const deleteModal = document.createElement('div');
+  deleteModal.id = 'deleteConfirmModal';
+  deleteModal.className = 'modal-overlay';
+  deleteModal.innerHTML = `
+    <div class="modal">
+      <button class="close-btn" data-close="deleteConfirmModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-exclamation-triangle" style="color:#dc3545"></i> Cancel Ride?</h3>
+      <p>Are you sure you want to cancel this upcoming ride?</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-close="deleteConfirmModal">No, Keep</button>
+        <button class="btn-primary" id="confirmDelete">Yes, Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(deleteModal);
+
+   rideList.addEventListener('click', e => {
+    if (e.target.closest('.trash-btn')) {
+      deleteModal.style.display = 'flex';
+       deleteModal.dataset.toDelete = e.target.closest('li').dataset.id;
+    }
+  });
+
+   document.getElementById('confirmDelete').addEventListener('click', () => {
+    const id = deleteModal.dataset.toDelete;
+     const idx = bookings.findIndex(b => b.id == id);
+    if (idx > -1) bookings.splice(idx, 1);
+    localStorage.setItem('ksbBookings', JSON.stringify(bookings));
+    renderHistory(currentFilter);
+    deleteModal.style.display = 'none';
+  });
+
+   document.querySelectorAll('[data-close="deleteConfirmModal"]').forEach(btn => {
+    btn.addEventListener('click', () => deleteModal.style.display = 'none');
+  });
+ 
   document.querySelector('[data-close="historyModal"]').addEventListener('click', () => {
     historyModal.style.display = 'none';
   });
