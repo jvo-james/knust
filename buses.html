@@ -12,6 +12,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
+ <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
   <style>
    :root {
   --primary:   #006233;
@@ -1633,13 +1635,28 @@ input:focus {
 .bus-tracker header,
 .bus-tracker #notifyToggle {
   position: sticky;
-  top: 0;
-  background: var(--white);
-  z-index: 100;
 }
 .bus-tracker #notifyToggle {
   margin: 0;
   border-radius: 0 0 var(--radius) var(--radius);
+}
+
+#exportRideBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  transition: background var(--transition), transform var(--transition);
+  margin-top: 1rem;       
+}
+#exportRideBtn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
 }
 
   </style>
@@ -1681,19 +1698,19 @@ input:focus {
       <h1 class="app-title"> KNUST Shuttle Tracker</h1>
       <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
       <nav class="header-nav desktop-only">
-        <button class="nav-btn active" data-target="hero"><i class="fas fa-home"></i> </button>
-        <button class="nav-btn" data-target="live-shuttles"><i class="fas fa-route"></i> </button>
-        <button class="nav-btn" data-target="book-ride"><i class="fas fa-paper-plane"></i> </button>
-        <button class="nav-btn" data-target="quick-book"><i class="fas fa-thumbs-up"></i> </button>
+        <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> </a>
+        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i> </a>
+        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> </a>
+        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> </a>
         <button class="nav-btn" id="ridesBtnHeader"><i class="fas fa-history"></i> My Rides</button>
       </nav>
     </div>
     <aside class="mobile-sidebar" id="mobileSidebar">
       <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
-      <button class="nav-btn" data-target="hero"><i class="fas fa-home"></i> Home</button>
-      <button class="nav-btn" data-target="live-shuttles"><i class="fas fa-route"></i> Live Shuttles</button>
-      <button class="nav-btn" data-target="book-ride"><i class="fas fa-paper-plane"></i> Book Ride</button>
-      <button class="nav-btn" data-target="quick-book"><i class="fas fa-thumbs-up"></i> Quick Book</button>
+       <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> </a>
+        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i> </a>
+        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> </a>
+        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> </a>
    <button class="nav-btn" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
     </aside>
   </header>
@@ -1708,8 +1725,8 @@ input:focus {
       <h2 class="hero-title">Welcome to <span id="typewriter"></span></h2>
       <p class="hero-subtitle">Track, book and ride with confidence.</p>
       <div class="hero-buttons">
-        <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book a Ride</button>
-        <button class="btn-secondary" data-scroll="live-shuttles"><i class="fas fa-route"></i> See Live Shuttles</button>
+  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book a Ride</a>
+  <a href="#live-shuttles" class="btn-secondary"><i class="fas fa-route"></i> See Live Shuttles</a>
       </div>
       <br>
       <div class="bus-animations">
@@ -1880,7 +1897,7 @@ input:focus {
       <button class="close-btn" data-close="ksbQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-university"></i> Quick Book: KSB</h3>
       <p>Secure your seat on the next shuttle departing to/from KSB.</p>
-      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="medicalQuickModal">
@@ -1888,7 +1905,7 @@ input:focus {
       <button class="close-btn" data-close="medicalQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-hospital"></i> Quick Book: Medical Village</h3>
       <p>Reserve your spot for the next shuttle at Medical Village.</p>
-      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="bruneiQuickModal">
@@ -1896,7 +1913,7 @@ input:focus {
       <button class="close-btn" data-close="bruneiQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-tree"></i> Quick Book: Brunei</h3>
       <p>Get on the green route—book your Brunei shuttle now.</p>
-      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+ <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="caselyQuickModal">
@@ -1904,7 +1921,7 @@ input:focus {
       <button class="close-btn" data-close="caselyQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-university"></i> Quick Book: Casely Hayeford</h3>
       <p>Hop on the shuttle serving Casely Hayeford—reserve now.</p>
-      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+ <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="scienceQuickModal">
@@ -1912,7 +1929,7 @@ input:focus {
       <button class="close-btn" data-close="scienceQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-flask"></i> Quick Book: College of Science</h3>
       <p>Lock in your seat to/from the College of Science shuttle.</p>
-      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+ <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="commerceQuickModal">
@@ -1920,7 +1937,7 @@ input:focus {
       <button class="close-btn" data-close="commerceQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-shopping-bag"></i> Quick Book: Commercial Area</h3>
       <p>Secure your seat on the busy Commercial Area route.</p>
-      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
+ <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
 
@@ -1938,7 +1955,7 @@ input:focus {
         </div>
         <div class="accordion-item">
           <button class="accordion-header"><i class="fas fa-chevron-down"></i> Can I book for others?</button>
-          <div class="accordion-body">Yes—enter their student ID in the form.</div>
+          <div class="accordion-body">Yes, enter their student ID in the form.</div>
         </div>
         <div class="accordion-item">
           <button class="accordion-header"><i class="fas fa-chevron-down"></i> Weekend service?</button>
@@ -2036,13 +2053,15 @@ input:focus {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <footer class="app-footer">
-    <p>&copy; 2025 KNUST Shuttle Tracker — Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
+    <p>&copy; 2025 KNUST Shuttle Tracker. Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
  <button id="signOutFooter" type="button" class="btn-secondary" style="margin-top:1rem;">
     <i class="fas fa-sign-out-alt"></i> Sign Out
   </button>
   </footer>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.min.js"></script>
+<script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
   <script>
@@ -2103,22 +2122,44 @@ document.addEventListener('DOMContentLoaded', function() {
     signinOverlay.style.display = 'none';
   });
 
- const map = L.map('map', {
-    zoomControl: true,
-    zoomAnimation: true,     
-    fadeAnimation: true,        
-    markerZoomAnimation: true,   
-    zoomSnap: 0.25,              
-    zoomDelta: 0.25,            
-    inertia: true,            
-    inertiaDeceleration: 600,   
-    inertiaMaxSpeed: 1500
+const map = L.map('map', {
+    zoomControl: false,             
+    fadeAnimation: true,
+    markerZoomAnimation: true,
+    zoomSnap: 0.25,
+    zoomDelta: 0.25,
+    inertia: true,
+    inertiaDeceleration: 600,
+    inertiaMaxSpeed: 1500,
+    fullscreenControl: true,           
+    fullscreenControlOptions: {        
+      position: 'topleft'
+    }
   }).setView([6.6667, -1.5833], 15);
+
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  L.control.scale({ position: 'bottomleft', metric: true, imperial: false }).addTo(map);
+
+  L.control.locate({
+    position: 'bottomright',
+    strings: {
+      title: 'Show my location'
+   },
+    flyTo: true,
+    keepCurrentZoomLevel: false,
+    icon: 'fas fa-location-arrow'
+  }).addTo(map);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
+  const mini = new L.Control.MiniMap(
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+    { toggleDisplay: true, minimized: false, position: 'bottomleft' }
+  ).addTo(map);
+  
   let userMarker;
   if ('geolocation' in navigator) {
     navigator.geolocation.watchPosition(pos => {
@@ -2159,11 +2200,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // pulled from google maps
   const stops = {
-    KSB:                  [6.668479541771787, -1.5684205067613826],
+    KSB:                  [6.669316418795082, -1.5671804175503585],
     'Medical Village':    [6.681114944023242, -1.549788155821193],
-    Brunei:               [6.670277669253442, -1.572828261973431],
+    Brunei:               [6.67046510610072, -1.5741292302545924],
     'Casely Hayeford':    [6.675135508075269, -1.5675584175565618],
-    'College of Science': [6.674004778977404, -1.5676476478794432],
+    'College of Science': [6.6745559231628535, -1.5675620238500976],
     'Commercial Area':    [6.682837359405059, -1.576959913492716]
   };
 
@@ -2313,6 +2354,13 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     }
   });
 
+  map.on('click', function(e) {
+    const { lat, lng } = e.latlng;
+    L.popup({ autoClose: true })
+      .setLatLng(e.latlng)
+      .setContent(`Coordinates:<br/>${lat.toFixed(6)}, ${lng.toFixed(6)}`)
+      .openOn(map);
+  });
   const hamBtn      = document.getElementById('hamburgerBtn');
   const mobileNav   = document.getElementById('mobileSidebar');
   const closeNavBtn = document.getElementById('closeSidebar');
@@ -2325,27 +2373,6 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     window.scrollBy(0, -headerHeight);
     mobileNav.style.left = '-260px';
   }
-   document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      scrollToSection(btn.dataset.target);
-      if (btn.dataset.target === 'live-shuttles') refreshMap();
-    });
-  });
-
-document.querySelectorAll('[data-scroll]').forEach(btn => {
-  btn.addEventListener('click', e => {
-    e.preventDefault();
-    const sectionId = btn.dataset.scroll;
-    const overlay = btn.closest('.modal-overlay');
-    if (overlay) overlay.style.display = 'none';
-    scrollToSection(sectionId);
-  });
-});
-
-
   
    ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {
@@ -2439,21 +2466,47 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     });
   }
 
+  document.addEventListener('click', e => {
+    const clickedHamburger = e.target.closest('#hamburgerBtn');
+    const clickedInMobileNav = e.target.closest('#mobileSidebar');
+    const clickedOpenTrackerMobile = !!e.target.closest('#openTrackerMobile');
+
+    const clickedOpenTrackerHeader = e.target.id === 'openTracker';
+    const clickedInTracker = e.target.closest('#busTracker');
+
+    if (!clickedHamburger && !clickedInMobileNav) {
+      mobileNav.style.left = '-260px';
+    }
+    if (clickedOpenTrackerMobile) {
+      tracker.classList.remove('hidden');
+      mobileNav.style.left = '-260px';
+    }
+
+    if (!clickedOpenTrackerHeader && !clickedOpenTrackerMobile && !clickedInTracker) {
+      tracker.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('signOutFooter').addEventListener('click', () => {
+    localStorage.removeItem('signedIn');
+    window.location.reload();
+  });
+  
    function refreshTracker() {
       trackerList.innerHTML = '';
       liveData.forEach((bus, i) => {
        const li = document.createElement('li');
         li.innerHTML = `<strong>${bus.route}</strong><br/>
           ETA: <span class="eta-${i}">${bus.eta}</span> min &bull; Seats: ${bus.cap}`;
-        li.onclick = () => {
-            tracker.classList.add('hidden');
-          const [from, to] = bus.route.split(' → ');
-          const { fromCoords, toCoords, progress } = busObjects[i];
-          const lat = fromCoords[0] + (toCoords[0]-fromCoords[0])*progress;
-         const lng = fromCoords[1] + (toCoords[1]-fromCoords[1])*progress;
-          map.flyTo([lat, lng], 16, { animate: true, duration: 1 });
-        };
-        trackerList.appendChild(li);
+        li.addEventListener('click', () => {
+      tracker.classList.add('hidden');
+      const [fromName, toName] = bus.route.split(' → ');
+      const obj = busObjects[i];
+      const lat = obj.from.lat + (obj.to.lat - obj.from.lat) * obj.progress;
+      const lng = obj.from.lng + (obj.to.lng - obj.from.lng) * obj.progress;
+      map.flyTo([lat, lng], 16, { animate: true, duration: 1 });
+    });
+       trackerList.appendChild(li);
         if (notifyEnabled && bus.eta <= 2) {
           new Notification(`${bus.route} arriving in ${bus.eta} min`);
         }
