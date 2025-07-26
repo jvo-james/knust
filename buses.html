@@ -2102,6 +2102,11 @@ input:focus {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
+  const pickup      = document.getElementById('pickup');
+ const destination = document.getElementById('destination');
+  const date        = document.getElementById('date');
+  const timeslot    = document.getElementById('timeslot');
+  
   const openTrackerBtn = document.createElement('button');
     openTrackerBtn.id = 'openTracker';
     openTrackerBtn.className = 'nav-btn desktop-only';
@@ -2339,28 +2344,27 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     }
   });
 
-  map.on('click', e => {
+ map.on('click', e => {
     let min = Infinity, nearest = null;
     Object.entries(stops).forEach(([name, coords]) => {
       const d = map.distance(e.latlng, L.latLng(coords));
       if (d < min) [min, nearest] = [d, { name, coords }];
     });
     if (nearest && min < 500) {
-      map.flyTo(nearest.coords, 17, { animate: true, duration: 1 });
-      L.popup({ autoClose: true })
+      return L.popup()
         .setLatLng(nearest.coords)
-        .setContent(`Stop: <strong>${nearest.name}</strong>`)
+        .setContent(`Nearest Stop: <strong>${nearest.name}</strong>`)
         .openOn(map);
     }
-  });
-
-  map.on('click', function(e) {
     const { lat, lng } = e.latlng;
     L.popup({ autoClose: true })
       .setLatLng(e.latlng)
       .setContent(`Coordinates:<br/>${lat.toFixed(6)}, ${lng.toFixed(6)}`)
       .openOn(map);
   });
+
+ 
+  
   const hamBtn      = document.getElementById('hamburgerBtn');
   const mobileNav   = document.getElementById('mobileSidebar');
   const closeNavBtn = document.getElementById('closeSidebar');
@@ -2829,7 +2833,6 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
     window.location.reload();
   }
 
-  document.getElementById('signOutMobile').addEventListener('click', signOut);
   document.getElementById('signOutFooter').addEventListener('click', signOut);
 
   
