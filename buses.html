@@ -781,6 +781,15 @@ input:focus {
   .live-cards { grid-template-columns: 1fr; }
 }
 
+    .pulse-marker {
+  animation: pulse 1.8s ease-out infinite;
+}
+@keyframes pulse {
+  0%   { r: 6; opacity: 0.6; }
+  50%  { r: 12; opacity: 0.2; }
+  100% { r: 6; opacity: 0.6; }
+}
+
 .booking-section form {
   background: var(--white);
   padding: 2.5rem;
@@ -1602,6 +1611,37 @@ input:focus {
   color: var(--accent);
 }
 
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--secondary);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-dark);
+  opacity: 0;
+  transition: transform 0.4s var(--transition), opacity 0.4s var(--transition);
+  z-index: 9999;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.bus-tracker header,
+.bus-tracker #notifyToggle {
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 100;
+}
+.bus-tracker #notifyToggle {
+  margin: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
   </style>
 </head>
 <body>
@@ -1803,6 +1843,7 @@ input:focus {
     </section>
 
   </main>
+<div id="toastContainer"></div>
 
 <div class="modal-overlay" id="historyModal">
   <div class="modal history-modal">
@@ -1828,6 +1869,9 @@ input:focus {
     </button>
     <h3><i class="fas fa-info-circle"></i> Ride Details</h3>
     <div id="rideDetailContent"></div>
+     <button id="exportRideBtn" class="btn-secondary" style="margin-top:1rem;">
+      <i class="fas fa-download"></i> Export PDF
+    </button>
   </div>
 </div>
   
@@ -1993,7 +2037,7 @@ input:focus {
 
   <footer class="app-footer">
     <p>&copy; 2025 KNUST Shuttle Tracker — Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
-  <button id="signOutFooter" class="btn-secondary" style="margin-top:1rem;">
+ <button id="signOutFooter" type="button" class="btn-secondary" style="margin-top:1rem;">
     <i class="fas fa-sign-out-alt"></i> Sign Out
   </button>
   </footer>
@@ -2075,6 +2119,34 @@ document.addEventListener('DOMContentLoaded', function() {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
+  let userMarker;
+  if ('geolocation' in navigator) {
+    navigator.geolocation.watchPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      if (!userMarker) {
+        userMarker = L.circleMarker([lat, lng], {
+          radius: 8,
+          color: '#3388ff',
+          weight: 2,
+          fillColor: '#3388ff',
+          fillOpacity: 1,
+          className: 'pulse-marker'  
+        }).addTo(map);
+      } else {
+        userMarker.setLatLng([lat, lng]);
+      }
+
+   }, err => {
+      console.warn('Geolocation error:', err);
+    }, {
+      enableHighAccuracy: true,
+      maximumAge: 10000,
+      timeout: 10000
+    });
+  }
+  
    map.once('load', () => {
     map.invalidateSize();
     map.flyTo([6.6667, -1.5833], 15, { animate: true, duration: 1.2 });
@@ -2085,14 +2157,14 @@ document.addEventListener('DOMContentLoaded', function() {
   
   setTimeout(() => map.invalidateSize(), 200);
 
-// (pulled from campus GIS data)
+// pulled from google maps
   const stops = {
-    KSB:                  [6.672800, -1.580500],
-    'Medical Village':    [6.667800, -1.583200],
-    Brunei:               [6.667900, -1.578000],
-    'Casely Hayeford':    [6.670800, -1.579400],
-    'College of Science': [6.669200, -1.579000],
-    'Commercial Area':    [6.665500, -1.590000]
+    KSB:                  [6.668479541771787, -1.5684205067613826],
+    'Medical Village':    [6.681114944023242, -1.549788155821193],
+    Brunei:               [6.670277669253442, -1.572828261973431],
+    'Casely Hayeford':    [6.675135508075269, -1.5675584175565618],
+    'College of Science': [6.674004778977404, -1.5676476478794432],
+    'Commercial Area':    [6.682837359405059, -1.576959913492716]
   };
 
   const boundsCoords = Object.values(stops);
@@ -2132,19 +2204,36 @@ const busSpeed = 0.0005;
   document.getElementById('mobileSidebar').append(mobileOpen);
   mobileOpen.addEventListener('click', () => openTracker.click());
 
-    notifyToggle.onclick = async () => {
-      if (!notifyEnabled) {
-        const perm = await Notification.requestPermission();
-        if (perm === 'granted') {
-          notifyEnabled = true;
-          notifyToggle.textContent = 'Disable ETA Alerts';
-           refreshTracker();
-        }
-      } else {
-        notifyEnabled = false;
-        notifyToggle.textContent = 'Enable ETA Alerts';
-      }
-    };
+   notifyToggle.onclick = async () => {
+  if (!notifyEnabled) {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      notifyEnabled = true;
+      notifyToggle.textContent = 'Disable ETA Alerts';
+      refreshTracker();
+      showToast('ETA Alerts Enabled');
+    } else {
+      showToast('Notification permission denied');
+    }
+  } else {
+    notifyEnabled = false;
+    notifyToggle.textContent = 'Enable ETA Alerts';
+    showToast('ETA Alerts Disabled');
+  }
+};
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.getElementById('toastContainer').append(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+  }, 3000);
+}
+
 
 Object.entries(routes).forEach(([routeName, [from, to]], i) => {
   const start = stops[from];
@@ -2236,7 +2325,7 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     window.scrollBy(0, -headerHeight);
     mobileNav.style.left = '-260px';
   }
-   document.querySelectorAll('.header-nav .nav-btn[data-target], .mobile-sidebar .nav-btn[data-target]').forEach(btn => {
+   document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -2245,24 +2334,18 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
       if (btn.dataset.target === 'live-shuttles') refreshMap();
     });
   });
- document.body.addEventListener('click', e => {
-   const btn = e.target.closest('[data-scroll]');
-   if (!btn) return;
-   e.preventDefault();
-   const dest = btn.dataset.scroll;
-   const overlay = btn.closest('.modal-overlay');
-   if (overlay) overlay.style.display = 'none';
-   scrollToSection(dest);
- });
 
-  document.querySelectorAll('.quick-modal .btn-primary[data-scroll]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      const overlay = btn.closest('.modal-overlay');
-      if (overlay) overlay.style.display = 'none';
-      scrollToSection('book-ride');
-    });
+document.querySelectorAll('[data-scroll]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const sectionId = btn.dataset.scroll;
+    const overlay = btn.closest('.modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    scrollToSection(sectionId);
   });
+});
+
+
   
    ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {
@@ -2363,11 +2446,12 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
         li.innerHTML = `<strong>${bus.route}</strong><br/>
           ETA: <span class="eta-${i}">${bus.eta}</span> min &bull; Seats: ${bus.cap}`;
         li.onclick = () => {
+            tracker.classList.add('hidden');
           const [from, to] = bus.route.split(' → ');
           const { fromCoords, toCoords, progress } = busObjects[i];
           const lat = fromCoords[0] + (toCoords[0]-fromCoords[0])*progress;
          const lng = fromCoords[1] + (toCoords[1]-fromCoords[1])*progress;
-          map.panTo([lat, lng], { animate: true });
+          map.flyTo([lat, lng], 16, { animate: true, duration: 1 });
         };
         trackerList.appendChild(li);
         if (notifyEnabled && bus.eta <= 2) {
@@ -2548,6 +2632,22 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
    });
  });
 
+  document.getElementById('exportRideBtn').addEventListener('click', () => {
+    const content = document.getElementById('rideDetailContent');
+    html2canvas(content).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ unit: 'pt', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const scale = pageWidth / canvas.width;
+      const imgHeight = canvas.height * scale;
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
+      pdf.save('ride-details.pdf');
+    }).catch(err => {
+      console.error('Export failed:', err);
+      alert('Sorry, export failed. Please try again.');
+    });
+  });
+  
  document.getElementById('confirmDelete').addEventListener('click', () => {
    const id = deleteModal.dataset.toDelete;
    const idx = bookings.findIndex(b => b.id == id);
@@ -2680,14 +2780,24 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
   document.getElementById('signOutFooter').addEventListener('click', signOut);
 
   
-  document.addEventListener('click', e => {
-   if (!mobileNav.contains(e.target) && !hamBtn.contains(e.target)) {
-    mobileNav.style.left = '-260px';
-  }
-  if (window.busTracker && !busTracker.contains(e.target) && e.target.id !== 'openTracker' && e.target.id !== 'openTrackerMobile') {
-    busTracker.classList.add('hidden');
-  }
+ document.addEventListener('click', e => {
+    const clickInsideMobileNav = mobileNav.contains(e.target) || hamBtn.contains(e.target);
+    const clickOnMobileTracker = e.target.closest('#openTrackerMobile');
+    const clickInsideBusTracker = tracker.contains(e.target) || e.target.id === 'openTracker' || clickOnMobileTracker;
+
+    if (!clickInsideMobileNav) {
+      mobileNav.style.left = '-260px';
+    }
+    if (clickOnMobileTracker) {
+      tracker.classList.remove('hidden');
+      mobileNav.style.left = '-260px';
+    }
+
+    if (!clickInsideBusTracker) {
+      tracker.classList.add('hidden');
+    }
   });
+  
 });
 </script>
 
