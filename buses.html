@@ -2106,7 +2106,13 @@ document.addEventListener('DOMContentLoaded', function() {
  const destination = document.getElementById('destination');
   const date        = document.getElementById('date');
   const timeslot    = document.getElementById('timeslot');
-  
+
+   const historyModal = document.getElementById('historyModal');
+  const rideList     = document.getElementById('rideList');
+  const rideDetail   = document.getElementById('rideDetail');
+  const historyTabs  = document.querySelectorAll('.history-tabs .tab');
+  const todayDate    = new Date().toISOString().split('T')[0];
+
   const openTrackerBtn = document.createElement('button');
     openTrackerBtn.id = 'openTracker';
     openTrackerBtn.className = 'nav-btn desktop-only';
@@ -2343,28 +2349,7 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
       renderLiveShuttles(term);
     }
   });
-
- map.on('click', e => {
-    let min = Infinity, nearest = null;
-    Object.entries(stops).forEach(([name, coords]) => {
-      const d = map.distance(e.latlng, L.latLng(coords));
-      if (d < min) [min, nearest] = [d, { name, coords }];
-    });
-    if (nearest && min < 500) {
-      return L.popup()
-        .setLatLng(nearest.coords)
-        .setContent(`Nearest Stop: <strong>${nearest.name}</strong>`)
-        .openOn(map);
-    }
-    const { lat, lng } = e.latlng;
-    L.popup({ autoClose: true })
-      .setLatLng(e.latlng)
-      .setContent(`Coordinates:<br/>${lat.toFixed(6)}, ${lng.toFixed(6)}`)
-      .openOn(map);
-  });
-
  
-  
   const hamBtn      = document.getElementById('hamburgerBtn');
   const mobileNav   = document.getElementById('mobileSidebar');
   const closeNavBtn = document.getElementById('closeSidebar');
@@ -2378,7 +2363,7 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     mobileNav.style.left = '-260px';
   }
   
-   ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
+    ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {
       const filter = id === 'prevRidesBtn'
         ? 'prev'
