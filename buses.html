@@ -2107,12 +2107,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const date        = document.getElementById('date');
   const timeslot    = document.getElementById('timeslot');
 
-   const historyModal = document.getElementById('historyModal');
-  const rideList     = document.getElementById('rideList');
-  const rideDetail   = document.getElementById('rideDetail');
-  const historyTabs  = document.querySelectorAll('.history-tabs .tab');
-  const todayDate    = new Date().toISOString().split('T')[0];
-
   const openTrackerBtn = document.createElement('button');
     openTrackerBtn.id = 'openTracker';
     openTrackerBtn.className = 'nav-btn desktop-only';
