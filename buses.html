@@ -597,29 +597,35 @@ input:focus {
   animation: fadeInHero 1s ease-out forwards 2.5s;
 }
 
-.hero-buttons {
-  opacity: 0;
-  animation: fadeInHero 1s ease-out forwards 3s;
-}
-
-.hero-buttons {
-  margin: 0 0.5rem;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--white);
-  background: var(--primary);
-  border: none;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-light);
-  cursor: pointer;
-  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
-}
-.hero-buttons:hover {
-  background: var(--primary-dark);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-dark);
-}
+ .hero-buttons .btn-primary,
+     .hero-buttons .btn-secondary {
+     display: inline-block;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+     }
+     .hero-buttons .btn-primary {
+       background: var(--primary);
+       color: var(--white);
+     }
+    .hero-buttons .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+     .hero-buttons .btn-secondary {
+      background: var(--accent);
+      color: var(--white);
+     }
+    .hero-buttons .btn-secondary:hover {
+      background: #e65550;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
 
 .bus-animation {
   font-size: 2rem;
