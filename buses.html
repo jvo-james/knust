@@ -2744,26 +2744,7 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
     });
   });
 
-  document.addEventListener('click', e => {
-  const btn = e.target.closest('.view-map');
-  if (!btn) return;
-  const idx = +btn.dataset.route;
-  const item = liveData[idx];
-  const [from, to] = item.route.split(' → ');
-  const coordA = stops[from], coordB = stops[to];
-  if (coordA && coordB) {
-    const mid = [(coordA[0]+coordB[0])/2, (coordA[1]+coordB[1])/2];
-    document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
-   setTimeout(() => {
-     map.invalidateSize();
-     map.flyTo(mid, 16, { animate: true, duration: 1.2 });
-   }, 500);
-    L.popup()
-      .setLatLng(mid)
-      .setContent(`<strong>${item.route}</strong><br/>ETA: ${item.eta} min`)
-      .openOn(map);
-  }
-});
+ 
   
   document.querySelectorAll('.card[data-page]').forEach(card => {
     const modal = document.getElementById(card.dataset.page);
