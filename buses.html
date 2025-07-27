@@ -1779,6 +1779,22 @@ input:focus {
 .ar-controls button:hover:enabled {
   background: rgba(0,0,0,0.8);
 }
+
+    .sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 1090; 
+}
+
+.mobile-sidebar.open + .sidebar-overlay {
+  display: block;
+}
+
+.fab-menu.open ~ #fabOverlay {
+  display: block;
+}
   </style>
 </head>
 <body>
@@ -1834,6 +1850,7 @@ input:focus {
        <button id="openTrackerMobile" class="nav-btn"><i class="fas fa-shuttle-van"></i> Tracker</button>
    <button class="nav-btn" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
     </aside>
+   <div id="sidebarOverlay" class="sidebar-overlay"></div>
   </header>
 
 
@@ -2208,6 +2225,7 @@ input:focus {
       <button id="fab-notif" class="fab-item" title="Notifications"><i class="fas fa-bell"></i></button>
       <button id="fab-support" class="fab-item" title="Live Support"><i class="fas fa-headset"></i></button>
     </div>
+  <div id="fabOverlay" class="sidebar-overlay"></div>
   </div>
 
   <div class="modal-overlay" id="notifPrefsModal">
@@ -2617,12 +2635,17 @@ function initFABMenu() {
   const menu   = document.querySelector('.fab-menu');
   const container = document.querySelector('.fab-container');
 
-  container.addEventListener('click', e => e.stopPropagation());
-  menu.addEventListener('click',      e => e.stopPropagation());
+   const overlay = document.getElementById('fabOverlay');
 
   toggle.addEventListener('click', e => {
-    e.stopPropagation();            
-       menu.classList.toggle('open');
+    e.stopPropagation();
+    const isOpen = menu.classList.toggle('open');
+    overlay.style.display = isOpen ? 'block' : 'none';
+  });
+
+  overlay.addEventListener('click', () => {
+    menu.classList.remove('open');
+    overlay.style.display = 'none';
   });
 
   document.getElementById('fab-ar').addEventListener('click', () => {
@@ -3001,15 +3024,23 @@ function initFABMenu() {
   
   
   function initGlobalNav() {
-     const sidebar = document.getElementById('mobileSidebar');
-sidebar.addEventListener('click', e => e.stopPropagation());
-   document.getElementById('hamburgerBtn').addEventListener('click', e => {
-   e.stopPropagation();              
-    document.getElementById('mobileSidebar').classList.add('open');
+    const sidebar    = document.getElementById('mobileSidebar');
+  const overlay    = document.getElementById('sidebarOverlay');
+  const openBtn    = document.getElementById('hamburgerBtn');
+  const closeBtn   = document.getElementById('closeSidebar');
+
+  openBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    sidebar.classList.add('open');
+    overlay.style.display = 'block';
   });
-  document.getElementById('closeSidebar').addEventListener('click', () => {
-    sidebar.classList.remove('open');
-  });
+
+  [ closeBtn, overlay ].forEach(el =>
+    el.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.style.display = 'none';
+    })
+  );
     document.querySelectorAll('.nav-btn[href^="#"]').forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
