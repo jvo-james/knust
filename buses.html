@@ -2611,6 +2611,10 @@ input:focus {
 function initFABMenu() {
   const toggle = document.getElementById('fabToggle');
   const menu   = document.querySelector('.fab-menu');
+  const container = document.querySelector('.fab-container');
+
+  container.addEventListener('click', e => e.stopPropagation());
+
 
   toggle.addEventListener('click', e => {
     e.stopPropagation();            
@@ -2994,6 +2998,7 @@ function initFABMenu() {
   
   function initGlobalNav() {
      const sidebar = document.getElementById('mobileSidebar');
+sidebar.addEventListener('click', e => e.stopPropagation());
    document.getElementById('hamburgerBtn').addEventListener('click', e => {
    e.stopPropagation();              
     document.getElementById('mobileSidebar').classList.add('open');
