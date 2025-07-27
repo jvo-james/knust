@@ -603,7 +603,7 @@ input:focus {
       padding: 0.75rem 2rem;
       font-size: 1rem;
       font-weight: 600;
-      text-transform: uppercase;
+      text-decoration: none;
       border-radius: var(--radius);
       box-shadow: 0 6px 12px rgba(0,0,0,0.1);
       transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
@@ -637,8 +637,15 @@ input:focus {
 }
 .bus-animations .bus-1 { animation-delay: 0s; }
 .bus-animations .bus-2 { animation-delay: 0.5s; }
-.bus-animations .bus-3 { animation-delay: 1s; }
+.bus-animations .bus-3 {
+  animation: flyAcross 4s linear infinite;
+}
 
+@keyframes flyAcross {
+  0%   { transform: translateX(-150vw) scale(1) rotate(0deg); opacity: 1; }
+  80%  { opacity: 1; }
+ 100% { transform: translateX(150vw) scale(1) rotate(0deg); opacity: 0; }
+}
     @keyframes spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
@@ -1700,6 +1707,78 @@ input:focus {
   top: 1rem; right: 1rem;
   font-size: 1.5rem;
 }
+
+    .fab-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 4000;
+}
+.fab-btn {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  box-shadow: var(--shadow-dark);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform var(--transition), background var(--transition);
+}
+.fab-btn:hover {
+  transform: scale(1.1);
+}
+.fab-menu {
+  display: none;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.fab-menu.open {
+  display: flex;
+}
+.fab-item {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  box-shadow: var(--shadow-light);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: transform var(--transition), background var(--transition);
+}
+.fab-item:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+    .ar-controls {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  z-index: 6000;
+}
+.ar-controls button {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.ar-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.ar-controls button:hover:enabled {
+  background: rgba(0,0,0,0.8);
+}
   </style>
 </head>
 <body>
@@ -1871,10 +1950,6 @@ input:focus {
       <button id="allRidesBtn" class="btn-secondary"><i class="fas fa-list"></i> All Rides</button>
     </div>
 
-    <!-- AR Stop Finder Button -->
-  <button id="arBtn" class="support-chat-btn" style="bottom:80px; left:20px;">
-    <i class="fas fa-arrows-alt-v"></i>
-  </button>
 
   <!-- AR Modal -->
   <div class="modal-overlay" id="arModal">
@@ -1882,6 +1957,10 @@ input:focus {
      <button class="close-btn" data-close="arModal" style="color:#fff;"><i class="fas fa-times"></i></button>
       <video id="arVideo" autoplay muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>
       <canvas id="arCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%;"></canvas>
+   <div class="ar-controls">
+        <button id="startRecord"><i class="fas fa-circle"></i> Record</button>
+        <button id="stopRecord" disabled><i class="fas fa-stop"></i> Stop</button>
+      </div>
     </div>
   </div>
     
@@ -1996,10 +2075,6 @@ input:focus {
  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
-
-<button id="supportChat" class="support-chat-btn">
-  <i class="fas fa-headset"></i>
-</button>
 
 <div class="info-sections">
     <section class="section faq-section" id="faq">
@@ -2127,9 +2202,14 @@ input:focus {
   </button>
   </footer>
 
-  <button id="notifPrefsBtn" class="support-chat-btn" style="bottom:80px; right:80px;">
-    <i class="fas fa-cog"></i>
-  </button>
+<div class="fab-container">
+    <button id="fabToggle" class="fab-btn"><i class="fas fa-th"></i></button>
+    <div class="fab-menu">
+      <button id="fab-ar"    class="fab-item" title="AR Stop Finder"><i class="fas fa-arrows-alt-v"></i></button>
+      <button id="fab-notif" class="fab-item" title="Notifications"><i class="fas fa-bell"></i></button>
+      <button id="fab-support" class="fab-item" title="Live Support"><i class="fas fa-headset"></i></button>
+    </div>
+  </div>
 
   <div class="modal-overlay" id="notifPrefsModal">
     <div class="modal quick-modal" style="max-width:360px;">
@@ -2160,7 +2240,6 @@ input:focus {
 (function() {
   'use strict';
 
-  // Utility: throttle
   function throttle(fn, wait) {
     let last = 0;
     return function(...args) {
@@ -2172,7 +2251,6 @@ input:focus {
     };
   }
 
-  // DOM Ready
   document.addEventListener('DOMContentLoaded', init);
 
   function init() {
@@ -2190,12 +2268,11 @@ input:focus {
     startPeriodicUpdates();
     initCrowdHeatmap();
     initNotifPrefs(); 
-    initARFinder(); 
+    initARFinder();
+    initFABMenu();
   }
 
-  // ------------------------
-  // Sign-In Overlay
-  // ------------------------
+  
   function initSignIn() {
     const overlay = document.getElementById('signinOverlay');
     const form    = document.getElementById('signinForm');
@@ -2213,9 +2290,7 @@ input:focus {
     });
   }
 
-  // ------------------------
-  // Hero Section Parallax & GSAP
-  // ------------------------
+ 
   function initHeroParallax() {
     const hero       = document.querySelector('.hero-section');
     const bgImage    = hero.querySelector('.hero-background img');
@@ -2248,9 +2323,7 @@ input:focus {
     }
   }
 
-  // ------------------------
-  // Typewriter Effect
-  // ------------------------
+ 
   function initTypewriter() {
     const el    = document.getElementById('typewriter');
     const words = ['Your Campus Commute', 'The Smart Shuttle Tracker', 'KNUST Shuttle Tracker'];
@@ -2276,9 +2349,7 @@ input:focus {
     })();
   }
 
-  // ------------------------
-  // Leaflet Map & Shuttle Logic
-  // ------------------------
+ 
   let map, userMarker, shuttleMarkers, liveData, busObjects;
   const stops = {
     KSB: [6.669316, -1.567180],
@@ -2327,19 +2398,16 @@ input:focus {
     }).addTo(map);
     L.rectangle(getCampusBounds(), { color:'#006233', weight:2, fillOpacity: 0.05 }).addTo(map);
 
-    // Add stops markers
-    Object.entries(stops).forEach(([name, coord]) => {
+     Object.entries(stops).forEach(([name, coord]) => {
       L.marker(coord).addTo(map).bindPopup(`<strong>${name}</strong>`);
     });
 
-    // MiniMap
-   const mini = new L.Control.MiniMap(
+    const mini = new L.Control.MiniMap(
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
       { toggleDisplay: true, minimized: true }
     ).addTo(map);
 
-    // Geolocation
-    if ('geolocation' in navigator) {
+     if ('geolocation' in navigator) {
       navigator.geolocation.watchPosition(onGeoSuccess, onGeoError, {
         enableHighAccuracy: true, maximumAge:10000, timeout:10000
       });
@@ -2370,9 +2438,7 @@ input:focus {
     ];
   }
 
-  // ------------------------
-  // Live Shuttles Rendering
-  // ------------------------
+  
   function initLiveShuttles() {
     liveData = [
       { route:'KSB → Medical Village', eta:5, cap:30 },
@@ -2385,7 +2451,6 @@ input:focus {
     shuttleMarkers = L.layerGroup().addTo(map);
     busObjects = [];
 
-    // Initialize bus markers for route animation
     Object.entries(routes).forEach(([name, [from,to]], i) => {
       const start = stops[from], end = stops[to];
       const marker = L.marker(start, {
@@ -2446,7 +2511,6 @@ input:focus {
       div.style.animationDelay = `${i*0.1}s`;
       container.appendChild(div);
 
-      // Add pulse marker at midpoint
       const [from,to] = item.route.split(' → ');
       const mid = [
         (stops[from][0] + stops[to][0]) / 2,
@@ -2468,20 +2532,16 @@ input:focus {
   }
 
   function onDocumentClick(e) {
-    // hamburger/menu hiding
     const mobileNav = document.getElementById('mobileSidebar');
     if (!e.target.closest('#hamburgerBtn') && !mobileNav.contains(e.target)) {
       mobileNav.style.left = '-260px';
     }
-    // bus tracker toggles
     handleTrackerOpenClose(e);
-    // ride history buttons
     if (e.target.matches('#ridesBtnHeader, #ridesBtnLive, #ridesBtnMobile')) {
       openHistory('all');
       e.preventDefault();
       e.stopPropagation();
     }
-    // view-map buttons
     if (e.target.closest('.view-map')) {
       const idx = +e.target.dataset.route;
       const item = liveData[idx];
@@ -2494,15 +2554,12 @@ input:focus {
         L.popup().setLatLng(mid).setContent(`${item.route}<br>ETA: ${item.eta} min`).openOn(map);
       }, 500);
     }
-    // live chat close
     if (e.target.matches('#closeChatBtn')) {
       document.getElementById('chatWidget').classList.add('hidden');
     }
-    // support modal close
     if (e.target.closest('[data-close="supportModal"]')) {
       document.getElementById('supportModal').style.display = 'none';
     }
-    // generic modal close
     document.querySelectorAll('[data-close]').forEach(btn => {
       if (btn.contains(e.target)) {
         document.getElementById(btn.dataset.close).style.display = 'none';
@@ -2514,8 +2571,8 @@ input:focus {
 
   function initCrowdHeatmap() {
     crowdHeatLayer = L.heatLayer([], {
-      radius: 25,    // radius of each “point”
-      blur: 15,      // blur intensity
+      radius: 25,    
+      blur: 15,      
       maxZoom: 17,
       gradient: {
         0.2: 'lime',
@@ -2541,9 +2598,7 @@ input:focus {
    crowdHeatLayer.setLatLngs(mockCrowdData);
   }
   
-  // ------------------------
-  // Bus Tracker Panel
-  // ------------------------
+ 
   function handleTrackerOpenClose(e) {
     const tracker = document.getElementById('busTracker');
    if (e.target.matches('#openTracker, #openTrackerMobile')) {
@@ -2554,9 +2609,36 @@ input:focus {
     }
   }
 
-  // ------------------------
-  // Booking Form & Confirmation
-  // ------------------------
+function initFABMenu() {
+  const toggle = document.getElementById('fabToggle');
+  const menu   = document.querySelector('.fab-menu');
+
+  toggle.addEventListener('click', () => {
+    menu.classList.toggle('open');
+  });
+
+  document.getElementById('fab-ar').addEventListener('click', () => {
+    document.getElementById('arModal').style.display = 'flex';
+    menu.classList.remove('open');
+  });
+
+  document.getElementById('fab-notif').addEventListener('click', () => {
+    document.getElementById('notifPrefsModal').style.display = 'flex';
+    menu.classList.remove('open');
+  });
+
+  document.getElementById('fab-support').addEventListener('click', () => {
+    document.getElementById('supportModal').classList.add('open');
+    menu.classList.remove('open');
+  });
+
+  document.addEventListener('click', e => {
+    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+      menu.classList.remove('open');
+    }
+  });
+}
+  
   function initBookingForm() {
     const form    = document.getElementById('bookingForm');
     const modal   = document.getElementById('confirmModal');
@@ -2580,7 +2662,6 @@ input:focus {
       }
       const booking = { id:Date.now(), p,d,dt,ts };
       saveBooking(booking);
-      // set modal text
       confEls.pickup.textContent      = p;
       confEls.destination.textContent = d;
       confEls.date.textContent        = new Date(dt).toLocaleDateString();
@@ -2601,9 +2682,7 @@ input:focus {
     localStorage.setItem('ksbBookings', JSON.stringify(arr));
   }
 
-  // ------------------------
-  // Ride History Modal
-  // ------------------------
+
   function initHistoryModal() {
     const historyModal = document.getElementById('historyModal');
     const rideList     = document.getElementById('rideList');
@@ -2620,7 +2699,6 @@ input:focus {
 
     rideList.addEventListener('click', e => {
       if (e.target.closest('.trash-btn')) {
-        // delete flow
         openDeleteConfirm(e.target.closest('li').dataset.id);
         return;
       }
@@ -2715,14 +2793,40 @@ input:focus {
   const ctx    = canvas.getContext('2d');
   const stopsArr = Object.entries(stops).map(([name, coord]) => ({ name, lat:coord[0], lng:coord[1] }));
 
-  // open AR modal
   btn.addEventListener('click', async () => {
     modal.style.display = 'flex';
-    // start camera
     const stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' } });
     video.srcObject = stream;
-    // resize canvas
-    canvas.width  = video.clientWidth;
+    let mediaRecorder, recordedChunks = [];
+    document.getElementById('startRecord').disabled = false;
+    document.getElementById('stopRecord').disabled  = true;
+
+    document.getElementById('startRecord').onclick = () => {
+      recordedChunks = [];
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
+      mediaRecorder.ondataavailable = e => { if (e.data.size) recordedChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = `AR_capture_${Date.now()}.webm`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+      mediaRecorder.start();
+      document.getElementById('startRecord').disabled = true;
+      document.getElementById('stopRecord').disabled  = false;
+    };
+
+    document.getElementById('stopRecord').onclick = () => {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        document.getElementById('stopRecord').disabled  = true;
+        document.getElementById('startRecord').disabled = false;
+      }
+    };
+   canvas.width  = video.clientWidth;
     canvas.height = video.clientHeight;
     // start overlay loop
     navigator.geolocation.getCurrentPosition(pos => {
@@ -2902,13 +3006,11 @@ input:focus {
   });
 }
   
-  // ------------------------
-  // Global Navigation & Hamburger
-  // ------------------------
+  
   function initGlobalNav() {
      const sidebar = document.getElementById('mobileSidebar');
   document.getElementById('hamburgerBtn').addEventListener('click', () => {
-    sidebar.classList.add('open');
+    document.getElementById('mobileSidebar').classList.add('open');
   });
   document.getElementById('closeSidebar').addEventListener('click', () => {
     sidebar.classList.remove('open');
@@ -2921,7 +3023,6 @@ input:focus {
         const headerH = document.querySelector('.app-header').offsetHeight;
         document.getElementById(id).scrollIntoView({ behavior:'smooth' });
         window.scrollBy(0, -headerH);
-        document.getElementById('mobileSidebar').style.left = '-260px';
       });
     });
   }
@@ -3124,8 +3225,7 @@ function scheduleSmartAlert(idx, eta, offset) {
     });
   })();
 
-  // 4) (Re)wire up Quick‑Book cards (in case
-  //    they didn’t initialize)
+ 
   (function reInitQuickBookCards() {
     document.querySelectorAll('.card[data-page]').forEach(card => {
       const modal = document.getElementById(card.dataset.page);
@@ -3136,7 +3236,6 @@ function scheduleSmartAlert(idx, eta, offset) {
     });
   })();
 
-  // ------------ END OF PATCH ------------
 
 })();
 </script>
