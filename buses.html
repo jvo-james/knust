@@ -2767,6 +2767,78 @@ input:focus {
     }, 3000);
   }
 
+    // ------------ MISSING BITS PATCH ------------
+
+  // 1) Add "Tracker" button to the desktop header
+  (function addTrackerHeaderButton() {
+    const headerNav = document.querySelector('.header-nav');
+    if (!document.getElementById('openTracker')) {
+      const btn = document.createElement('button');
+      btn.id = 'openTracker';
+      btn.className = 'nav-btn desktop-only';
+      btn.innerHTML = '<i class="fas fa-shuttle-van"></i> Tracker';
+      headerNav.appendChild(btn);
+      btn.addEventListener('click', () => {
+        document.getElementById('busTracker').classList.remove('hidden');
+      });
+      // mobile equivalent already created earlier
+    }
+  })();
+
+  // 2) Wire up the Prev/Upcoming/All Rides buttons
+  (function wireHistoryButtons() {
+    ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          const mode = id === 'prevRidesBtn'
+            ? 'prev'
+            : id === 'upcomingRidesBtn'
+              ? 'upcoming'
+              : 'all';
+          // call your existing renderHistory + openHistory
+          renderHistory(mode);
+          document.getElementById('historyModal').style.display = 'flex';
+          // toggle active class
+          document.querySelectorAll('.history-buttons .btn-secondary').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      }
+    });
+  })();
+
+  // 3) Initialize FAQ accordion toggles
+  (function initAccordion() {
+    document.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const body = header.nextElementSibling;
+        const icon = header.querySelector('i.fa-chevron-down');
+        if (body.style.display === 'block') {
+          body.style.display = 'none';
+          icon.style.transform = '';
+        } else {
+          body.style.display = 'block';
+          icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
+  })();
+
+  // 4) (Re)wire up Quick‑Book cards (in case
+  //    they didn’t initialize)
+  (function reInitQuickBookCards() {
+    document.querySelectorAll('.card[data-page]').forEach(card => {
+      const modal = document.getElementById(card.dataset.page);
+      card.removeEventListener('click', null);
+      card.addEventListener('click', () => {
+        if (modal) modal.style.display = 'flex';
+      });
+    });
+  })();
+
+  // ------------ END OF PATCH ------------
+
 })();
 </script>
 
