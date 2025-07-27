@@ -529,6 +529,10 @@ input:focus {
     }
 
      #map { will-change: transform; }
+
+    .modal-overlay {
+   pointer-events: none;
+ }
     
 .hero-section {
   position: relative;
@@ -2818,9 +2822,7 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
 
   document.getElementById('signOutFooter').addEventListener('click', signOut);
 
-  document.addEventListener('click', e => {
-    if ( e.target.closest('button, a, .view-map, .nav-btn') ) return;
-
+ 
     const clickInsideMobileNav = mobileNav.contains(e.target) || hamBtn.contains(e.target);
     const clickOnMobileTracker = !!e.target.closest('#openTrackerMobile');
     const clickInsideBusTracker = tracker.contains(e.target)
