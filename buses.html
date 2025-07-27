@@ -2818,12 +2818,14 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
 
   document.getElementById('signOutFooter').addEventListener('click', signOut);
 
-  
- document.addEventListener('click', e => {
-    const clickInsideMobileNav = mobileNav.contains(e.target) || hamBtn.contains(e.target);
-    const clickOnMobileTracker = e.target.closest('#openTrackerMobile');
-    const clickInsideBusTracker = tracker.contains(e.target) || e.target.id === 'openTracker' || clickOnMobileTracker;
+  document.addEventListener('click', e => {
+    if ( e.target.closest('button, a, .view-map, .nav-btn') ) return;
 
+    const clickInsideMobileNav = mobileNav.contains(e.target) || hamBtn.contains(e.target);
+    const clickOnMobileTracker = !!e.target.closest('#openTrackerMobile');
+    const clickInsideBusTracker = tracker.contains(e.target)
+                               || e.target.id === 'openTracker'
+                               || clickOnMobileTracker;
     if (!clickInsideMobileNav) {
       mobileNav.style.left = '-260px';
     }
@@ -2831,7 +2833,6 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
       tracker.classList.remove('hidden');
       mobileNav.style.left = '-260px';
     }
-
     if (!clickInsideBusTracker) {
       tracker.classList.add('hidden');
     }
