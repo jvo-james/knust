@@ -1888,7 +1888,7 @@ input:focus {
   <div id="liveCards" class="live-cards">
   </div>
 </section>
-<button class="btn-secondary" id="ridesBtnLive" style="display:block; margin:2rem auto;">
+<button class="btn-secondary" id="ridesBtnLive" style="display:none; margin:2rem auto;">
   <i class="fas fa-history"></i> My Rides
 </button>
     <section id="book-ride" class="section booking-section">
@@ -2532,8 +2532,12 @@ input:focus {
 
   function onDocumentClick(e) {
      const mobileNav = document.getElementById('mobileSidebar');
-    if (!e.target.closest('#hamburgerBtn') && !mobileNav.contains(e.target)) {
-      mobileNav.classList.remove('open');
+if (
+      mobileNav.classList.contains('open') &&    
+     !e.target.closest('#hamburgerBtn') &&
+     !mobileNav.contains(e.target)
+   ) {
+    mobileNav.classList.remove('open');
     }
     handleTrackerOpenClose(e);
     if (e.target.matches('#ridesBtnHeader, #ridesBtnLive, #ridesBtnMobile')) {
@@ -2614,7 +2618,7 @@ function initFABMenu() {
   const container = document.querySelector('.fab-container');
 
   container.addEventListener('click', e => e.stopPropagation());
-
+  menu.addEventListener('click',      e => e.stopPropagation());
 
   toggle.addEventListener('click', e => {
     e.stopPropagation();            
