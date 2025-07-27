@@ -122,7 +122,7 @@ body {
   background: var(--secondary);
   padding: 2rem 1rem;
   box-shadow: var(--shadow-dark);
-  transition: left var(--transition);
+ transition: transform var(--transition);
   z-index: 1100;
 }
 .mobile-sidebar .close-sidebar {
@@ -1951,7 +1951,6 @@ input:focus {
     </div>
 
 
-  <!-- AR Modal -->
   <div class="modal-overlay" id="arModal">
     <div class="modal" style="max-width:100%; width:100%; height:100%; padding:0; background:transparent;">
      <button class="close-btn" data-close="arModal" style="color:#fff;"><i class="fas fa-times"></i></button>
@@ -2532,9 +2531,9 @@ input:focus {
   }
 
   function onDocumentClick(e) {
-    const mobileNav = document.getElementById('mobileSidebar');
+     const mobileNav = document.getElementById('mobileSidebar');
     if (!e.target.closest('#hamburgerBtn') && !mobileNav.contains(e.target)) {
-      mobileNav.style.left = '-260px';
+      mobileNav.classList.remove('open');
     }
     handleTrackerOpenClose(e);
     if (e.target.matches('#ridesBtnHeader, #ridesBtnLive, #ridesBtnMobile')) {
@@ -2613,8 +2612,9 @@ function initFABMenu() {
   const toggle = document.getElementById('fabToggle');
   const menu   = document.querySelector('.fab-menu');
 
-  toggle.addEventListener('click', () => {
-    menu.classList.toggle('open');
+  toggle.addEventListener('click', e => {
+    e.stopPropagation();            
+       menu.classList.toggle('open');
   });
 
   document.getElementById('fab-ar').addEventListener('click', () => {
@@ -2632,8 +2632,10 @@ function initFABMenu() {
     menu.classList.remove('open');
   });
 
-  document.addEventListener('click', e => {
-    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+   document.addEventListener('click', e => {
+    if (menu.classList.contains('open') &&
+        !toggle.contains(e.target) &&
+        !menu.contains(e.target)) {
       menu.classList.remove('open');
     }
   });
@@ -2828,7 +2830,6 @@ function initFABMenu() {
     };
    canvas.width  = video.clientWidth;
     canvas.height = video.clientHeight;
-    // start overlay loop
     navigator.geolocation.getCurrentPosition(pos => {
       const userLat = pos.coords.latitude, userLng = pos.coords.longitude;
       window.addEventListener('deviceorientationabsolute', e => {
@@ -2837,25 +2838,20 @@ function initFABMenu() {
     });
   });
 
-  // close AR modal
   modal.querySelector('[data-close="arModal"]').addEventListener('click', () => {
     modal.style.display = 'none';
-    // stop camera
     const tracks = video.srcObject?.getTracks()||[];
     tracks.forEach(t=>t.stop());
     ctx.clearRect(0,0,canvas.width,canvas.height);
   });
 
-  // draw loop
   function drawAR(alpha, uLat, uLng) {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     stopsArr.forEach(s => {
       const bearing = getBearing(uLat,uLng,s.lat,s.lng);
-      // compute relative angle (0 = device facing north)
       let rel = bearing - alpha;
       if (rel < -180) rel += 360;
       if (rel > 180)  rel -= 360;
-      // if within ±30° of center, draw
       if (Math.abs(rel) < 30) {
         const x = canvas.width * (0.5 + rel/60);
         const dist = getDistance(uLat,uLng,s.lat,s.lng).toFixed(1);
@@ -2866,14 +2862,12 @@ function initFABMenu() {
     });
   }
 
-  // haversine
   function getDistance(lat1,lon1,lat2,lon2){
     const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
     const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)
             * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
     return R * 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
   }
-  // bearing
   function getBearing(lat1,lon1,lat2,lon2) {
     const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180;
     const Δλ=(lon2-lon1)*Math.PI/180;
@@ -2883,9 +2877,7 @@ function initFABMenu() {
     return (Math.atan2(y,x)*180/Math.PI+360)%360;
   }
 }
-  // ------------------------
-  // Quick Book Modals
-  // ------------------------
+
   function initQuickBookCards() {
     document.querySelectorAll('.card[data-page]').forEach(card => {
       const modal = document.getElementById(card.dataset.page);
@@ -2900,9 +2892,7 @@ function initFABMenu() {
     });
   }
 
-  // ------------------------
-  // Support Chat & Modal
-  // ------------------------
+
   function initSupportChat() {
     const btn    = document.getElementById('supportChat');
     const modal  = document.getElementById('supportModal');
@@ -2943,9 +2933,7 @@ function initFABMenu() {
       html2canvas: { scale: 0.8 }
     });
   });
-  // ------------------------
-  // Live Chat Widget
-  // ------------------------
+ 
   function initLiveChatWidget() {
     const sendBtn = document.getElementById('chatSendBtn');
     const input   = document.getElementById('chatInputField');
@@ -2980,20 +2968,17 @@ function initFABMenu() {
   const modal = document.getElementById('notifPrefsModal');
   const form  = document.getElementById('notifPrefsForm');
 
-  // open/close
   btn.addEventListener('click', () => modal.style.display = 'flex');
   modal.querySelectorAll('[data-close]').forEach(x =>
     x.addEventListener('click', () => modal.style.display = 'none')
   );
 
-  // load saved
   const saved = JSON.parse(localStorage.getItem('notifPrefs')||'{}');
   Object.keys(saved).forEach(k => {
     const inp = form.querySelector(`[name="${k}"]`);
     if (inp) inp.checked = saved[k];
   });
 
-  // save on submit
   form.addEventListener('submit', e => {
     e.preventDefault();
     const prefs = {};
@@ -3009,13 +2994,13 @@ function initFABMenu() {
   
   function initGlobalNav() {
      const sidebar = document.getElementById('mobileSidebar');
-  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+   document.getElementById('hamburgerBtn').addEventListener('click', e => {
+   e.stopPropagation();              
     document.getElementById('mobileSidebar').classList.add('open');
   });
   document.getElementById('closeSidebar').addEventListener('click', () => {
     sidebar.classList.remove('open');
   });
-    // Section scroll links
     document.querySelectorAll('.nav-btn[href^="#"]').forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
@@ -3027,12 +3012,9 @@ function initFABMenu() {
     });
   }
 
-  // ------------------------
-  // Periodic Updates: liveData & busObjects
-  // ------------------------
+ 
   function startPeriodicUpdates() {
     setInterval(() => {
-      // update liveData ETAs and capacity
       liveData.forEach(item => {
         item.eta = Math.max(1, item.eta - 1);
         item.cap = Math.max(0, item.cap - Math.floor(Math.random()*2));
@@ -3044,7 +3026,6 @@ function initFABMenu() {
     }, 10000);
 
     setInterval(() => {
-      // animate buses
       busObjects.forEach(bus => {
         bus.progress = (bus.progress + bus.speed) % 1;
         const lat = bus.from.lat + (bus.to.lat - bus.from.lat)*bus.progress;
@@ -3079,7 +3060,7 @@ function initFABMenu() {
       }
     });
     if (prefs.lateWarn && eta > 5) {
-      scheduleSmartAlert(i, eta, -1); // negative = late warning
+      scheduleSmartAlert(i, eta, -1); 
     }
   });
 }
@@ -3088,13 +3069,12 @@ const alertTimers = {};
 function scheduleSmartAlert(idx, eta, offset) {
   const bus   = liveData[idx];
   const idKey = `${idx}_${offset}`;
-  if (alertTimers[idKey]) return; // already scheduled
-
+  if (alertTimers[idKey]) return; 
   let delay;
   if (offset > 0) {
     delay = (eta - offset) * 60 * 1000;
   } else {
-    delay = 5 * 60 * 1000; // late warning at +5 min
+    delay = 5 * 60 * 1000; 
   }
 
   alertTimers[idKey] = setTimeout(() => {
@@ -3111,9 +3091,7 @@ function scheduleSmartAlert(idx, eta, offset) {
   }, delay);
 }
   
-  // ------------------------
-  // Bus Tracker List & Notifications
-  // ------------------------
+
   function refreshTrackerList() {
     const notifyToggle = document.getElementById('notifyToggle');
     const enabled      = notifyToggle.textContent.includes('Disable');
@@ -3136,7 +3114,6 @@ function scheduleSmartAlert(idx, eta, offset) {
     });
   }
 
-  // Notification toggle
   document.getElementById('notifyToggle').addEventListener('click', async function() {
     const btn = this;
     if (btn.textContent.includes('Enable')) {
@@ -3153,9 +3130,7 @@ function scheduleSmartAlert(idx, eta, offset) {
     }
   });
 
-  // ------------------------
-  // Toast Messages
-  // ------------------------
+ 
   function showToast(msg) {
     const t = document.createElement('div');
     t.className = 'toast';
@@ -3169,7 +3144,6 @@ function scheduleSmartAlert(idx, eta, offset) {
   }
 
 
-  // 1) Add "Tracker" button to the desktop header
   (function addTrackerHeaderButton() {
     const headerNav = document.querySelector('.header-nav');
     if (!document.getElementById('openTracker')) {
@@ -3181,11 +3155,9 @@ function scheduleSmartAlert(idx, eta, offset) {
       btn.addEventListener('click', () => {
         document.getElementById('busTracker').classList.remove('hidden');
       });
-      // mobile equivalent already created earlier
     }
   })();
 
-  // 2) Wire up the Prev/Upcoming/All Rides buttons
   (function wireHistoryButtons() {
     ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
       const btn = document.getElementById(id);
@@ -3197,10 +3169,8 @@ function scheduleSmartAlert(idx, eta, offset) {
             : id === 'upcomingRidesBtn'
               ? 'upcoming'
               : 'all';
-          // call your existing renderHistory + openHistory
           renderHistory(mode);
           document.getElementById('historyModal').style.display = 'flex';
-          // toggle active class
           document.querySelectorAll('.history-buttons .btn-secondary').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
         });
@@ -3208,7 +3178,6 @@ function scheduleSmartAlert(idx, eta, offset) {
     });
   })();
 
-  // 3) Initialize FAQ accordion toggles
   (function initAccordion() {
     document.querySelectorAll('.accordion-header').forEach(header => {
       header.addEventListener('click', () => {
