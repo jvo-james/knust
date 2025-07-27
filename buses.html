@@ -1730,10 +1730,12 @@ input:focus {
 }
 .fab-menu {
   display: none;
+  bottom: 80px;
   flex-direction: column-reverse;
   align-items: flex-end;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
+   z-index: 40001;
 }
 .fab-menu.open {
   display: flex;
@@ -1811,29 +1813,6 @@ input:focus {
     z-index: 5001;        
   }
 
-  .mobile-sidebar .nav-btn { display: flex; align-items: center; gap: .5rem; }
-  .mobile-sidebar .nav-btn::after {
-    content: attr(data-label);
-    font-size: .875rem;
-    color: var(--white);
-  }
-  .header-nav .nav-btn {
-    position: relative;
-  }
-  .header-nav .nav-btn:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%; left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.9);
-    color: #222;
-    padding: 0.25rem .5rem;
-    border-radius: 4px;
-    white-space: nowrap;
-    font-size: .75rem;
-    margin-bottom: .25rem;
-    pointer-events: none;
-  }
 
   #closeTracker {
     color: var(--white) !important;
@@ -1892,8 +1871,8 @@ input:focus {
     <aside class="mobile-sidebar" id="mobileSidebar">
       <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
        <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> Home</a>
-        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route">Live</i> </a>
-        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane">Book</i> </a>
+        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i>Live </a>
+        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> Book</a>
         <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i>Quick Book</a>
        <button id="openTrackerMobile" class="nav-btn"><i class="fas fa-shuttle-van"></i> Tracker</button>
    <button class="nav-btn" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
