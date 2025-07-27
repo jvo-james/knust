@@ -2954,7 +2954,7 @@ function initFABMenu() {
 
 
   function initSupportChat() {
-    const btn    = document.getElementById('supportChat');
+  const btn    = document.getElementById('fab-support');
     const modal  = document.getElementById('supportModal');
     const agent  = document.getElementById('chatAgentBtn');
  btn.addEventListener('click', () => {
@@ -3321,7 +3321,66 @@ function scheduleSmartAlert(idx, eta, offset) {
   });
 </script>
 
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#mobileSidebar .nav-btn').forEach(btn => {
+      const icon = btn.querySelector('i');
+      btn.setAttribute('data-label', icon.nextSibling?.textContent.trim() || icon.className);
+    });
 
+    document.getElementById('openTrackerMobile').addEventListener('click', () => {
+      document.getElementById('mobileSidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').style.display = 'none';
+    });
+
+    document.getElementById('closeTracker').addEventListener('click', () => {
+      document.getElementById('busTracker').classList.add('hidden');
+    });
+
+    const notifyBtn = document.getElementById('notifyToggle');
+    notifyBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        notifyBtn.textContent = 'Disable ETA Alerts';
+        showToast('ETA Alerts Enabled');
+      } else if (perm === 'denied') {
+        showToast('Please enable notifications in your browser settings');
+      }
+    });
+
+    document.getElementById('trackerList').addEventListener('click', e => {
+      if (!e.target.closest('li')) return;
+      const idx = Array.from(e.currentTarget.children).indexOf(e.target.closest('li'));
+      const bus = window.liveData[idx];
+      const [from,to] = bus.route.split(' → ');
+      const mid = [(stops[from][0] + stops[to][0]) / 2, (stops[from][1] + stops[to][1]) / 2];
+      document.getElementById('map').scrollIntoView({ behavior:'smooth' });
+      setTimeout(() => {
+        map.invalidateSize();
+        map.flyTo(mid, 16, { animate:true, duration:1.2 });
+      }, 300);
+      document.getElementById('busTracker').classList.add('hidden');
+    });
+
+    map.on('load', () => {
+      map.addLayer(window.crowdHeatLayer);
+    });
+    if (map._loaded) window.crowdHeatLayer.addTo(map);
+  });
+
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.getElementById('toastContainer').appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => {
+      t.classList.remove('show');
+      t.addEventListener('transitionend', () => t.remove(), { once: true });
+    }, 3000);
+  }
+</script>
 
 </body>
 </html>
