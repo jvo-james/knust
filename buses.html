@@ -2712,12 +2712,13 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
   });
 
   ['ridesBtnHeader','ridesBtnLive','ridesBtnMobile'].forEach(id => {
-   document.getElementById(id).addEventListener('click', e => {
-     e.preventDefault();
-     renderHistory('all');
-     historyModal.style.display = 'flex';
-   });
- });
+    document.getElementById(id).addEventListener('click', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      renderHistory('all');
+      historyModal.style.display = 'flex';
+    });
+  });
 
   document.addEventListener('click', e => {
   const btn = e.target.closest('.view-map');
@@ -2822,6 +2823,8 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
 
   document.getElementById('signOutFooter').addEventListener('click', signOut);
 
+    document.addEventListener('click', e => {
+    if ( e.target.closest('button, a, .view-map, .nav-btn') ) return;
  
     const clickInsideMobileNav = mobileNav.contains(e.target) || hamBtn.contains(e.target);
     const clickOnMobileTracker = !!e.target.closest('#openTrackerMobile');
