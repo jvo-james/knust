@@ -1805,6 +1805,43 @@ input:focus {
 #globalOverlay.active {
   display: block;
 }
+
+    .fab-menu {
+    position: relative;
+    z-index: 5001;        
+  }
+
+  .mobile-sidebar .nav-btn { display: flex; align-items: center; gap: .5rem; }
+  .mobile-sidebar .nav-btn::after {
+    content: attr(data-label);
+    font-size: .875rem;
+    color: var(--white);
+  }
+  .header-nav .nav-btn {
+    position: relative;
+  }
+  .header-nav .nav-btn:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.9);
+    color: #222;
+    padding: 0.25rem .5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: .75rem;
+    margin-bottom: .25rem;
+    pointer-events: none;
+  }
+
+  #closeTracker {
+    color: var(--white) !important;
+  }
+
+  .bus-tracker {
+    z-index: 6000;  
+  }
   </style>
 </head>
 <body>
@@ -1844,20 +1881,20 @@ input:focus {
       <h1 class="app-title"> KNUST Shuttle Tracker</h1>
       <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
       <nav class="header-nav desktop-only">
-        <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> </a>
-        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i> </a>
-        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> </a>
-        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> </a>
+        <a href="#hero" class="nav-btn" title="Home"><i class="fas fa-home"></i> </a>
+        <a href="#live-shuttles" class="nav-btn" title="Live"><i class="fas fa-route"></i> </a>
+        <a href="#book-ride" class="nav-btn" title="Book"><i class="fas fa-paper-plane"></i> </a>
+        <a href="#quick-book" class="nav-btn" title="Quick Book"><i class="fas fa-thumbs-up"></i> </a>
         <button class="nav-btn" id="ridesBtnHeader"><i class="fas fa-history"></i> My Rides</button>
       </nav>
     </div>
    <div id="globalOverlay"></div>
     <aside class="mobile-sidebar" id="mobileSidebar">
       <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
-       <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> </a>
-        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i> </a>
-        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> </a>
-        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> </a>
+       <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> Home</a>
+        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route">Live</i> </a>
+        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane">Book</i> </a>
+        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i>Quick Book</a>
        <button id="openTrackerMobile" class="nav-btn"><i class="fas fa-shuttle-van"></i> Tracker</button>
    <button class="nav-btn" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
     </aside>
@@ -3304,6 +3341,66 @@ function scheduleSmartAlert(idx, eta, offset) {
   });
 </script>
 
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#mobileSidebar .nav-btn').forEach(btn => {
+      const icon = btn.querySelector('i');
+      btn.setAttribute('data-label', icon.nextSibling?.textContent.trim() || icon.className);
+    });
+
+    document.getElementById('openTrackerMobile').addEventListener('click', () => {
+      document.getElementById('mobileSidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').style.display = 'none';
+    });
+
+    document.getElementById('closeTracker').addEventListener('click', () => {
+      document.getElementById('busTracker').classList.add('hidden');
+    });
+
+    const notifyBtn = document.getElementById('notifyToggle');
+    notifyBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        notifyBtn.textContent = 'Disable ETA Alerts';
+        showToast('ETA Alerts Enabled');
+      } else if (perm === 'denied') {
+        showToast('Please enable notifications in your browser settings');
+      }
+    });
+
+    document.getElementById('trackerList').addEventListener('click', e => {
+      if (!e.target.closest('li')) return;
+      const idx = Array.from(e.currentTarget.children).indexOf(e.target.closest('li'));
+      const bus = window.liveData[idx];
+      const [from,to] = bus.route.split(' → ');
+      const mid = [(stops[from][0] + stops[to][0]) / 2, (stops[from][1] + stops[to][1]) / 2];
+      document.getElementById('map').scrollIntoView({ behavior:'smooth' });
+      setTimeout(() => {
+        map.invalidateSize();
+        map.flyTo(mid, 16, { animate:true, duration:1.2 });
+      }, 300);
+      document.getElementById('busTracker').classList.add('hidden');
+    });
+
+    map.on('load', () => {
+      map.addLayer(window.crowdHeatLayer);
+    });
+    if (map._loaded) window.crowdHeatLayer.addTo(map);
+  });
+
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.getElementById('toastContainer').appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => {
+      t.classList.remove('show');
+      t.addEventListener('transitionend', () => t.remove(), { once: true });
+    }, 3000);
+  }
+</script>
 
 </body>
 </html>
