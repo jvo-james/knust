@@ -2364,7 +2364,26 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     window.scrollBy(0, -headerHeight);
     mobileNav.style.left = '-260px';
   }
-  
+
+   document
+   .querySelectorAll('.header-nav .nav-btn[href^="#"], .mobile-sidebar .nav-btn[href^="#"]')
+    .forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        const target = el.getAttribute('href').slice(1);
+        scrollToSection(target);
+      });
+    });
+
+  document
+    .querySelectorAll('.hero-buttons a[href^="#"]')
+    .forEach(el => {
+     el.addEventListener('click', e => {
+       e.preventDefault();
+        const target = el.getAttribute('href').slice(1);
+        scrollToSection(target);
+      });
+    });
     ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {
       const filter = id === 'prevRidesBtn'
