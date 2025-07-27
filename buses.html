@@ -3259,6 +3259,50 @@ function scheduleSmartAlert(idx, eta, offset) {
 })();
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const hambBtn      = document.getElementById('hamburgerBtn');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    hambBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = mobileSidebar.classList.toggle('open');
+      sidebarOverlay.style.display = isOpen ? 'block' : 'none';
+    });
+
+    sidebarOverlay.addEventListener('click', function() {
+      mobileSidebar.classList.remove('open');
+      this.style.display = 'none';
+    });
+
+    const fabToggle   = document.getElementById('fabToggle');
+    const fabMenu     = document.querySelector('.fab-menu');
+    const fabOverlay  = document.getElementById('fabOverlay');
+
+    fabToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = fabMenu.classList.toggle('open');
+      fabOverlay.style.display = isOpen ? 'block' : 'none';
+    });
+
+    fabOverlay.addEventListener('click', function() {
+      fabMenu.classList.remove('open');
+      this.style.display = 'none';
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!hambBtn.contains(e.target) && !mobileSidebar.contains(e.target)) {
+        mobileSidebar.classList.remove('open');
+        sidebarOverlay.style.display = 'none';
+      }
+      if (!fabToggle.contains(e.target) && !fabMenu.contains(e.target)) {
+        fabMenu.classList.remove('open');
+        fabOverlay.style.display = 'none';
+      }
+    });
+  });
+</script>
 
 
 </body>
