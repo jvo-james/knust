@@ -2468,31 +2468,7 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     });
   }
 
-  document.addEventListener('click', e => {
-    const clickedHamburger = e.target.closest('#hamburgerBtn');
-    const clickedInMobileNav = e.target.closest('#mobileSidebar');
-    const clickedOpenTrackerMobile = !!e.target.closest('#openTrackerMobile');
-
-    const clickedOpenTrackerHeader = e.target.id === 'openTracker';
-    const clickedInTracker = e.target.closest('#busTracker');
-
-    if (!clickedHamburger && !clickedInMobileNav) {
-      mobileNav.style.left = '-260px';
-    }
-    if (clickedOpenTrackerMobile) {
-      tracker.classList.remove('hidden');
-      mobileNav.style.left = '-260px';
-    }
-
-    if (!clickedOpenTrackerHeader && !clickedOpenTrackerMobile && !clickedInTracker) {
-      tracker.classList.add('hidden');
-    }
-  });
-
-  document.getElementById('signOutFooter').addEventListener('click', () => {
-    localStorage.removeItem('signedIn');
-    window.location.reload();
-  });
+ 
   
    function refreshTracker() {
       trackerList.innerHTML = '';
