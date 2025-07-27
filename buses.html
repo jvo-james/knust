@@ -2326,7 +2326,22 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
       renderLiveShuttles(term);
     }
   });
- 
+
+    map.on('click', e => {
+    let min = Infinity, nearest = null;
+    Object.entries(stops).forEach(([name, coords]) => {
+      const d = map.distance(e.latlng, L.latLng(coords));
+      if (d < min) [min, nearest] = [d, { name, coords }];
+    });
+    if (nearest && min < 500) {
+      map.flyTo(nearest.coords, 17, { animate: true, duration: 1 });
+      L.popup({ autoClose: true })
+        .setLatLng(nearest.coords)
+        .setContent(`Stop: <strong>${nearest.name}</strong>`)
+        .openOn(map);
+    }
+  });
+
   const hamBtn      = document.getElementById('hamburgerBtn');
   const mobileNav   = document.getElementById('mobileSidebar');
   const closeNavBtn = document.getElementById('closeSidebar');
@@ -2339,7 +2354,28 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     window.scrollBy(0, -headerHeight);
     mobileNav.style.left = '-260px';
   }
-  
+
+    document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      scrollToSection(btn.dataset.target);
+      if (btn.dataset.target === 'live-shuttles') refreshMap();
+    });
+  });
+
+document.querySelectorAll('[data-scroll]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const sectionId = btn.dataset.scroll;
+    const overlay = btn.closest('.modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    scrollToSection(sectionId);
+  });
+});
+
+
     ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {
       const filter = id === 'prevRidesBtn'
