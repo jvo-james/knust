@@ -1730,12 +1730,11 @@ input:focus {
 }
 .fab-menu {
   display: none;
-  bottom: 80px;
   flex-direction: column-reverse;
   align-items: flex-end;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
-   z-index: 40001;
+ 
 }
 .fab-menu.open {
   display: flex;
@@ -1821,6 +1820,8 @@ input:focus {
   .bus-tracker {
     z-index: 6000;  
   }
+    .nav-btn { text-decoration: none; }
+    .nav-btn active { text-decoration: none; }
   </style>
 </head>
 <body>
@@ -1860,7 +1861,7 @@ input:focus {
       <h1 class="app-title"> KNUST Shuttle Tracker</h1>
       <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
       <nav class="header-nav desktop-only">
-        <a href="#hero" class="nav-btn" title="Home"><i class="fas fa-home"></i> </a>
+        <a href="#hero" class="nav-btn active" title="Home"><i class="fas fa-home"></i> </a>
         <a href="#live-shuttles" class="nav-btn" title="Live"><i class="fas fa-route"></i> </a>
         <a href="#book-ride" class="nav-btn" title="Book"><i class="fas fa-paper-plane"></i> </a>
         <a href="#quick-book" class="nav-btn" title="Quick Book"><i class="fas fa-thumbs-up"></i> </a>
@@ -1871,9 +1872,9 @@ input:focus {
     <aside class="mobile-sidebar" id="mobileSidebar">
       <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
        <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> Home</a>
-        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i>Live </a>
+        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i> Live </a>
         <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> Book</a>
-        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i>Quick Book</a>
+        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> Quick Book</a>
        <button id="openTrackerMobile" class="nav-btn"><i class="fas fa-shuttle-van"></i> Tracker</button>
    <button class="nav-btn" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
     </aside>
@@ -3320,66 +3321,7 @@ function scheduleSmartAlert(idx, eta, offset) {
   });
 </script>
 
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('#mobileSidebar .nav-btn').forEach(btn => {
-      const icon = btn.querySelector('i');
-      btn.setAttribute('data-label', icon.nextSibling?.textContent.trim() || icon.className);
-    });
 
-    document.getElementById('openTrackerMobile').addEventListener('click', () => {
-      document.getElementById('mobileSidebar').classList.remove('open');
-      document.getElementById('sidebarOverlay').style.display = 'none';
-    });
-
-    document.getElementById('closeTracker').addEventListener('click', () => {
-      document.getElementById('busTracker').classList.add('hidden');
-    });
-
-    const notifyBtn = document.getElementById('notifyToggle');
-    notifyBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const perm = await Notification.requestPermission();
-      if (perm === 'granted') {
-        notifyBtn.textContent = 'Disable ETA Alerts';
-        showToast('ETA Alerts Enabled');
-      } else if (perm === 'denied') {
-        showToast('Please enable notifications in your browser settings');
-      }
-    });
-
-    document.getElementById('trackerList').addEventListener('click', e => {
-      if (!e.target.closest('li')) return;
-      const idx = Array.from(e.currentTarget.children).indexOf(e.target.closest('li'));
-      const bus = window.liveData[idx];
-      const [from,to] = bus.route.split(' → ');
-      const mid = [(stops[from][0] + stops[to][0]) / 2, (stops[from][1] + stops[to][1]) / 2];
-      document.getElementById('map').scrollIntoView({ behavior:'smooth' });
-      setTimeout(() => {
-        map.invalidateSize();
-        map.flyTo(mid, 16, { animate:true, duration:1.2 });
-      }, 300);
-      document.getElementById('busTracker').classList.add('hidden');
-    });
-
-    map.on('load', () => {
-      map.addLayer(window.crowdHeatLayer);
-    });
-    if (map._loaded) window.crowdHeatLayer.addTo(map);
-  });
-
-  function showToast(msg) {
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = msg;
-    document.getElementById('toastContainer').appendChild(t);
-    requestAnimationFrame(() => t.classList.add('show'));
-    setTimeout(() => {
-      t.classList.remove('show');
-      t.addEventListener('transitionend', () => t.remove(), { once: true });
-    }, 3000);
-  }
-</script>
 
 </body>
 </html>
