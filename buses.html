@@ -12,8 +12,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"  />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
- <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
   <style>
    :root {
   --primary:   #006233;
@@ -364,15 +362,15 @@ input:focus {
 
 
 .modal-overlay {
-   position: fixed;
-   top: 0; left: 0;
-   width: 100%; height: 100%;
-   background: rgba(0,0,0,0.6);
-   display: none;
-   align-items: center;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
   justify-content: center;
-   z-index: 2000;
-   backdrop-filter: blur(4px);
+  z-index: 2000;
+  backdrop-filter: blur(4px);
 }
 .modal {
   background: var(--white);
@@ -529,8 +527,6 @@ input:focus {
     }
 
      #map { will-change: transform; }
-
-    
     
 .hero-section {
   position: relative;
@@ -1637,28 +1633,13 @@ input:focus {
 .bus-tracker header,
 .bus-tracker #notifyToggle {
   position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 100;
 }
 .bus-tracker #notifyToggle {
   margin: 0;
   border-radius: 0 0 var(--radius) var(--radius);
-}
-
-#exportRideBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  background: var(--primary);
-  color: var(--white);
-  border: none;
-  border-radius: var(--radius);
-  font-weight: 600;
-  transition: background var(--transition), transform var(--transition);
-  margin-top: 1rem;       
-}
-#exportRideBtn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
 }
 
   </style>
@@ -1700,19 +1681,19 @@ input:focus {
       <h1 class="app-title"> KNUST Shuttle Tracker</h1>
       <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
       <nav class="header-nav desktop-only">
-        <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> </a>
-        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i> </a>
-        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> </a>
-        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> </a>
+        <button class="nav-btn active" data-target="hero"><i class="fas fa-home"></i> </button>
+        <button class="nav-btn" data-target="live-shuttles"><i class="fas fa-route"></i> </button>
+        <button class="nav-btn" data-target="book-ride"><i class="fas fa-paper-plane"></i> </button>
+        <button class="nav-btn" data-target="quick-book"><i class="fas fa-thumbs-up"></i> </button>
         <button class="nav-btn" id="ridesBtnHeader"><i class="fas fa-history"></i> My Rides</button>
       </nav>
     </div>
     <aside class="mobile-sidebar" id="mobileSidebar">
       <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
-       <a href="#hero" class="nav-btn active"><i class="fas fa-home"></i> </a>
-        <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i> </a>
-        <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> </a>
-        <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> </a>
+      <button class="nav-btn" data-target="hero"><i class="fas fa-home"></i> Home</button>
+      <button class="nav-btn" data-target="live-shuttles"><i class="fas fa-route"></i> Live Shuttles</button>
+      <button class="nav-btn" data-target="book-ride"><i class="fas fa-paper-plane"></i> Book Ride</button>
+      <button class="nav-btn" data-target="quick-book"><i class="fas fa-thumbs-up"></i> Quick Book</button>
    <button class="nav-btn" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
     </aside>
   </header>
@@ -1727,8 +1708,8 @@ input:focus {
       <h2 class="hero-title">Welcome to <span id="typewriter"></span></h2>
       <p class="hero-subtitle">Track, book and ride with confidence.</p>
       <div class="hero-buttons">
-  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book a Ride</a>
-  <a href="#live-shuttles" class="btn-secondary"><i class="fas fa-route"></i> See Live Shuttles</a>
+        <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book a Ride</button>
+        <button class="btn-secondary" data-scroll="live-shuttles"><i class="fas fa-route"></i> See Live Shuttles</button>
       </div>
       <br>
       <div class="bus-animations">
@@ -1899,7 +1880,7 @@ input:focus {
       <button class="close-btn" data-close="ksbQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-university"></i> Quick Book: KSB</h3>
       <p>Secure your seat on the next shuttle departing to/from KSB.</p>
-  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
     </div>
   </div>
   <div class="modal-overlay" id="medicalQuickModal">
@@ -1907,7 +1888,7 @@ input:focus {
       <button class="close-btn" data-close="medicalQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-hospital"></i> Quick Book: Medical Village</h3>
       <p>Reserve your spot for the next shuttle at Medical Village.</p>
-  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
     </div>
   </div>
   <div class="modal-overlay" id="bruneiQuickModal">
@@ -1915,7 +1896,7 @@ input:focus {
       <button class="close-btn" data-close="bruneiQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-tree"></i> Quick Book: Brunei</h3>
       <p>Get on the green route—book your Brunei shuttle now.</p>
- <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
     </div>
   </div>
   <div class="modal-overlay" id="caselyQuickModal">
@@ -1923,7 +1904,7 @@ input:focus {
       <button class="close-btn" data-close="caselyQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-university"></i> Quick Book: Casely Hayeford</h3>
       <p>Hop on the shuttle serving Casely Hayeford—reserve now.</p>
- <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
     </div>
   </div>
   <div class="modal-overlay" id="scienceQuickModal">
@@ -1931,7 +1912,7 @@ input:focus {
       <button class="close-btn" data-close="scienceQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-flask"></i> Quick Book: College of Science</h3>
       <p>Lock in your seat to/from the College of Science shuttle.</p>
- <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
     </div>
   </div>
   <div class="modal-overlay" id="commerceQuickModal">
@@ -1939,7 +1920,7 @@ input:focus {
       <button class="close-btn" data-close="commerceQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-shopping-bag"></i> Quick Book: Commercial Area</h3>
       <p>Secure your seat on the busy Commercial Area route.</p>
- <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+      <button class="btn-primary" data-scroll="book-ride"><i class="fas fa-paper-plane"></i> Book Now</button>
     </div>
   </div>
 
@@ -1957,7 +1938,7 @@ input:focus {
         </div>
         <div class="accordion-item">
           <button class="accordion-header"><i class="fas fa-chevron-down"></i> Can I book for others?</button>
-          <div class="accordion-body">Yes, enter their student ID in the form.</div>
+          <div class="accordion-body">Yes—enter their student ID in the form.</div>
         </div>
         <div class="accordion-item">
           <button class="accordion-header"><i class="fas fa-chevron-down"></i> Weekend service?</button>
@@ -2055,66 +2036,60 @@ input:focus {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <footer class="app-footer">
-    <p>&copy; 2025 KNUST Shuttle Tracker. Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
+    <p>&copy; 2025 KNUST Shuttle Tracker — Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
  <button id="signOutFooter" type="button" class="btn-secondary" style="margin-top:1rem;">
     <i class="fas fa-sign-out-alt"></i> Sign Out
   </button>
   </footer>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.min.js"></script>
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.css"/>
-<script src="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
-  <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
   <script>
-// GSAP parallax & bus animations
-const hero = document.querySelector('.hero-section');
-const bg    = hero.querySelector('.hero-background img');
-const gsapBuses = hero.querySelectorAll('.bus-animation');
+  const hero = document.querySelector('.hero-section');
+  const bg    = hero.querySelector('.hero-background img');
+  const gsapBuses = hero.querySelectorAll('.bus-animation');
 
-hero.addEventListener('mousemove', e => {
-  const rect = hero.getBoundingClientRect();
-  const xPct = (e.clientX - rect.left) / rect.width  - 0.5;
-  const yPct = (e.clientY - rect.top)  / rect.height - 0.5;
+  hero.addEventListener('mousemove', e => {
+    const rect = hero.getBoundingClientRect();
+    const xPct = (e.clientX - rect.left) / rect.width  - 0.5;
+    const yPct = (e.clientY - rect.top)  / rect.height - 0.5;
 
-  gsap.to(bg, {
-    x: xPct * 30,
-    y: yPct * 20,
-    duration: 1,
-    ease: 'power3.out'
-  });
-
-  gsapBuses.forEach((bus, i) => {
-    gsap.to(bus, {
-      x: xPct * (20 + i * 10),
-      y: yPct * (10 + i * 5),
-      rotationY: xPct * 10,
+    gsap.to(bg, {
+      x: xPct * 30,
+      y: yPct * 20,
       duration: 1,
       ease: 'power3.out'
     });
-  });
-});
 
-hero.addEventListener('mouseleave', () => {
-  gsap.to([bg, ...gsapBuses], {
-    x: 0, y: 0, rotationY: 0, duration: 1, ease: 'power3.out'
+    gsapBuses.forEach((bus, i) => {
+      gsap.to(bus, {
+        x: xPct * (20 + i * 10),
+        y: yPct * (10 + i * 5),
+        rotationY: xPct * 10,
+        duration: 1,
+        ease: 'power3.out'
+      });
+    });
   });
-});
+
+  hero.addEventListener('mouseleave', () => {
+    gsap.to([bg, ...gsapBuses], {
+      x: 0, y: 0, rotationY: 0, duration: 1, ease: 'power3.out'
+    });
+  });
 </script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-  const pickup      = document.getElementById('pickup');
-  const destination = document.getElementById('destination');
-  const date        = document.getElementById('date');
-  const timeslot    = document.getElementById('timeslot');
-  
-  // --- SIGN-IN OVERLAY ---
+  const openTrackerBtn = document.createElement('button');
+    openTrackerBtn.id = 'openTracker';
+    openTrackerBtn.className = 'nav-btn desktop-only';
+    openTrackerBtn.innerHTML = '<i class="fas fa-shuttle-van"></i> Tracker';
+    document.querySelector('.header-nav').append(openTrackerBtn);
+
+  const { jsPDF } = window.jspdf;
   const signinOverlay = document.getElementById('signinOverlay');
   const signinForm    = document.getElementById('signinForm');
   if (localStorage.getItem('signedIn') === 'true') {
@@ -2128,185 +2103,284 @@ document.addEventListener('DOMContentLoaded', function() {
     signinOverlay.style.display = 'none';
   });
 
-  // --- HEADER & TRACKER BUTTON ---
-  const openTrackerBtn = document.createElement('button');
-  openTrackerBtn.id = 'openTracker';
-  openTrackerBtn.className = 'nav-btn desktop-only';
-  openTrackerBtn.innerHTML = '<i class="fas fa-shuttle-van"></i> Tracker';
-  document.querySelector('.header-nav').append(openTrackerBtn);
-
-  // --- PDF EXPORT SETUP ---
-  const { jsPDF } = window.jspdf;
-
-  // --- MAP INITIALIZATION ---
-  const map = L.map('map', {
-      zoomControl: false,
-      fadeAnimation: true,
-      markerZoomAnimation: true,
-      zoomSnap: 0.25,
-      zoomDelta: 0.25,
-      inertia: true,
-      inertiaDeceleration: 600,
-      inertiaMaxSpeed: 1500,
-      fullscreenControl: true,
-      fullscreenControlOptions: { position: 'topleft' }
+ const map = L.map('map', {
+    zoomControl: true,
+    zoomAnimation: true,     
+    fadeAnimation: true,        
+    markerZoomAnimation: true,   
+    zoomSnap: 0.25,              
+    zoomDelta: 0.25,            
+    inertia: true,            
+    inertiaDeceleration: 600,   
+    inertiaMaxSpeed: 1500
   }).setView([6.6667, -1.5833], 15);
-
-  L.control.zoom({ position: 'bottomright' }).addTo(map);
-  L.control.scale({ position: 'bottomleft', metric: true, imperial: false }).addTo(map);
-  L.control.locate({
-    position: 'bottomright',
-    strings: { title: 'Show my location' },
-    flyTo: true,
-    keepCurrentZoomLevel: false,
-    icon: 'fas fa-location-arrow'
-  }).addTo(map);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  // Mini map
-  const mini = new L.Control.MiniMap(
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-    { toggleDisplay: true, minimized: false, position: 'bottomleft' }
-  ).addTo(map);
-
-  // --- USER LOCATION ---
   let userMarker;
   if ('geolocation' in navigator) {
     navigator.geolocation.watchPosition(pos => {
-      const lat = pos.coords.latitude, lng = pos.coords.longitude;
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
       if (!userMarker) {
         userMarker = L.circleMarker([lat, lng], {
-          radius: 8, color: '#3388ff', weight: 2,
-          fillColor: '#3388ff', fillOpacity: 1,
-          className: 'pulse-marker'
+          radius: 8,
+          color: '#3388ff',
+          weight: 2,
+          fillColor: '#3388ff',
+          fillOpacity: 1,
+          className: 'pulse-marker'  
         }).addTo(map);
       } else {
         userMarker.setLatLng([lat, lng]);
       }
-    }, err => console.warn('Geolocation error:', err),
-    { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 });
-  }
 
-  map.once('load', () => {
+   }, err => {
+      console.warn('Geolocation error:', err);
+    }, {
+      enableHighAccuracy: true,
+      maximumAge: 10000,
+      timeout: 10000
+    });
+  }
+  
+   map.once('load', () => {
     map.invalidateSize();
     map.flyTo([6.6667, -1.5833], 15, { animate: true, duration: 1.2 });
-  });
-
-  window.addEventListener('resize', () => { setTimeout(()=> map.invalidateSize(), 200); });
+   });
+  
+  function refreshMap() { setTimeout(()=> map.invalidateSize(), 200); }
+  window.addEventListener('resize', refreshMap);
+  
   setTimeout(() => map.invalidateSize(), 200);
 
-  // --- STOPS & ROUTES ---
+// pulled from google maps
   const stops = {
-    KSB: [6.669316418795082, -1.5671804175503585],
-    'Medical Village': [6.681114944023242, -1.549788155821193],
-    Brunei: [6.67046510610072, -1.5741292302545924],
-    'Casely Hayeford': [6.675135508075269, -1.5675584175565618],
-    'College of Science': [6.6745559231628535, -1.5675620238500976],
-    'Commercial Area': [6.682837359405059, -1.576959913492716]
+    KSB:                  [6.668479541771787, -1.5684205067613826],
+    'Medical Village':    [6.681114944023242, -1.549788155821193],
+    Brunei:               [6.670277669253442, -1.572828261973431],
+    'Casely Hayeford':    [6.675135508075269, -1.5675584175565618],
+    'College of Science': [6.674004778977404, -1.5676476478794432],
+    'Commercial Area':    [6.682837359405059, -1.576959913492716]
   };
 
   const boundsCoords = Object.values(stops);
   const lats = boundsCoords.map(c=>c[0]), lngs = boundsCoords.map(c=>c[1]);
-  const campusBounds = [
-    [Math.min(...lats), Math.min(...lngs)],
-    [Math.max(...lats), Math.max(...lngs)]
-  ];
-
-  L.rectangle(campusBounds, { color: '#006233', weight: 2, fillOpacity: 0.05 }).addTo(map);
-
-  // Plot stop markers
-  Object.entries(stops).forEach(([name, coords]) => {
-    L.marker(coords).addTo(map).bindPopup(`<strong>${name}</strong>`);
-  });
-
-  // Route definitions
-  const routes = {
-    'KSB → Medical Village': ['KSB', 'Medical Village'],
-    'Medical Village → Brunei': ['Medical Village', 'Brunei'],
-    'Brunei → Commercial Area': ['Brunei', 'Commercial Area'],
-    'Commercial Area → KSB': ['Commercial Area', 'KSB'],
-    'Casely Hayeford → College of Science': ['Casely Hayeford', 'College of Science'],
-    'College of Science → KSB': ['College of Science', 'KSB']
-  };
-
-  // Bus objects for animation
-  const busObjects = [];
-  Object.entries(routes).forEach(([routeName, [from, to]], i) => {
-    const start = stops[from], end = stops[to];
-    const marker = L.marker(start, {
-      icon: L.divIcon({ className:'bus-icon', html:`<i class="fas fa-shuttle-van"></i>` }),
-      routeName
-    }).addTo(map);
-
-    marker.bindPopup(`
-      <strong>${routeName}</strong><br/>
-      ID: Bus-${100+i}<br/>
-      ETA: <span class="eta">—</span> min
-    `);
-
-    busObjects.push({
-      marker,
-      from: L.latLng(start),
-      to: L.latLng(end),
-      progress: Math.random() * 0.7,
-      speed: 0.0008 + Math.random() * 0.0004
-    });
-  });
+  const southWest = [ Math.min(...lats), Math.min(...lngs) ];
+  const northEast = [ Math.max(...lats), Math.max(...lngs) ];
+  const campusBounds = [ southWest, northEast ];
   
-  // --- TRACKER PANEL & NOTIFICATIONS ---
-  const tracker      = document.getElementById('busTracker');
-  const trackerList  = document.getElementById('trackerList');
-  const closeTracker = document.getElementById('closeTracker');
-  const openTracker  = document.getElementById('openTracker');
-  const notifyToggle = document.getElementById('notifyToggle');
-  let notifyEnabled  = false;
+const routes = {
+  'KSB → Medical Village':         ['KSB','Medical Village'],
+  'Medical Village → Brunei':      ['Medical Village','Brunei'],
+  'Brunei → Commercial Area':      ['Brunei','Commercial Area'],
+  'Commercial Area → KSB':         ['Commercial Area','KSB'],
+  'Casely Hayeford → College of Science': ['Casely Hayeford','College of Science'],
+  'College of Science → KSB':      ['College of Science','KSB']
+};
 
-  openTracker.onclick  = () => tracker.classList.remove('hidden');
-  closeTracker.onclick = () => tracker.classList.add('hidden');
 
-  // Mobile tracker button
+const busObjects = [];  
+const busSpeed = 0.0005; 
+
+   const tracker = document.getElementById('busTracker');
+    const trackerList = document.getElementById('trackerList');
+    const closeTracker = document.getElementById('closeTracker');
+    const openTracker = document.getElementById('openTracker');
+    const notifyToggle = document.getElementById('notifyToggle');
+    let notifyEnabled = false;
+
+    openTracker.onclick = () => tracker.classList.remove('hidden');
+    closeTracker.onclick = () => tracker.classList.add('hidden');
+
+  
   const mobileOpen = document.createElement('button');
-  mobileOpen.id    = 'openTrackerMobile';
+  mobileOpen.id = 'openTrackerMobile';
   mobileOpen.className = 'nav-btn';
   mobileOpen.innerHTML = '<i class="fas fa-shuttle-van"></i> Tracker';
   document.getElementById('mobileSidebar').append(mobileOpen);
   mobileOpen.addEventListener('click', () => openTracker.click());
 
-  notifyToggle.onclick = async () => {
-    if (!notifyEnabled) {
-      const perm = await Notification.requestPermission();
-      if (perm === 'granted') {
-        notifyEnabled = true;
-        notifyToggle.textContent = 'Disable ETA Alerts';
-        refreshTracker();
-        showToast('ETA Alerts Enabled');
-      } else {
-        showToast('Notification permission denied');
+   notifyToggle.onclick = async () => {
+  if (!notifyEnabled) {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      notifyEnabled = true;
+      notifyToggle.textContent = 'Disable ETA Alerts';
+      refreshTracker();
+      showToast('ETA Alerts Enabled');
+    } else {
+      showToast('Notification permission denied');
+    }
+  } else {
+    notifyEnabled = false;
+    notifyToggle.textContent = 'Enable ETA Alerts';
+    showToast('ETA Alerts Disabled');
+  }
+};
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.getElementById('toastContainer').append(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+  }, 3000);
+}
+
+
+Object.entries(routes).forEach(([routeName, [from, to]], i) => {
+  const start = stops[from];
+  const end   = stops[to];
+  const marker = L.marker(start, {
+    icon: L.divIcon({ className:'bus-icon', html:`<i class="fas fa-shuttle-van"></i>` }),
+    routeName: routeName    
+  }).addTo(map);
+
+  marker.bindPopup(`
+    <strong>${routeName}</strong><br/>
+    ID: Bus-${100+i}<br/>
+    ETA: <span class="eta">—</span> min
+  `);
+
+ busObjects.push({
+    marker,
+    from: L.latLng(start),
+    to:   L.latLng(end),
+    progress: Math.random()*0.7, 
+    speed: 0.0008 + Math.random()*0.0004
+  });
+});
+
+  
+   Object.entries(stops).forEach(([name, coords]) => {
+     L.marker(coords)
+       .addTo(map)
+       .bindPopup(`<strong>${name}</strong>`)
+      .openPopup();
+   });
+
+  L.rectangle(campusBounds, {
+    color: '#006233', weight: 2, fillOpacity: 0.05
+  }).addTo(map);
+  
+   map.on('click', e => {
+    let minDist = Infinity, nearest = null;
+    Object.entries(stops).forEach(([name, coords]) => {
+      const d = map.distance(e.latlng, L.latLng(coords));
+      if (d < minDist) [minDist, nearest] = [d, { name, coords }];
+    });
+    if (nearest && minDist < 500) {
+      L.popup()
+        .setLatLng(nearest.coords)
+        .setContent(`Nearest Stop: <strong>${nearest.name}</strong>`)
+        .openOn(map);
+    }
+  });
+  
+  const liveSearch = document.getElementById('liveSearch');
+   liveSearch.addEventListener('input', e => {
+    const term = e.target.value.trim();
+    if (stops[term]) {
+      map.flyTo(stops[term], 17, { animate: true, duration: 1.5 });
+      L.popup({ autoClose: true })
+        .setLatLng(stops[term])
+        .setContent(`<strong>${term}</strong>`)
+        .openOn(map);
+    } else {
+      renderLiveShuttles(term);
+    }
+  });
+
+  map.on('click', e => {
+    let min = Infinity, nearest = null;
+    Object.entries(stops).forEach(([name, coords]) => {
+      const d = map.distance(e.latlng, L.latLng(coords));
+      if (d < min) [min, nearest] = [d, { name, coords }];
+    });
+    if (nearest && min < 500) {
+      map.flyTo(nearest.coords, 17, { animate: true, duration: 1 });
+      L.popup({ autoClose: true })
+        .setLatLng(nearest.coords)
+        .setContent(`Stop: <strong>${nearest.name}</strong>`)
+        .openOn(map);
+    }
+  });
+
+  const hamBtn      = document.getElementById('hamburgerBtn');
+  const mobileNav   = document.getElementById('mobileSidebar');
+  const closeNavBtn = document.getElementById('closeSidebar');
+  hamBtn.addEventListener('click', () => mobileNav.style.left = '0');
+  closeNavBtn.addEventListener('click', () => mobileNav.style.left = '-260px');
+
+  const headerHeight = document.querySelector('.app-header').offsetHeight;
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    window.scrollBy(0, -headerHeight);
+    mobileNav.style.left = '-260px';
+  }
+   document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      scrollToSection(btn.dataset.target);
+      if (btn.dataset.target === 'live-shuttles') refreshMap();
+    });
+  });
+
+document.querySelectorAll('[data-scroll]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const sectionId = btn.dataset.scroll;
+    const overlay = btn.closest('.modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    scrollToSection(sectionId);
+  });
+});
+
+
+  
+   ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
+    document.getElementById(id).addEventListener('click', () => {
+      const filter = id === 'prevRidesBtn'
+        ? 'prev'
+        : id === 'upcomingRidesBtn'
+          ? 'upcoming'
+          : 'all';
+      renderHistory(filter);
+      historyModal.style.display = 'flex';
+    });
+  });
+  
+  const typeEl = document.getElementById('typewriter');
+  const words  = ['Your Campus Commute', 'The Smart Shuttle Tracker', 'KNUST Shuttle Tracker'];
+  let wIndex = 0, cIndex = 0, forward = true;
+  function tick() {
+    const current = words[wIndex];
+    if (forward) {
+      typeEl.textContent = current.slice(0, ++cIndex);
+      if (cIndex === current.length) {
+        setTimeout(() => forward = false, 1200);
       }
     } else {
-      notifyEnabled = false;
-      notifyToggle.textContent = 'Enable ETA Alerts';
-      showToast('ETA Alerts Disabled');
+      typeEl.textContent = current.slice(0, --cIndex);
+      if (cIndex === 0) {
+        forward = true;
+        wIndex = (wIndex + 1) % words.length;
+      }
     }
-  };
-
-  function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    document.getElementById('toastContainer').append(toast);
-    requestAnimationFrame(() => toast.classList.add('show'));
-    setTimeout(() => {
-      toast.classList.remove('show');
-      toast.addEventListener('transitionend', () => toast.remove(), { once: true });
-    }, 3000);
+    setTimeout(tick, forward ? 100 : 50);
   }
+  tick();
 
-  // --- LIVE SEARCH & CARD RENDERING ---
-  const liveData = [
+  let liveData = [
     { route: 'KSB → Medical Village', eta: 5, cap: 30 },
     { route: 'Brunei → Commercial Area', eta: 2, cap: 25 },
     { route: 'Medical Village → Brunei', eta: 8, cap: 28 },
@@ -2321,36 +2395,33 @@ document.addEventListener('DOMContentLoaded', function() {
     liveCards.innerHTML = '';
     shuttleMarkers.clearLayers();
     const term = filter.trim().toLowerCase();
-    const filtered = liveData.filter(item => item.route.toLowerCase().includes(term));
-
-    filtered.forEach((item, i) => {
+    const filtered = liveData.filter(item =>
+      item.route.toLowerCase().includes(term)
+    );
+      filtered.forEach((item, i) => {
       const maxCap = 40;
       const occupancyPct = Math.round((maxCap - item.cap) / maxCap * 100);
       const busId = 'Bus-' + (i + 101);
-      const colorIndex = i % 6;
-      const routeColor = ['#007bff','#28a745','#ffc107','#17a2b8','#dc3545','#6f42c1'][colorIndex];
-
+      const routeColor = ['#007bff','#28a745','#ffc107','#17a2b8','#dc3545','#6f42c1'][i % 6];
       const card = document.createElement('div');
-      card.className = 'shuttle-card';
+      card.className = 'shuttle-card'; 
       card.style.borderLeft = `4px solid ${routeColor}`;
       card.innerHTML = `
-        <h3 style="color:${routeColor}">${item.route}</h3>
-        <div class="occupancy">
-          <span>Occupancy</span>
-          <div class="occ-bar">
-            <div class="occ-fill" style="width:${occupancyPct}%"></div>
-          </div>
+         <h3 style="color:${routeColor}">${item.route}</h3>
+      <div class="occupancy">
+       <span>Occupancy</span>
+        <div class="occ-bar">
+          <div class="occ-fill" style="width:${occupancyPct}%"></div>
         </div>
+      </div>
         <p><strong>ID:</strong> ${busId}</p>
         <p><strong>ETA:</strong> ${item.eta} min</p>
         <p><strong>Seats:</strong> ${item.cap}</p>
         <p class="updated"><small>Last updated: <span class="time">${new Date().toLocaleTimeString()}</span></small></p>
-        <button class="view-map" data-route="${i}">View on map</button>
-      `;
+        <button class="view-map" data-route="${i}">View on map</button>`;
       card.style.animationDelay = `${i * 0.1}s`;
       liveCards.appendChild(card);
 
-      // Add pulse marker for each shuttle
       const [from, to] = item.route.split(' → ');
       const coordA = stops[from], coordB = stops[to];
       if (coordA && coordB) {
@@ -2368,130 +2439,66 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-   document.addEventListener('click', e => {
-    const btn = e.target.closest('.view-map');
-    if (!btn) return;
-    const idx = parseInt(btn.dataset.route, 10);
-    const [from] = liveData[idx].route.split(' → ');
-    map.flyTo(stops[from], 17, { animate: true, duration: 1.2 });
-  });
+   function refreshTracker() {
+      trackerList.innerHTML = '';
+      liveData.forEach((bus, i) => {
+       const li = document.createElement('li');
+        li.innerHTML = `<strong>${bus.route}</strong><br/>
+          ETA: <span class="eta-${i}">${bus.eta}</span> min &bull; Seats: ${bus.cap}`;
+        li.onclick = () => {
+            tracker.classList.add('hidden');
+          const [from, to] = bus.route.split(' → ');
+          const { fromCoords, toCoords, progress } = busObjects[i];
+          const lat = fromCoords[0] + (toCoords[0]-fromCoords[0])*progress;
+         const lng = fromCoords[1] + (toCoords[1]-fromCoords[1])*progress;
+          map.flyTo([lat, lng], 16, { animate: true, duration: 1 });
+        };
+        trackerList.appendChild(li);
+        if (notifyEnabled && bus.eta <= 2) {
+          new Notification(`${bus.route} arriving in ${bus.eta} min`);
+        }
+      });
+    }
   
-  // --- LIVE SEARCH INPUT HANDLER ---
-  const liveSearch = document.getElementById('liveSearch');
-  liveSearch.addEventListener('input', e => {
-    const term = e.target.value.trim();
-    if (stops[term]) {
-      map.flyTo(stops[term], 17, { animate: true, duration: 1.5 });
-      L.popup({ autoClose: true })
-        .setLatLng(stops[term])
-        .setContent(`<strong>${term}</strong>`)
-        .openOn(map);
-    } else {
-      renderLiveShuttles(term);
-    }
-  });
-
-  // --- MOBILE NAVIGATION & SCROLLING ---
-  const hamBtn      = document.getElementById('hamburgerBtn');
-  const mobileNav   = document.getElementById('mobileSidebar');
-  const closeNavBtn = document.getElementById('closeSidebar');
-  hamBtn.addEventListener('click', () => mobileNav.style.left = '0');
-  closeNavBtn.addEventListener('click', () => mobileNav.style.left = '-260px');
-
-  const headerHeight = document.querySelector('.app-header').offsetHeight;
-  function scrollToSection(id) {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-    window.scrollBy(0, -headerHeight);
-    mobileNav.style.left = '-260px';
-  }
-
-  document.querySelectorAll('.header-nav .nav-btn[href^="#"], .mobile-sidebar .nav-btn[href^="#"]').forEach(el => {
-    el.addEventListener('click', e => {
-      e.preventDefault();
-      const tgt = el.getAttribute('href').slice(1);
-      scrollToSection(tgt);
-    });
-  });
-  document.querySelectorAll('.hero-buttons a[href^="#"]').forEach(el => {
-    el.addEventListener('click', e => {
-      e.preventDefault();
-      const tgt = el.getAttribute('href').slice(1);
-      scrollToSection(tgt);
-    });
-  });
-
-  // --- HISTORY BUTTONS ---
-  ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
-    document.getElementById(id).addEventListener('click', () => {
-      const filter = id === 'prevRidesBtn' ? 'prev'
-                    : id === 'upcomingRidesBtn' ? 'upcoming'
-                    : 'all';
-      renderHistory(filter);
-      historyModal.style.display = 'flex';
-    });
-  });
-
-  // --- TYPEWRITER EFFECT ---
-  const typeEl = document.getElementById('typewriter');
-  const words  = ['Your Campus Commute', 'The Smart Shuttle Tracker', 'KNUST Shuttle Tracker'];
-  let wIndex = 0, cIndex = 0, forward = true;
-  function tick() {
-    const current = words[wIndex];
-    if (forward) {
-      typeEl.textContent = current.slice(0, ++cIndex);
-      if (cIndex === current.length) setTimeout(() => forward = false, 1200);
-    } else {
-      typeEl.textContent = current.slice(0, --cIndex);
-      if (cIndex === 0) { forward = true; wIndex = (wIndex + 1) % words.length; }
-    }
-    setTimeout(tick, forward ? 100 : 50);
-  }
-  tick();
-
-  // --- RENDER INITIAL LIVE SHUTTLES ---
-  renderLiveShuttles();
-
-  // --- PERIODIC ETA & CAPACITY UPDATES ---
   setInterval(() => {
     liveData.forEach(item => {
       item.eta = Math.max(1, item.eta - 1);
       item.cap = Math.max(0, item.cap - Math.floor(Math.random() * 2));
     });
-    renderLiveShuttles(liveSearch.value);
-    document.querySelectorAll('.shuttle-card').forEach((card, i) => {
-      const item = liveData[i];
-      card.querySelector('.time').textContent = new Date().toLocaleTimeString();
-      const pct = Math.round((40 - item.cap) / 40 * 100);
-      card.querySelector('.occ-fill').style.width = pct + '%';
-      const title = card.querySelector('h3');
-      const newColor = item.eta <= 5 ? '#dc3545' : item.eta <= 10 ? '#ffc107' : '#28a745';
-      title.style.color = newColor;
-      card.style.borderLeft = `4px solid ${newColor}`;
-    });
-    refreshTracker();
-  }, 10000);
+   renderLiveShuttles(liveSearch.value);
+  document.querySelectorAll('.shuttle-card').forEach((card, i) => {
+    const item = liveData[i];
+    card.querySelector('.time').textContent = new Date().toLocaleTimeString();
+    const pct = Math.round((40 - item.cap) / 40 * 100);
+    card.querySelector('.occ-fill').style.width = pct + '%';
+    const title = card.querySelector('h3');
+    const newColor = item.eta <= 5 ? '#dc3545' : item.eta <= 10 ? '#ffc107' : '#28a745';
+    title.style.color = newColor;
+    card.style.borderLeft = `4px solid ${newColor}`;
+  });
+     refreshTracker();
+ }, 10000);
 
-  // --- BUS MOVEMENT ANIMATION ---
-  setInterval(() => {
-    busObjects.forEach(bus => {
-      bus.progress = (bus.progress + bus.speed) % 1;
+   setInterval(() => {
+     busObjects.forEach(bus => {
+       bus.progress = (bus.progress + bus.speed) % 1;
       const lat = bus.from.lat + (bus.to.lat - bus.from.lat) * bus.progress;
       const lng = bus.from.lng + (bus.to.lng - bus.from.lng) * bus.progress;
       bus.marker.setLatLng([lat, lng]);
       const remaining = Math.ceil((1 - bus.progress) * 15);
       bus.marker.getPopup().setContent(`
         <strong>${bus.marker.options.routeName}</strong><br/>
-        ETA: ${remaining} min
+        ETA: ${remaining} min
       `);
-    });
-  }, 1000);
+     });
+   }, 1000);
 
-  // --- CONTROL STYLING ---
-  map.zoomControl.setPosition('bottomright');
-  document.querySelector('.leaflet-control-attribution').style.fontSize = '0.7rem';
-  document.querySelector('.leaflet-control-attribution').style.opacity = '0.5';
+   map.zoomControl.setPosition('bottomright');
+   document.querySelector('.leaflet-control-attribution').style.fontSize = '0.7rem';
+   document.querySelector('.leaflet-control-attribution').style.opacity  = '0.5';
+  
+  renderLiveShuttles();
 
-  // --- BOOKING FORM & CONFIRMATION ---
   const bookings = JSON.parse(localStorage.getItem('ksbBookings') || '[]');
   const bookingForm = document.getElementById('bookingForm');
   const confirmModal    = document.getElementById('confirmModal');
@@ -2503,7 +2510,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   bookingForm.addEventListener('submit', e => {
     e.preventDefault();
-    const p  = pickup.value, d = destination.value, dt = date.value, ts = timeslot.value;
+    const p  = pickup.value;
+    const d  = destination.value;
+    const dt = date.value;
+    const ts = timeslot.value;
     if (!p || !d || !dt || !ts || p === d) {
       alert('Please fill all fields and ensure pickup ≠ destination.');
       return;
@@ -2521,17 +2531,15 @@ document.addEventListener('DOMContentLoaded', function() {
     bookingForm.reset();
   });
 
-  document.querySelectorAll('[data-close="confirmModal"]').forEach(btn =>
-    btn.addEventListener('click', () => confirmModal.style.display = 'none')
-  );
+  document.querySelectorAll('[data-close="confirmModal"]').forEach(btn => {
+    btn.addEventListener('click', () => confirmModal.style.display = 'none');
+  });
 
-  // --- HISTORY MODAL & RIDE DETAILS ---
   const historyModal = document.getElementById('historyModal');
   const rideList     = document.getElementById('rideList');
   const rideDetail   = document.getElementById('rideDetail');
   const historyTabs  = document.querySelectorAll('.history-tabs .tab');
   const todayDate    = new Date().toISOString().split('T')[0];
-  let currentFilter  = 'all';
 
   function renderHistory(filter) {
     rideList.innerHTML = '';
@@ -2545,7 +2553,9 @@ document.addEventListener('DOMContentLoaded', function() {
       rideList.innerHTML = '<li>No rides found.</li>';
       return;
     }
-    historyTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === filter));
+    historyTabs.forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.tab === filter);
+    });
     filtered.forEach(b => {
       const li = document.createElement('li');
       li.dataset.id = b.id;
@@ -2557,40 +2567,38 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  historyTabs.forEach(tab =>
-    tab.addEventListener('click', () => {
-      currentFilter = tab.dataset.tab;
-      renderHistory(currentFilter);
-    })
-  );
-
-  rideList.addEventListener('click', e => {
-    const li = e.target.closest('li');
-    if (!li) return;
-    rideList.querySelectorAll('li').forEach(x => x.classList.remove('active'));
-    li.classList.add('active');
-
-    const ride = bookings.find(b => b.id == li.dataset.id);
-    const html = `
-      <p><strong>From:</strong> ${ride.p}</p>
-      <p><strong>To:</strong> ${ride.d}</p>
-      <p><strong>Date:</strong> ${ride.dt}</p>
-      <p><strong>Time:</strong> ${ride.ts}</p>
-      <div class="qr-container"><canvas id="rideQrSmall"></canvas></div>
-    `;
-    document.getElementById('rideDetailContent').innerHTML = html;
-    new QRious({ element: document.getElementById('rideQrSmall'), size: 150, value: JSON.stringify(ride) });
-    document.getElementById('rideDetailModal').style.display = 'flex';
+  historyTabs.forEach(tab => {
+    tab.addEventListener('click', () => renderHistory(tab.dataset.tab));
   });
 
-  document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
-    btn.addEventListener('click', () => {
-      document.getElementById('rideDetailModal').style.display = 'none';
-    })
-  );
+  rideList.addEventListener('click', e => {
+   const li = e.target.closest('li');
+   if (!li) return;
+   rideList.querySelectorAll('li').forEach(x => x.classList.remove('active'));
+   li.classList.add('active');
 
-  // --- DELETE CONFIRMATION MODAL ---
-  const deleteModal = document.createElement('div');
+   const ride = bookings.find(b => b.id == li.dataset.id);
+   const html = `
+     <p><strong>From:</strong> ${ride.p}</p>
+     <p><strong>To:</strong> ${ride.d}</p>
+     <p><strong>Date:</strong> ${ride.dt}</p>
+     <p><strong>Time:</strong> ${ride.ts}</p>
+     <div class="qr-container"><canvas id="rideQrSmall"></canvas></div>
+   `;
+   document.getElementById('rideDetailContent').innerHTML = html;
+
+   new QRious({ element: document.getElementById('rideQrSmall'), size: 150, value: JSON.stringify(ride) });
+
+   document.getElementById('rideDetailModal').style.display = 'flex';
+ });
+
+document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
+  btn.addEventListener('click', () => {
+    document.getElementById('rideDetailModal').style.display = 'none';
+  })
+);
+
+   const deleteModal = document.createElement('div');
   deleteModal.id = 'deleteConfirmModal';
   deleteModal.className = 'modal-overlay';
   deleteModal.innerHTML = `
@@ -2602,60 +2610,102 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="btn-secondary" data-close="deleteConfirmModal">No, Keep</button>
         <button class="btn-primary" id="confirmDelete">Yes, Cancel</button>
       </div>
-    </div>`;
+    </div>
+  `;
   document.body.appendChild(deleteModal);
 
-  rideList.addEventListener('click', e => {
-    const trash = e.target.closest('.trash-btn');
-    if (trash) {
+   rideList.addEventListener('click', e => {
+    if (e.target.closest('.trash-btn')) {
       deleteModal.style.display = 'flex';
-      deleteModal.dataset.toDelete = trash.dataset.id;
+       deleteModal.dataset.toDelete = e.target.closest('li').dataset.id;
     }
   });
 
-  document.getElementById('confirmDelete').addEventListener('click', () => {
-    const id = deleteModal.dataset.toDelete;
-    const idx = bookings.findIndex(b => b.id == id);
-    if (idx > -1) {
-      bookings.splice(idx, 1);
-      localStorage.setItem('ksbBookings', JSON.stringify(bookings));
-      renderHistory(currentFilter);
-    }
-    deleteModal.style.display = 'none';
+   let currentFilter = 'all';
+ ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
+   document.getElementById(id).addEventListener('click', () => {
+     currentFilter = id === 'prevRidesBtn' ? 'prev'
+                   : id === 'upcomingRidesBtn' ? 'upcoming'
+                   : 'all';
+     renderHistory(currentFilter);
+     historyModal.style.display = 'flex';
+   });
+ });
+
+  document.getElementById('exportRideBtn').addEventListener('click', () => {
+    const content = document.getElementById('rideDetailContent');
+    html2canvas(content).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ unit: 'pt', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const scale = pageWidth / canvas.width;
+      const imgHeight = canvas.height * scale;
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
+      pdf.save('ride-details.pdf');
+    }).catch(err => {
+      console.error('Export failed:', err);
+      alert('Sorry, export failed. Please try again.');
+    });
+  });
+  
+ document.getElementById('confirmDelete').addEventListener('click', () => {
+   const id = deleteModal.dataset.toDelete;
+   const idx = bookings.findIndex(b => b.id == id);
+   if (idx > -1) {
+     bookings.splice(idx, 1);
+     localStorage.setItem('ksbBookings', JSON.stringify(bookings));
+     renderHistory(currentFilter);
+   }
+   deleteModal.style.display = 'none';
+ });
+
+   document.querySelectorAll('[data-close="deleteConfirmModal"]').forEach(btn => {
+    btn.addEventListener('click', () => deleteModal.style.display = 'none');
+  });
+ 
+  document.querySelector('[data-close="historyModal"]').addEventListener('click', () => {
+    historyModal.style.display = 'none';
   });
 
-  document.querySelectorAll('[data-close="deleteConfirmModal"]').forEach(btn =>
-    btn.addEventListener('click', () => deleteModal.style.display = 'none')
-  );
+  ['ridesBtnHeader','ridesBtnLive','ridesBtnMobile'].forEach(id => {
+   document.getElementById(id).addEventListener('click', e => {
+     e.preventDefault();
+     renderHistory('all');
+     historyModal.style.display = 'flex';
+   });
+ });
 
-  document.querySelectorAll('[data-close="historyModal"]').forEach(btn =>
-    btn.addEventListener('click', () => historyModal.style.display = 'none')
-  );
-
-  // --- RENDER ALL HISTORY on ridesBtn clicks ---
-  ['ridesBtnHeader','ridesBtnLive','ridesBtnMobile'].forEach(id =>
-    document.getElementById(id).addEventListener('click', e => {
-      e.stopPropagation(); e.preventDefault();
-      currentFilter = 'all';
-      renderHistory('all');
-      historyModal.style.display = 'flex';
-    })
-  );
-
-  // --- QUICK BOOK CARDS OPEN MODALS ---
+  document.addEventListener('click', e => {
+  const btn = e.target.closest('.view-map');
+  if (!btn) return;
+  const idx = +btn.dataset.route;
+  const item = liveData[idx];
+  const [from, to] = item.route.split(' → ');
+  const coordA = stops[from], coordB = stops[to];
+  if (coordA && coordB) {
+    const mid = [(coordA[0]+coordB[0])/2, (coordA[1]+coordB[1])/2];
+    document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+   setTimeout(() => {
+     map.invalidateSize();
+     map.flyTo(mid, 16, { animate: true, duration: 1.2 });
+   }, 500);
+    L.popup()
+      .setLatLng(mid)
+      .setContent(`<strong>${item.route}</strong><br/>ETA: ${item.eta} min`)
+      .openOn(map);
+  }
+});
+  
   document.querySelectorAll('.card[data-page]').forEach(card => {
     const modal = document.getElementById(card.dataset.page);
     card.addEventListener('click', () => modal.style.display = 'flex');
   });
-
-  // --- CLOSE ANY MODAL via data-close ---
   document.querySelectorAll('.close-btn[data-close]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.getElementById(btn.dataset.close).style.display = 'none';
     });
   });
 
-  // --- ACCORDION FAQ ---
   document.querySelectorAll('.accordion-header').forEach(header => {
     header.addEventListener('click', () => {
       const body = header.nextElementSibling;
@@ -2670,14 +2720,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // --- SUPPORT CHAT MODALS & WIDGET ---
   const supportChat  = document.getElementById('supportChat');
   const supportModal = document.getElementById('supportModal');
   const chatWidget   = document.getElementById('chatWidget');
   const chatAgentBtn = document.getElementById('chatAgentBtn');
   const closeChatBtn = document.getElementById('closeChatBtn');
 
-  supportChat.addEventListener('click', () => supportModal.style.display = 'flex');
+  supportChat.addEventListener('click', () => {
+    supportModal.style.display = 'flex';
+  });
   supportModal.addEventListener('click', e => {
     if (e.target === supportModal || e.target.closest('[data-close="supportModal"]')) {
       supportModal.style.display = 'none';
@@ -2694,11 +2745,9 @@ document.addEventListener('DOMContentLoaded', function() {
     chatWidget.classList.remove('visible');
   });
 
-  // --- CHAT INPUT HANDLING ---
-  const chatInput    = document.getElementById('chatInputField');
-  const chatSendBtn  = document.getElementById('chatSendBtn');
-  const chatMessages = document.getElementById('chatMessages');
-
+  const chatInput   = document.getElementById('chatInputField');
+  const chatSendBtn = document.getElementById('chatSendBtn');
+  const chatMessages= document.getElementById('chatMessages');
   function appendMessage(text, isUser) {
     const div = document.createElement('div');
     div.className = isUser ? 'chat-user' : 'chat-system';
@@ -2706,7 +2755,6 @@ document.addEventListener('DOMContentLoaded', function() {
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
-
   chatSendBtn.addEventListener('click', () => {
     const msg = chatInput.value.trim();
     if (!msg) return;
@@ -2716,7 +2764,6 @@ document.addEventListener('DOMContentLoaded', function() {
       appendMessage('Thanks for your message! An agent will be with you shortly.', false);
     }, 1000);
   });
-
   chatInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -2724,40 +2771,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // --- SIGN-OUT HANDLING (footer) ---
   function signOut() {
     localStorage.removeItem('signedIn');
     window.location.reload();
   }
+
+  document.getElementById('signOutMobile').addEventListener('click', signOut);
   document.getElementById('signOutFooter').addEventListener('click', signOut);
 
-  // --- REFRESH TRACKER LIST ---
-  function refreshTracker() {
-    trackerList.innerHTML = '';
-    liveData.forEach((bus, i) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <strong>${bus.route}</strong><br/>
-        ETA: <span class="eta-${i}">${bus.eta}</span> min • Seats: ${bus.cap}
-      `;
-      li.addEventListener('click', () => {
-        tracker.classList.add('hidden');
-        const obj = busObjects[i];
-        const lat = obj.from.lat + (obj.to.lat - obj.from.lat) * obj.progress;
-        const lng = obj.from.lng + (obj.to.lng - obj.from.lng) * obj.progress;
-        map.flyTo([lat, lng], 16, { animate: true, duration: 1 });
-      });
-      trackerList.appendChild(li);
-      if (notifyEnabled && bus.eta <= 2) {
-        new Notification(`${bus.route} arriving in ${bus.eta} min`);
-      }
-    });
-  }
+  
+ document.addEventListener('click', e => {
+    const clickInsideMobileNav = mobileNav.contains(e.target) || hamBtn.contains(e.target);
+    const clickOnMobileTracker = e.target.closest('#openTrackerMobile');
+    const clickInsideBusTracker = tracker.contains(e.target) || e.target.id === 'openTracker' || clickOnMobileTracker;
 
+    if (!clickInsideMobileNav) {
+      mobileNav.style.left = '-260px';
+    }
+    if (clickOnMobileTracker) {
+      tracker.classList.remove('hidden');
+      mobileNav.style.left = '-260px';
+    }
+
+    if (!clickInsideBusTracker) {
+      tracker.classList.add('hidden');
+    }
+  });
+  
 });
 </script>
 
- 
 
 </body>
 </html>
