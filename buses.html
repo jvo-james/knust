@@ -116,7 +116,7 @@ body {
 .mobile-sidebar {
   position: fixed;
   top: 0;
-  left: -260px;
+  transform: translateX(-100%);
   width: 260px;
   height: 100%;
   background: var(--secondary);
@@ -139,7 +139,9 @@ body {
   text-align: left;
   margin-bottom: 1rem;
 }
-
+ .mobile-sidebar.open {
+  transform: translateX(0);
+ }
 
     .hero-section {
   position: relative;
@@ -375,6 +377,10 @@ input:focus {
   backdrop-filter: blur(4px);
   pointer-events: auto;
 }
+
+.modal-overlay.open {
+  display: flex;
+}
 .modal {
   background: var(--white);
   border-radius: var(--radius);
@@ -596,7 +602,7 @@ input:focus {
   animation: fadeInHero 1s ease-out forwards 3s;
 }
 
-.hero-buttons button {
+.hero-buttons {
   margin: 0 0.5rem;
   padding: 0.75rem 2rem;
   font-size: 1rem;
@@ -609,7 +615,7 @@ input:focus {
   cursor: pointer;
   transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
 }
-.hero-buttons button:hover {
+.hero-buttons:hover {
   background: var(--primary-dark);
   transform: translateY(-3px);
   box-shadow: var(--shadow-dark);
@@ -645,6 +651,13 @@ input:focus {
   z-index: 999;
 }
 
+     .quick-modal p {
+     margin-bottom: 1.5rem;      
+    }
+    .quick-modal .btn-primary {
+      text-decoration: none;     
+      display: inline-block;
+    }
     @keyframes fadeInHero {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -1662,6 +1675,25 @@ input:focus {
   transform: translateY(-2px);
 }
 
+    .modal-overlay#arModal {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: none;
+  background: rgba(0,0,0,0.8);
+  z-index: 5000;
+}
+.modal#arModal .modal {
+  position: relative;
+}
+#arCanvas {
+  pointer-events: none;
+}
+#arModal .close-btn {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  font-size: 1.5rem;
+}
   </style>
 </head>
 <body>
@@ -1714,6 +1746,7 @@ input:focus {
         <a href="#live-shuttles" class="nav-btn"><i class="fas fa-route"></i> </a>
         <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> </a>
         <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> </a>
+       <button id="openTrackerMobile" class="nav-btn"><i class="fas fa-shuttle-van"></i> Tracker</button>
    <button class="nav-btn" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
     </aside>
   </header>
@@ -1832,6 +1865,20 @@ input:focus {
       <button id="allRidesBtn" class="btn-secondary"><i class="fas fa-list"></i> All Rides</button>
     </div>
 
+    <!-- AR Stop Finder Button -->
+  <button id="arBtn" class="support-chat-btn" style="bottom:80px; left:20px;">
+    <i class="fas fa-arrows-alt-v"></i>
+  </button>
+
+  <!-- AR Modal -->
+  <div class="modal-overlay" id="arModal">
+    <div class="modal" style="max-width:100%; width:100%; height:100%; padding:0; background:transparent;">
+     <button class="close-btn" data-close="arModal" style="color:#fff;"><i class="fas fa-times"></i></button>
+      <video id="arVideo" autoplay muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>
+      <canvas id="arCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%;"></canvas>
+    </div>
+  </div>
+    
     <section id="quick-book" class="section quick-book-section">
       <h2><i class="fas fa-thumbs-up"></i> Quick Book Popular Stops</h2>
       <div class="grid-cards">
@@ -2040,6 +2087,18 @@ input:focus {
   </div>
 </div>
 
+  <div class="modal-overlay" id="deleteConfirmModal">
+    <div class="modal">
+      <button class="close-btn" data-close="deleteConfirmModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h3>
+      <p>Are you sure you want to remove this ride?</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-close="deleteConfirmModal">Cancel</button>
+        <button id="confirmDelete" class="btn-primary">Delete</button>
+      </div>
+    </div>
+  </div>
+  
 <div id="chatWidget" class="chat-widget hidden">
   <div class="chat-header">
     <span>Live Chat</span>
@@ -2062,6 +2121,24 @@ input:focus {
   </button>
   </footer>
 
+  <button id="notifPrefsBtn" class="support-chat-btn" style="bottom:80px; right:80px;">
+    <i class="fas fa-cog"></i>
+  </button>
+
+  <div class="modal-overlay" id="notifPrefsModal">
+    <div class="modal quick-modal" style="max-width:360px;">
+      <button class="close-btn" data-close="notifPrefsModal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+      <form id="notifPrefsForm">
+        <label><input type="checkbox" name="alert10" /> Alert 10 min before</label><br/>
+        <label><input type="checkbox" name="alert5"  /> Alert 5 min before</label><br/>
+        <label><input type="checkbox" name="alert2"  /> Alert 2 min before</label><br/>
+        <label><input type="checkbox" name="lateWarn" /> Warn if >5 min late</label><br/>
+        <button type="submit" class="btn-primary" style="margin-top:1rem;">Save Preferences</button>
+      </form>
+    </div>
+  </div>
+  
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.min.js"></script>
 <link
@@ -2070,12 +2147,9 @@ input:focus {
 <script src="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
   <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  
 <script>
-// ========================
-// Vitra – KNUST Shuttle Tracker
-// Complete Script (825 lines)
-// ========================
 
 (function() {
   'use strict';
@@ -2107,8 +2181,10 @@ input:focus {
     initSupportChat();
     initLiveChatWidget();
     initGlobalNav();
-    // Start periodic updates
     startPeriodicUpdates();
+    initCrowdHeatmap();
+    initNotifPrefs(); 
+    initARFinder(); 
   }
 
   // ------------------------
@@ -2224,7 +2300,8 @@ input:focus {
       inertia: true,
       fullscreenControl: true,
       fullscreenControlOptions: { position: 'topleft' }
-    }).setView([6.6667, -1.5833], 15);
+      })
+     .fitBounds(getCampusBounds());
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -2232,8 +2309,16 @@ input:focus {
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.control.scale({ position: 'bottomleft', metric: true, imperial: false }).addTo(map);
-    L.control.locate({ position: 'bottomright', strings: { title: 'Show my location' }, flyTo: true }).addTo(map);
-
+ L.control.locate({
+      position: 'bottomright',
+      strings: { title: 'Show my location' },
+      flyTo: true,
+      locateOptions: {
+        enableHighAccuracy: false,
+        maximumAge: 30000,
+        timeout: 5000
+      }
+    }).addTo(map);
     L.rectangle(getCampusBounds(), { color:'#006233', weight:2, fillOpacity: 0.05 }).addTo(map);
 
     // Add stops markers
@@ -2242,9 +2327,9 @@ input:focus {
     });
 
     // MiniMap
-    new L.Control.MiniMap(
+   const mini = new L.Control.MiniMap(
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-      { toggleDisplay: true, minimized: false }
+      { toggleDisplay: true, minimized: true }
     ).addTo(map);
 
     // Geolocation
@@ -2419,13 +2504,45 @@ input:focus {
     });
   }
 
+   let crowdHeatLayer;
+
+  function initCrowdHeatmap() {
+    crowdHeatLayer = L.heatLayer([], {
+      radius: 25,    // radius of each “point”
+      blur: 15,      // blur intensity
+      maxZoom: 17,
+      gradient: {
+        0.2: 'lime',
+        0.4: 'yellow',
+        0.6: 'orange',
+        0.8: 'red'
+      }
+    }).addTo(map);
+
+    updateCrowdHeatmap();
+    setInterval(updateCrowdHeatmap, 10000);
+  }
+  function updateCrowdHeatmap() {
+    const mockCrowdData = [
+      [6.669316, -1.567180, Math.random()],       // KSB
+      [6.681115, -1.549788, Math.random()],       // Medical Village
+      [6.670465, -1.574129, Math.random()],       // Brunei
+      [6.675136, -1.567558, Math.random()],       // Casely Hayeford
+      [6.674556, -1.567562, Math.random()],       // College of Science
+      [6.682837, -1.576960, Math.random()]        // Commercial Area
+    ];
+
+   crowdHeatLayer.setLatLngs(mockCrowdData);
+  }
+  
   // ------------------------
   // Bus Tracker Panel
   // ------------------------
   function handleTrackerOpenClose(e) {
     const tracker = document.getElementById('busTracker');
-    if (e.target.matches('#openTracker, #openTrackerMobile')) {
+   if (e.target.matches('#openTracker, #openTrackerMobile')) {
       tracker.classList.remove('hidden');
+      refreshTrackerList();
     } else if (!e.target.closest('#busTracker')) {
       tracker.classList.add('hidden');
     }
@@ -2584,6 +2701,78 @@ input:focus {
     localStorage.setItem('ksbBookings', JSON.stringify(arr));
   }
 
+  function initARFinder() {
+  const btn    = document.getElementById('arBtn');
+  const modal  = document.getElementById('arModal');
+  const video  = document.getElementById('arVideo');
+  const canvas = document.getElementById('arCanvas');
+  const ctx    = canvas.getContext('2d');
+  const stopsArr = Object.entries(stops).map(([name, coord]) => ({ name, lat:coord[0], lng:coord[1] }));
+
+  // open AR modal
+  btn.addEventListener('click', async () => {
+    modal.style.display = 'flex';
+    // start camera
+    const stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' } });
+    video.srcObject = stream;
+    // resize canvas
+    canvas.width  = video.clientWidth;
+    canvas.height = video.clientHeight;
+    // start overlay loop
+    navigator.geolocation.getCurrentPosition(pos => {
+      const userLat = pos.coords.latitude, userLng = pos.coords.longitude;
+      window.addEventListener('deviceorientationabsolute', e => {
+        drawAR(e.alpha, userLat, userLng);
+      });
+    });
+  });
+
+  // close AR modal
+  modal.querySelector('[data-close="arModal"]').addEventListener('click', () => {
+    modal.style.display = 'none';
+    // stop camera
+    const tracks = video.srcObject?.getTracks()||[];
+    tracks.forEach(t=>t.stop());
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  });
+
+  // draw loop
+  function drawAR(alpha, uLat, uLng) {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stopsArr.forEach(s => {
+      const bearing = getBearing(uLat,uLng,s.lat,s.lng);
+      // compute relative angle (0 = device facing north)
+      let rel = bearing - alpha;
+      if (rel < -180) rel += 360;
+      if (rel > 180)  rel -= 360;
+      // if within ±30° of center, draw
+      if (Math.abs(rel) < 30) {
+        const x = canvas.width * (0.5 + rel/60);
+        const dist = getDistance(uLat,uLng,s.lat,s.lng).toFixed(1);
+        ctx.fillStyle = 'yellow';
+        ctx.font = 'bold 18px sans-serif';
+        ctx.fillText(`${s.name} — ${dist} km`, x, canvas.height*0.2);
+      }
+    });
+  }
+
+  // haversine
+  function getDistance(lat1,lon1,lat2,lon2){
+    const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)
+            * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+    return R * 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  }
+  // bearing
+  function getBearing(lat1,lon1,lat2,lon2) {
+    const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180;
+    const Δλ=(lon2-lon1)*Math.PI/180;
+    const y=Math.sin(Δλ)*Math.cos(φ2);
+    const x=Math.cos(φ1)*Math.sin(φ2)
+            - Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
+    return (Math.atan2(y,x)*180/Math.PI+360)%360;
+  }
+}
   // ------------------------
   // Quick Book Modals
   // ------------------------
@@ -2591,6 +2780,13 @@ input:focus {
     document.querySelectorAll('.card[data-page]').forEach(card => {
       const modal = document.getElementById(card.dataset.page);
       card.addEventListener('click', () => modal.style.display = 'flex');
+    });
+
+    document.querySelectorAll('.quick-modal a.btn-primary').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const overlay = e.target.closest('.modal').parentElement;
+        overlay.style.display = 'none';
+      });
     });
   }
 
@@ -2601,19 +2797,42 @@ input:focus {
     const btn    = document.getElementById('supportChat');
     const modal  = document.getElementById('supportModal');
     const agent  = document.getElementById('chatAgentBtn');
-    btn.addEventListener('click', () => modal.style.display = 'flex');
+ btn.addEventListener('click', () => {
+      modal.classList.add('open');
+    });
     modal.addEventListener('click', e => {
       if (e.target===modal) modal.style.display = 'none';
     });
     agent.addEventListener('click', e => {
       e.preventDefault();
-      modal.style.display = 'none';
+       modal.classList.remove('open');
       const widget = document.getElementById('chatWidget');
       widget.classList.remove('hidden');
       widget.classList.add('visible');
     });
   }
 
+   function openDeleteConfirm(id) {
+   const modal = document.getElementById('deleteConfirmModal');
+    modal.dataset.toDelete = id;
+    modal.style.display = 'flex';
+  }
+
+   document.getElementById('exportRideBtn').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit:'pt', format:'letter' });
+    const content = document.getElementById('rideDetailContent');
+    doc.html(content, {
+      callback: pdf => {
+        pdf.setFontSize(12);
+        pdf.text('KNUST Shuttle Tracker – Ride Details', 40, 40);
+        pdf.save(`ride_${Date.now()}.pdf`);
+      },
+      x: 40,
+      y: 60,
+      html2canvas: { scale: 0.8 }
+    });
+  });
   // ------------------------
   // Live Chat Widget
   // ------------------------
@@ -2646,16 +2865,48 @@ input:focus {
     }
   }
 
+  function initNotifPrefs() {
+  const btn   = document.getElementById('notifPrefsBtn');
+  const modal = document.getElementById('notifPrefsModal');
+  const form  = document.getElementById('notifPrefsForm');
+
+  // open/close
+  btn.addEventListener('click', () => modal.style.display = 'flex');
+  modal.querySelectorAll('[data-close]').forEach(x =>
+    x.addEventListener('click', () => modal.style.display = 'none')
+  );
+
+  // load saved
+  const saved = JSON.parse(localStorage.getItem('notifPrefs')||'{}');
+  Object.keys(saved).forEach(k => {
+    const inp = form.querySelector(`[name="${k}"]`);
+    if (inp) inp.checked = saved[k];
+  });
+
+  // save on submit
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const prefs = {};
+    ['alert10','alert5','alert2','lateWarn'].forEach(key => {
+      prefs[key] = !!form.elements[key].checked;
+    });
+    localStorage.setItem('notifPrefs', JSON.stringify(prefs));
+    showToast('Notification preferences saved!');
+    modal.style.display = 'none';
+  });
+}
+  
   // ------------------------
   // Global Navigation & Hamburger
   // ------------------------
   function initGlobalNav() {
-    document.getElementById('hamburgerBtn').addEventListener('click', () => {
-      document.getElementById('mobileSidebar').style.left = '0';
-    });
-    document.getElementById('closeSidebar').addEventListener('click', () => {
-      document.getElementById('mobileSidebar').style.left = '-260px';
-    });
+     const sidebar = document.getElementById('mobileSidebar');
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    sidebar.classList.add('open');
+  });
+  document.getElementById('closeSidebar').addEventListener('click', () => {
+    sidebar.classList.remove('open');
+  });
     // Section scroll links
     document.querySelectorAll('.nav-btn[href^="#"]').forEach(btn => {
       btn.addEventListener('click', e => {
@@ -2682,6 +2933,7 @@ input:focus {
       renderLiveShuttles(document.getElementById('liveSearch').value.trim().toLowerCase());
       updateLiveCardsUI();
       refreshTrackerList();
+      scheduleAllSmartAlerts(); 
     }, 10000);
 
     setInterval(() => {
@@ -2709,6 +2961,49 @@ input:focus {
     });
   }
 
+  function scheduleAllSmartAlerts() {
+  const prefs = JSON.parse(localStorage.getItem('notifPrefs')||'{}');
+  liveData.forEach((bus,i) => {
+    const eta = bus.eta;
+    ['alert10','alert5','alert2'].forEach(key => {
+      const minutes = parseInt(key.replace('alert',''),10);
+      if (prefs[key] && eta > minutes) {
+        scheduleSmartAlert(i, eta, minutes);
+      }
+    });
+    if (prefs.lateWarn && eta > 5) {
+      scheduleSmartAlert(i, eta, -1); // negative = late warning
+    }
+  });
+}
+
+const alertTimers = {};
+function scheduleSmartAlert(idx, eta, offset) {
+  const bus   = liveData[idx];
+  const idKey = `${idx}_${offset}`;
+  if (alertTimers[idKey]) return; // already scheduled
+
+  let delay;
+  if (offset > 0) {
+    delay = (eta - offset) * 60 * 1000;
+  } else {
+    delay = 5 * 60 * 1000; // late warning at +5 min
+  }
+
+  alertTimers[idKey] = setTimeout(() => {
+    const title = offset>0
+      ? `⏱️ ${bus.route} in ${offset} min`
+      : `⚠️ ${bus.route} running late`;
+    new Notification(title, {
+      body: offset>0
+        ? `Your shuttle will arrive in ${offset} minutes.`
+        : `ETA is ${bus.eta} min.`,
+      actions: [{action:'snooze', title:'Snooze'}]
+    });
+    delete alertTimers[idKey];
+  }, delay);
+}
+  
   // ------------------------
   // Bus Tracker List & Notifications
   // ------------------------
@@ -2766,7 +3061,6 @@ input:focus {
     }, 3000);
   }
 
-    // ------------ MISSING BITS PATCH ------------
 
   // 1) Add "Tracker" button to the desktop header
   (function addTrackerHeaderButton() {
