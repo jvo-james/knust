@@ -2111,6 +2111,11 @@ hero.addEventListener('mouseleave', () => {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
+  const pickup      = document.getElementById('pickup');
+  const destination = document.getElementById('destination');
+  const date        = document.getElementById('date');
+  const timeslot    = document.getElementById('timeslot');
+  
   // --- SIGN-IN OVERLAY ---
   const signinOverlay = document.getElementById('signinOverlay');
   const signinForm    = document.getElementById('signinForm');
@@ -2253,6 +2258,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+   document.addEventListener('click', e => {
+    const btn = e.target.closest('.view-map');
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.route, 10);
+    const [from] = liveData[idx].route.split(' → ');
+    map.flyTo(stops[from], 17, { animate: true, duration: 1.2 });
+  });
+  
   // --- TRACKER PANEL & NOTIFICATIONS ---
   const tracker      = document.getElementById('busTracker');
   const trackerList  = document.getElementById('trackerList');
