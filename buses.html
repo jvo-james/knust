@@ -2257,14 +2257,6 @@ document.addEventListener('DOMContentLoaded', function() {
       speed: 0.0008 + Math.random() * 0.0004
     });
   });
-
-   document.addEventListener('click', e => {
-    const btn = e.target.closest('.view-map');
-    if (!btn) return;
-    const idx = parseInt(btn.dataset.route, 10);
-    const [from] = liveData[idx].route.split(' → ');
-    map.flyTo(stops[from], 17, { animate: true, duration: 1.2 });
-  });
   
   // --- TRACKER PANEL & NOTIFICATIONS ---
   const tracker      = document.getElementById('busTracker');
@@ -2378,6 +2370,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+   document.addEventListener('click', e => {
+    const btn = e.target.closest('.view-map');
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.route, 10);
+    const [from] = liveData[idx].route.split(' → ');
+    map.flyTo(stops[from], 17, { animate: true, duration: 1.2 });
+  });
+  
   // --- LIVE SEARCH INPUT HANDLER ---
   const liveSearch = document.getElementById('liveSearch');
   liveSearch.addEventListener('input', e => {
