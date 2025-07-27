@@ -1928,6 +1928,7 @@ input:focus {
   <i class="fas fa-headset"></i>
 </button>
 
+  
 <div class="info-sections">
     <section class="section faq-section" id="faq">
       <h2><i class="fas fa-question-circle"></i> FAQs</h2>
@@ -1938,7 +1939,7 @@ input:focus {
         </div>
         <div class="accordion-item">
           <button class="accordion-header"><i class="fas fa-chevron-down"></i> Can I book for others?</button>
-          <div class="accordion-body">Yes—enter their student ID in the form.</div>
+          <div class="accordion-body">Yes, enter their student ID in the form.</div>
         </div>
         <div class="accordion-item">
           <button class="accordion-header"><i class="fas fa-chevron-down"></i> Weekend service?</button>
@@ -2036,13 +2037,19 @@ input:focus {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <footer class="app-footer">
-    <p>&copy; 2025 KNUST Shuttle Tracker — Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
+    <p>&copy; 2025 KNUST Shuttle Tracker. Built with <i class="fas fa-heart"></i> by a KNUST Student</p>
  <button id="signOutFooter" type="button" class="btn-secondary" style="margin-top:1rem;">
     <i class="fas fa-sign-out-alt"></i> Sign Out
   </button>
   </footer>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.css"/>
+<script src="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
+  <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
   <script>
@@ -2083,6 +2090,11 @@ input:focus {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
+  const pickup      = document.getElementById('pickup');
+ const destination = document.getElementById('destination');
+  const date        = document.getElementById('date');
+  const timeslot    = document.getElementById('timeslot');
+
   const openTrackerBtn = document.createElement('button');
     openTrackerBtn.id = 'openTracker';
     openTrackerBtn.className = 'nav-btn desktop-only';
@@ -2103,22 +2115,44 @@ document.addEventListener('DOMContentLoaded', function() {
     signinOverlay.style.display = 'none';
   });
 
- const map = L.map('map', {
-    zoomControl: true,
-    zoomAnimation: true,     
-    fadeAnimation: true,        
-    markerZoomAnimation: true,   
-    zoomSnap: 0.25,              
-    zoomDelta: 0.25,            
-    inertia: true,            
-    inertiaDeceleration: 600,   
-    inertiaMaxSpeed: 1500
+const map = L.map('map', {
+    zoomControl: false,             
+    fadeAnimation: true,
+    markerZoomAnimation: true,
+    zoomSnap: 0.25,
+    zoomDelta: 0.25,
+    inertia: true,
+    inertiaDeceleration: 600,
+    inertiaMaxSpeed: 1500,
+    fullscreenControl: true,           
+    fullscreenControlOptions: {        
+      position: 'topleft'
+    }
   }).setView([6.6667, -1.5833], 15);
+
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  L.control.scale({ position: 'bottomleft', metric: true, imperial: false }).addTo(map);
+
+  L.control.locate({
+    position: 'bottomright',
+    strings: {
+      title: 'Show my location'
+   },
+    flyTo: true,
+    keepCurrentZoomLevel: false,
+    icon: 'fas fa-location-arrow'
+  }).addTo(map);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
+  const mini = new L.Control.MiniMap(
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+    { toggleDisplay: true, minimized: false, position: 'bottomleft' }
+  ).addTo(map);
+  
   let userMarker;
   if ('geolocation' in navigator) {
     navigator.geolocation.watchPosition(pos => {
@@ -2159,11 +2193,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // pulled from google maps
   const stops = {
-    KSB:                  [6.668479541771787, -1.5684205067613826],
+    KSB:                  [6.669316418795082, -1.5671804175503585],
     'Medical Village':    [6.681114944023242, -1.549788155821193],
-    Brunei:               [6.670277669253442, -1.572828261973431],
+    Brunei:               [6.67046510610072, -1.5741292302545924],
     'Casely Hayeford':    [6.675135508075269, -1.5675584175565618],
-    'College of Science': [6.674004778977404, -1.5676476478794432],
+    'College of Science': [6.6745559231628535, -1.5675620238500976],
     'Commercial Area':    [6.682837359405059, -1.576959913492716]
   };
 
@@ -2297,22 +2331,7 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
       renderLiveShuttles(term);
     }
   });
-
-  map.on('click', e => {
-    let min = Infinity, nearest = null;
-    Object.entries(stops).forEach(([name, coords]) => {
-      const d = map.distance(e.latlng, L.latLng(coords));
-      if (d < min) [min, nearest] = [d, { name, coords }];
-    });
-    if (nearest && min < 500) {
-      map.flyTo(nearest.coords, 17, { animate: true, duration: 1 });
-      L.popup({ autoClose: true })
-        .setLatLng(nearest.coords)
-        .setContent(`Stop: <strong>${nearest.name}</strong>`)
-        .openOn(map);
-    }
-  });
-
+ 
   const hamBtn      = document.getElementById('hamburgerBtn');
   const mobileNav   = document.getElementById('mobileSidebar');
   const closeNavBtn = document.getElementById('closeSidebar');
@@ -2325,29 +2344,8 @@ Object.entries(routes).forEach(([routeName, [from, to]], i) => {
     window.scrollBy(0, -headerHeight);
     mobileNav.style.left = '-260px';
   }
-   document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      scrollToSection(btn.dataset.target);
-      if (btn.dataset.target === 'live-shuttles') refreshMap();
-    });
-  });
-
-document.querySelectorAll('[data-scroll]').forEach(btn => {
-  btn.addEventListener('click', e => {
-    e.preventDefault();
-    const sectionId = btn.dataset.scroll;
-    const overlay = btn.closest('.modal-overlay');
-    if (overlay) overlay.style.display = 'none';
-    scrollToSection(sectionId);
-  });
-});
-
-
   
-   ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
+    ['prevRidesBtn','upcomingRidesBtn','allRidesBtn'].forEach(id => {
     document.getElementById(id).addEventListener('click', () => {
       const filter = id === 'prevRidesBtn'
         ? 'prev'
@@ -2439,21 +2437,47 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
     });
   }
 
+  document.addEventListener('click', e => {
+    const clickedHamburger = e.target.closest('#hamburgerBtn');
+    const clickedInMobileNav = e.target.closest('#mobileSidebar');
+    const clickedOpenTrackerMobile = !!e.target.closest('#openTrackerMobile');
+
+    const clickedOpenTrackerHeader = e.target.id === 'openTracker';
+    const clickedInTracker = e.target.closest('#busTracker');
+
+    if (!clickedHamburger && !clickedInMobileNav) {
+      mobileNav.style.left = '-260px';
+    }
+    if (clickedOpenTrackerMobile) {
+      tracker.classList.remove('hidden');
+      mobileNav.style.left = '-260px';
+    }
+
+    if (!clickedOpenTrackerHeader && !clickedOpenTrackerMobile && !clickedInTracker) {
+      tracker.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('signOutFooter').addEventListener('click', () => {
+    localStorage.removeItem('signedIn');
+    window.location.reload();
+  });
+  
    function refreshTracker() {
       trackerList.innerHTML = '';
       liveData.forEach((bus, i) => {
        const li = document.createElement('li');
         li.innerHTML = `<strong>${bus.route}</strong><br/>
           ETA: <span class="eta-${i}">${bus.eta}</span> min &bull; Seats: ${bus.cap}`;
-        li.onclick = () => {
-            tracker.classList.add('hidden');
-          const [from, to] = bus.route.split(' → ');
-          const { fromCoords, toCoords, progress } = busObjects[i];
-          const lat = fromCoords[0] + (toCoords[0]-fromCoords[0])*progress;
-         const lng = fromCoords[1] + (toCoords[1]-fromCoords[1])*progress;
-          map.flyTo([lat, lng], 16, { animate: true, duration: 1 });
-        };
-        trackerList.appendChild(li);
+        li.addEventListener('click', () => {
+      tracker.classList.add('hidden');
+      const [fromName, toName] = bus.route.split(' → ');
+      const obj = busObjects[i];
+      const lat = obj.from.lat + (obj.to.lat - obj.from.lat) * obj.progress;
+      const lng = obj.from.lng + (obj.to.lng - obj.from.lng) * obj.progress;
+      map.flyTo([lat, lng], 16, { animate: true, duration: 1 });
+    });
+       trackerList.appendChild(li);
         if (notifyEnabled && bus.eta <= 2) {
           new Notification(`${bus.route} arriving in ${bus.eta} min`);
         }
@@ -2668,12 +2692,13 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
   });
 
   ['ridesBtnHeader','ridesBtnLive','ridesBtnMobile'].forEach(id => {
-   document.getElementById(id).addEventListener('click', e => {
-     e.preventDefault();
-     renderHistory('all');
-     historyModal.style.display = 'flex';
-   });
- });
+    document.getElementById(id).addEventListener('click', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      renderHistory('all');
+      historyModal.style.display = 'flex';
+    });
+  });
 
   document.addEventListener('click', e => {
   const btn = e.target.closest('.view-map');
@@ -2776,15 +2801,16 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
     window.location.reload();
   }
 
-  document.getElementById('signOutMobile').addEventListener('click', signOut);
   document.getElementById('signOutFooter').addEventListener('click', signOut);
 
-  
- document.addEventListener('click', e => {
+    document.addEventListener('click', e => {
+    if ( e.target.closest('button, a, .view-map, .nav-btn') ) return;
+ 
     const clickInsideMobileNav = mobileNav.contains(e.target) || hamBtn.contains(e.target);
-    const clickOnMobileTracker = e.target.closest('#openTrackerMobile');
-    const clickInsideBusTracker = tracker.contains(e.target) || e.target.id === 'openTracker' || clickOnMobileTracker;
-
+    const clickOnMobileTracker = !!e.target.closest('#openTrackerMobile');
+    const clickInsideBusTracker = tracker.contains(e.target)
+                               || e.target.id === 'openTracker'
+                               || clickOnMobileTracker;
     if (!clickInsideMobileNav) {
       mobileNav.style.left = '-260px';
     }
@@ -2792,7 +2818,6 @@ document.querySelectorAll('[data-close="rideDetailModal"]').forEach(btn =>
       tracker.classList.remove('hidden');
       mobileNav.style.left = '-260px';
     }
-
     if (!clickInsideBusTracker) {
       tracker.classList.add('hidden');
     }
