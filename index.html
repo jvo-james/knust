@@ -690,14 +690,14 @@ display: none;
      // use smaller size for category cards
      imgEl.src     = makeImageUrl(cat.toLowerCase(), seed, 400, 300);
    });
-       const cartPreview = document.getElementById('cart-preview');
+    const cartSidebar = document.getElementById('cart-preview');
      const cartLink    = document.getElementById('cart-link');
      cartLink.onclick = e => {
        e.preventDefault();
-       cartPreview.classList.toggle('open');
+        cartSidebar.classList.toggle('open');
      };
-       const closeCartBtn = document.querySelector('#cart-preview .close-cart');
-      closeCartBtn.onclick = () => cartPreview.classList.remove('open');
+     const closeCartBtn = document.querySelector('#cart-preview .close-cart');
+    closeCartBtn.onclick = () => cartSidebar.classList.remove('open');
 
        const namePools = {
    Books: [
@@ -783,8 +783,8 @@ display: none;
       const resultsMain  = document.getElementById('search-results');
       const paginationEl = document.getElementById('pagination');
       const cartCountEl  = document.getElementById('cart-count');
-      const cartPreview  = document.querySelector('#cart-preview .cart-items');
-      const cartSubtotal = document.getElementById('cart-subtotal');
+      const cartItems     = document.querySelector('#cart-preview .cart-items');
+      const cartSubtotal  = document.getElementById('cart-subtotal');
       const cartCheckout = document.querySelector('.btn-checkout');
       const detailSec    = document.getElementById('product-detail');
       const backBtn      = document.getElementById('detail-back');
@@ -883,7 +883,7 @@ display: none;
       // Cart UI
       function updateCart() {
         cartCountEl.textContent = cart.length;
-        cartPreview.innerHTML = '';
+        cartItems.innerHTML = '';
         let subtotal = 0;
         cart.forEach((p,i)=>{
           subtotal += parseFloat(p.price);
@@ -898,7 +898,7 @@ display: none;
             </div>
             <button class="remove-item" data-idx="${i}">×</button>
           `;
-          cartPreview.appendChild(d);
+         cartItems.appendChild(d);
         });
         cartSubtotal.textContent = subtotal.toFixed(2);
       }
@@ -907,7 +907,7 @@ display: none;
         alert(`Checked out ${cart.length} items. Thank you!`);
         cart.length = 0; updateCart();
       };
-closeCartBtn.onclick = () => cartPreview.classList.remove('open');
+ closeCartBtn.onclick = () => cartSidebar.classList.remove('open');
       // Product Detail
       function showDetail(id) {
         modal.classList.remove('hidden');
