@@ -1613,236 +1613,256 @@ textarea { resize: vertical; min-height: 100px; }
 
 </body>
 
-  <script>
+ <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // ========= Data & State =========
+    const products = [];
+    const categories = ['Books','Electronics','Fashion','Home & Kitchen','Beauty','Services'];
+    const cart = [];
 
-const products = [];
-const categories = ['Books','Electronics','Fashion','Home & Kitchen','Beauty','Services'];
-const cart = [];
+    // Generate 2000 products
+    for (let i = 1; i <= 2000; i++) {
+      const category = categories[i % categories.length];
+      const title = `${category} Item ${i}`;
+      const price = (Math.random() * 300 + 10).toFixed(2);
+      const rating = Math.floor(Math.random() * 5) + 1;
+      const reviewCount = Math.floor(Math.random() * 200);
+      const gallery = Array.from({ length: 4 }, (_, k) =>
+        `https://source.unsplash.com/400x400/?${category.toLowerCase()},sig=${i*10+k}`
+      );
+      const reviews = Array.from({ length: Math.floor(Math.random()*5) }, (_, r) => ({
+        author: `User${r+1}`,
+        date: new Date(2025,7,Math.ceil(Math.random()*28)).toDateString(),
+        rating: Math.floor(Math.random()*5)+1,
+        text: `Review ${r+1} for product ${i}`
+      }));
+      products.push({
+        id: i, title, category, price, rating, reviewCount,
+        gallery, reviews,
+        stock: Math.floor(Math.random()*50)+1,
+        shipping: `${1+Math.floor(Math.random()*3)}–${3+Math.floor(Math.random()*3)} days`
+      });
+    }
 
-// Generate 2000 products with realistic Unsplash images
-for (let i = 1; i <= 2000; i++) {
-  const category = categories[i % categories.length];
-  const title = `${category} Item ${i}`;
-  const price = (Math.random() * 300 + 10).toFixed(2);
-  const rating = Math.floor(Math.random() * 5) + 1;
-  const reviewCount = Math.floor(Math.random() * 200);
-  const gallery = Array.from({length:4}, (_,k) =>
-    `https://source.unsplash.com/400x400/?${category.toLowerCase()},sig=${i*10+k}`
-  );
-  const reviews = Array.from({length: Math.floor(Math.random()*5)}, (_,r)=>({
-    author: `User${r+1}`,
-    date: new Date(2025,7,Math.ceil(Math.random()*28)).toDateString(),
-    rating: Math.floor(Math.random()*5)+1,
-    text: `Review ${r+1} for product ${i}`
-  }));
-  products.push({ id:i, title, category, price, rating, reviewCount, gallery, reviews, stock: Math.floor(Math.random()*50)+1, shipping:`${1+Math.floor(Math.random()*3)}–${3+Math.floor(Math.random()*3)} days` });
-}
+    // ========= DOM refs =========
+    const slideEls        = document.querySelectorAll('#hero-slider .slide');
+    const prevBtn         = document.querySelector('.slider-prev');
+    const nextBtn         = document.querySelector('.slider-next');
+    const featuredGrid    = document.querySelector('#featured-products .products-grid');
+    const loadMoreBtn     = document.querySelector('.btn-load-more');
+    const searchInput     = document.getElementById('search-input');
+    const searchBtn       = document.getElementById('search-btn');
+    const searchCategory  = document.getElementById('search-category');
+    const resultsMain     = document.getElementById('search-results');
+    const paginationEl    = document.getElementById('pagination');
+    const cartCountEl     = document.getElementById('cart-count');
+    const cartPreviewEl   = document.querySelector('#cart-preview .cart-items');
+    const cartSubtotalEl  = document.getElementById('cart-subtotal');
+    const cartCheckoutBtn = document.querySelector('.btn-checkout');
+    const detailSection   = document.getElementById('product-detail');
+    const backToResults   = document.getElementById('detail-back');
+    const categoryLinks   = document.querySelectorAll('#category-nav a');
 
-// ---------- DOM References ----------
-const slideEls        = document.querySelectorAll('#hero-slider .slide');
-const prevBtn         = document.querySelector('.slider-prev');
-const nextBtn         = document.querySelector('.slider-next');
-const categoryNav     = document.querySelectorAll('#category-nav ul li a');
-const featuredGrid    = document.querySelector('#featured-products .products-grid');
-const loadMoreBtn     = document.querySelector('.btn-load-more');
-const searchInput     = document.getElementById('search-input');
-const searchBtn       = document.getElementById('search-btn');
-const searchCategory  = document.getElementById('search-category');
-const resultsMain     = document.getElementById('search-results');
-const paginationEl    = document.getElementById('pagination');
-const cartCountEl     = document.getElementById('cart-count');
-const cartPreviewEl   = document.querySelector('#cart-preview .cart-items');
-const cartSubtotalEl  = document.querySelector('#cart-preview .cart-summary p');
-const cartCheckoutBtn = document.querySelector('.btn-checkout');
-const detailSection   = document.getElementById('product-detail');
-const backToResults   = document.getElementById('detail-back');
+    // ========= Hero Slider =========
+    let currentSlide = 0;
+    function showSlide(idx) {
+      slideEls[currentSlide].classList.remove('active');
+      currentSlide = (idx + slideEls.length) % slideEls.length;
+      slideEls[currentSlide].classList.add('active');
+    }
+    prevBtn.onclick = () => showSlide(currentSlide - 1);
+    nextBtn.onclick = () => showSlide(currentSlide + 1);
+    setInterval(() => showSlide(currentSlide + 1), 5000);
 
-// ---------- Hero Slider ----------
-let currentSlide = 0;
-function showSlide(idx) {
-  slideEls[currentSlide].classList.remove('active');
-  currentSlide = (idx + slideEls.length) % slideEls.length;
-  slideEls[currentSlide].classList.add('active');
-}
-prevBtn.onclick = ()=> showSlide(currentSlide - 1);
-nextBtn.onclick = ()=> showSlide(currentSlide + 1);
-setInterval(()=> showSlide(currentSlide + 1), 5000);
+    // ========= Render Featured =========
+    let featuredPage = 0;
+    const FEATURED_PER_PAGE = 8;
+    function renderFeatured() {
+      const start = featuredPage * FEATURED_PER_PAGE;
+      products.slice(start, start + FEATURED_PER_PAGE).forEach(p => {
+        const art = document.createElement('article');
+        art.className = 'product-card';
+        art.dataset.id = p.id;
+        art.innerHTML = `
+          <img src="${p.gallery[0]}" alt="${p.title}">
+          <h3><a href="#">${p.title}</a></h3>
+          <p class="product-price">₵${p.price}</p>
+          <p class="product-rating">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})</p>
+        `;
+        featuredGrid.appendChild(art);
+      });
+    }
+    loadMoreBtn.onclick = () => { featuredPage++; renderFeatured(); };
 
-// ---------- Render Categories ----------
-categoryNav.forEach(link=>{
-  link.onclick = e=>{
-    e.preventDefault();
-    const cat = link.textContent.trim();
-    renderSearchResults(products.filter(p=>p.category===cat),1);
-  };
-});
+    // ========= Search & Pagination =========
+    const RESULTS_PER_PAGE = 12;
+    let currentResults = [], currentPage = 1;
+    function renderSearchResults(list, page) {
+      currentResults = list;
+      currentPage = page;
+      resultsMain.innerHTML = '';
+      const start = (page - 1)*RESULTS_PER_PAGE;
+      list.slice(start, start + RESULTS_PER_PAGE).forEach(p => {
+        const art = document.createElement('article');
+        art.className = 'product-card';
+        art.dataset.id = p.id;
+        art.innerHTML = `
+          <img src="${p.gallery[0]}" alt="${p.title}">
+          <h3><a href="#">${p.title}</a></h3>
+          <p class="product-price">₵${p.price}</p>
+          <p class="product-rating">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})</p>
+        `;
+        resultsMain.appendChild(art);
+      });
+      renderPagination(list.length, page);
+    }
+    function renderPagination(total, page) {
+      paginationEl.innerHTML = '';
+      const pages = Math.ceil(total / RESULTS_PER_PAGE);
+      const btnPrev = document.createElement('button');
+      btnPrev.className = 'page-btn';
+      btnPrev.textContent = '« Prev';
+      btnPrev.disabled = page === 1;
+      btnPrev.onclick = () => renderSearchResults(currentResults, page - 1);
+      paginationEl.appendChild(btnPrev);
+      for (let i = 1; i <= pages; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (i === page ? ' active' : '');
+        btn.textContent = i;
+        btn.onclick = () => renderSearchResults(currentResults, i);
+        paginationEl.appendChild(btn);
+      }
+      const btnNext = document.createElement('button');
+      btnNext.className = 'page-btn';
+      btnNext.textContent = 'Next »';
+      btnNext.disabled = page === pages;
+      btnNext.onclick = () => renderSearchResults(currentResults, page + 1);
+      paginationEl.appendChild(btnNext);
+    }
+    searchBtn.onclick = () => {
+      const term = searchInput.value.toLowerCase();
+      const cat = searchCategory.value;
+      const filtered = products.filter(p =>
+        (cat === 'all' || p.category === cat) &&
+        p.title.toLowerCase().includes(term)
+      );
+      renderSearchResults(filtered, 1);
+    };
 
-// ---------- Featured Products ----------
-let featuredPage = 0;
-const FEATURED_PER_PAGE = 8;
-function renderFeatured() {
-  const start = featuredPage * FEATURED_PER_PAGE;
-  const chunk = products.slice(start, start + FEATURED_PER_PAGE);
-  chunk.forEach(p=>{
-    const art = document.createElement('article');
-    art.className='product-card'; art.dataset.id=p.id;
-    art.innerHTML=`
-      <img src="${p.gallery[0]}" alt="${p.title}">
-      <h3><a href="#">${p.title}</a></h3>
-      <p class="product-price">₵${p.price}</p>
-      <p class="product-rating">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})</p>
-    `;
-    featuredGrid.appendChild(art);
-  });
-}
-loadMoreBtn.onclick = ()=>{
-  featuredPage++;
-  renderFeatured();
-};
+    // ========= Category Nav =========
+    categoryLinks.forEach(link => {
+      link.onclick = e => {
+        e.preventDefault();
+        const text = link.textContent.trim().replace(/^[^\s]+\s*/, '');
+        renderSearchResults(products.filter(p => p.category === text), 1);
+      };
+    });
 
-// ---------- Search & Pagination ----------
-const RESULTS_PER_PAGE = 12;
-let currentResults = [], currentPage=1;
-function renderSearchResults(list, page) {
-  currentResults = list;
-  currentPage = page;
-  resultsMain.innerHTML = '';
-  const start = (page-1)*RESULTS_PER_PAGE;
-  const chunk = list.slice(start, start+RESULTS_PER_PAGE);
-  chunk.forEach(p=>{
-    const art = document.createElement('article');
-    art.className='product-card'; art.dataset.id=p.id;
-    art.innerHTML=`
-      <img src="${p.gallery[0]}" alt="${p.title}">
-      <h3><a href="#">${p.title}</a></h3>
-      <p class="product-price">₵${p.price}</p>
-      <p class="product-rating">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})</p>
-    `;
-    resultsMain.appendChild(art);
-  });
-  renderPagination(list.length, page);
-}
-function renderPagination(total, page) {
-  paginationEl.innerHTML='';
-  const pages = Math.ceil(total/RESULTS_PER_PAGE);
-  const prev = document.createElement('button'); prev.className='page-btn'; prev.textContent='« Prev';
-  prev.disabled=page===1; prev.onclick=()=>renderSearchResults(currentResults, page-1);
-  paginationEl.appendChild(prev);
-  for (let i=1;i<=pages;i++){
-    const btn=document.createElement('button');
-    btn.className='page-btn'+(i===page?' active':''); btn.textContent=i;
-    btn.onclick=()=>renderSearchResults(currentResults,i);
-    paginationEl.appendChild(btn);
-  }
-  const next=document.createElement('button'); next.className='page-btn'; next.textContent='Next »';
-  next.disabled=page===pages; next.onclick=()=>renderSearchResults(currentResults,page+1);
-  paginationEl.appendChild(next);
-}
-searchBtn.onclick = ()=> {
-  const term=searchInput.value.toLowerCase();
-  const cat=searchCategory.value;
-  const filtered=products.filter(p=>{
-    return (cat==='all'||p.category===cat)
-        && p.title.toLowerCase().includes(term);
-  });
-  renderSearchResults(filtered,1);
-};
+    // ========= Cart UI =========
+    function updateCartUI() {
+      cartCountEl.textContent = cart.length;
+      cartPreviewEl.innerHTML = '';
+      let subtotal = 0;
+      cart.forEach((p, i) => {
+        subtotal += parseFloat(p.price);
+        const d = document.createElement('div');
+        d.className = 'cart-item';
+        d.innerHTML = `
+          <img src="${p.gallery[0]}" alt="${p.title}">
+          <div class="item-info">
+            <p class="item-title">${p.title}</p>
+            <p class="item-qty">Qty: 1</p>
+            <p class="item-price">₵${p.price}</p>
+          </div>
+          <button class="remove-item" data-idx="${i}">×</button>
+        `;
+        cartPreviewEl.appendChild(d);
+      });
+      cartSubtotalEl.textContent = subtotal.toFixed(2);
+    }
+    document.body.addEventListener('click', e => {
+      if (e.target.matches('.add-to-cart')) {
+        const id = +e.target.closest('.product-card').dataset.id;
+        const p = products.find(x => x.id === id);
+        cart.push(p);
+        updateCartUI();
+      }
+      if (e.target.matches('.remove-item')) {
+        cart.splice(+e.target.dataset.idx, 1);
+        updateCartUI();
+      }
+    });
+    cartCheckoutBtn.onclick = () => {
+      alert(`Checked out ${cart.length} items. Thank you!`);
+      cart.length = 0;
+      updateCartUI();
+    };
 
-// ---------- Cart Preview ----------
-function updateCartUI() {
-  cartCountEl.textContent = cart.length;
-  cartPreviewEl.innerHTML = '';
-  let subtotal = 0;
-  cart.forEach((p,i)=>{
-    subtotal += parseFloat(p.price);
-    const d = document.createElement('div'); d.className='cart-item';
-    d.innerHTML=`
-      <img src="${p.gallery[0]}" alt="${p.title}">
-      <div class="item-info">
-        <p class="item-title">${p.title}</p>
-        <p class="item-qty">Qty: 1</p>
-        <p class="item-price">₵${p.price}</p>
-      </div>
-      <button class="remove-item" data-idx="${i}">×</button>
-    `;
-    cartPreviewEl.appendChild(d);
-  });
-  cartSubtotalEl.textContent = `Subtotal: ₵${subtotal.toFixed(2)}`;
-}
-document.body.addEventListener('click', e=>{
-  if (e.target.matches('.add-to-cart')) {
-    const id=+e.target.closest('.product-card').dataset.id;
-    const p=products.find(x=>x.id===id);
-    cart.push(p); updateCartUI();
-  }
-  if (e.target.matches('.remove-item')) {
-    cart.splice(+e.target.dataset.idx,1); updateCartUI();
-  }
-});
-cartCheckoutBtn.onclick = ()=> {
-  alert(`Checked out ${cart.length} items. Thank you!`);
-  cart.length=0; updateCartUI();
-};
+    // ========= Product Detail =========
+    function showDetail(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      resultsMain.classList.add('hidden');
+      detailSection.style.display = 'block';
+      document.getElementById('detail-main-image').src = p.gallery[0];
+      const thumbs = document.getElementById('detail-thumbnails');
+      thumbs.innerHTML = '';
+      p.gallery.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'thumb';
+        img.onclick = () => document.getElementById('detail-main-image').src = src;
+        thumbs.appendChild(img);
+      });
+      document.getElementById('detail-title').textContent = p.title;
+      document.getElementById('detail-rating').innerHTML =
+        `${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} <span>(${p.reviewCount})</span>`;
+      document.getElementById('detail-price').textContent = p.price;
+      document.getElementById('detail-stock').textContent = p.stock;
+      document.getElementById('detail-shipping').textContent = p.shipping;
+      const feats = document.getElementById('detail-features');
+      feats.innerHTML = '';
+      ['High quality','Best seller','Limited stock'].forEach(f => {
+        const li = document.createElement('li');
+        li.textContent = f;
+        feats.appendChild(li);
+      });
+      document.getElementById('detail-description').textContent = 'Full product description…';
+      const revList = document.getElementById('detail-reviews-list');
+      revList.innerHTML = '';
+      p.reviews.forEach(r => {
+        const art = document.createElement('article');
+        art.innerHTML = `<strong>${r.author}</strong> (${r.date})<br/>${'★'.repeat(r.rating)}<p>${r.text}</p>`;
+        revList.appendChild(art);
+      });
+    }
+    backToResults.onclick = () => {
+      detailSection.style.display = 'none';
+      resultsMain.classList.remove('hidden');
+    };
+    document.body.addEventListener('click', e => {
+      if (e.target.closest('.product-card')) {
+        showDetail(+e.target.closest('.product-card').dataset.id);
+      }
+    });
 
-// ---------- Product Detail View ----------
-function showDetail(id) {
-  const p = products.find(x=>x.id===id);
-  if (!p) return;
-  document.getElementById('catalog')?.classList.add('hidden');
-  document.getElementById('search-results')?.classList.add('hidden');
-  detailSection.style.display='block';
-  document.getElementById('detail-main-image').src=p.gallery[0];
-  const thumbs=document.getElementById('detail-thumbnails'); thumbs.innerHTML='';
-  p.gallery.forEach(src=>{
-    const img=document.createElement('img'); img.src=src; img.className='thumb';
-    img.onclick=()=>document.getElementById('detail-main-image').src=src;
-    thumbs.appendChild(img);
-  });
-  document.getElementById('detail-title').textContent=p.title;
-  document.getElementById('detail-seller').textContent='MyMarketplace Seller';
-  document.getElementById('detail-rating').innerHTML=
-    `${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} <span>(${p.reviewCount})</span>`;
-  document.getElementById('detail-price').textContent=p.price;
-  document.getElementById('detail-stock').textContent=p.stock;
-  document.getElementById('detail-shipping').textContent=p.shipping;
-  const feats=document.getElementById('detail-features'); feats.innerHTML='';
-  ['High quality','Best seller','Limited stock'].forEach(f=>{
-    const li=document.createElement('li'); li.textContent=f; feats.appendChild(li);
-  });
-}
-backToResults.onclick = ()=>{
-  detailSection.style.display='none';
-  document.getElementById('search-results')?.classList.remove('hidden');
-};
+    // ========= Inject Dynamic Images =========
+    // 1) Hero slides
+    ['shopping,store','electronics,gadgets','fashion,clothes'].forEach((tag,i) => {
+      document.getElementById(`slide-img-${i+1}`).src =
+        `https://source.unsplash.com/1600x500/?${tag}`;
+    });
+    // 2) Category cards
+    document.querySelectorAll('.category-card').forEach(card => {
+      const img = card.querySelector('img');
+      img.src = `https://source.unsplash.com/400x300/?${card.dataset.category}`;
+    });
 
-// Wire clicks on product cards for detail
-document.body.addEventListener('click', e=>{
-  if (e.target.closest('.product-card')) {
-    const id=+e.target.closest('.product-card').dataset.id;
-    showDetail(id);
-  }
-});
-document.addEventListener('DOMContentLoaded', ()=> {
-    // ---------- Initialize ----------
+    // ========= Initialize =========
     renderFeatured();
     updateCartUI();
-
-    // Randomize category images
-   document.querySelectorAll('.category-card').forEach(card => {
-    const cat = card.dataset.category;
-    const img = card.querySelector('img');
-    const url = `https://source.unsplash.com/400x300/?${cat}`;
-    console.log('→ setting', img, 'to', url);
-    img.src = url;
   });
+</script>
 
-    // Randomize hero slides
-    ['shopping,store','electronics,gadgets','fashion,clothes']
-      .forEach((tag,i) => {
-        document.getElementById(`slide-img-${i+1}`).src =
-          `https://source.unsplash.com/1600x500/?${tag}`;
-      });
-  });
-  </script>
 
 </html>
