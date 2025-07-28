@@ -6,163 +6,1036 @@
   <title>All‑in‑One Market</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    * {
-  box-sizing: border-box;
+ /* ==============================
+   Variables & Reset
+   ============================== */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #18bc9c;
+  --accent-color: #f39c12;
+  --light-bg: #f7f9fa;
+  --light-text: #ffffff;
+  --dark-text: #333333;
+  --border-radius: 8px;
+  --transition-speed: 0.3s;
+  --max-width: 1200px;
+}
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  box-sizing: border-box;
 }
+
 body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--dark-text);
+  background-color: var(--light-bg);
+  line-height: 1.6;
+}
+
+/* ==============================
+   Container Utilities
+   ============================== */
+.container {
+  width: 90%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+/* ==============================
+   Header & Navigation
+   ============================== */
+#main-header {
+  background-color: var(--primary-color);
+  color: var(--light-text);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.navbar {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem .5rem;
 }
-header {
-  background: #333;
-  color: #fff;
-  padding: 1rem;
-  text-align: center;
+.logo {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--light-text);
+  text-decoration: none;
 }
-header input {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  width: 80%;
-  max-width: 400px;
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+.nav-links a {
+  color: var(--light-text);
+  text-decoration: none;
+  padding: .5rem .75rem;
+  border-radius: var(--border-radius);
+  transition: background var(--transition-speed);
+}
+.nav-links a:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.search-container {
+  position: relative;
+}
+#global-search {
+  padding: .5rem 1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
+  width: 250px;
+  transition: width var(--transition-speed);
 }
-main {
-  flex: 1;
+#global-search:focus {
+  width: 300px;
+  outline: none;
+}
+#search-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--secondary-color);
+  color: var(--light-text);
+  border: none;
+  padding: .4rem .8rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background var(--transition-speed);
+}
+#search-button:hover {
+  background: #149174;
+}
+
+/* ==============================
+   Sidebar Filters
+   ============================== */
+#filters {
+  background: var(--light-text);
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
   padding: 1rem;
+  margin: 1rem;
+  max-width: 300px;
+}
+#filters h2 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+.filter-group {
+  margin-bottom: 1rem;
+}
+.filter-group label {
+  display: block;
+  margin-bottom: .25rem;
+  font-weight: 600;
+}
+.filter-group input,
+.filter-group select {
+  width: 100%;
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+}
+#apply-filters {
+  display: block;
+  width: 100%;
+  background: var(--secondary-color);
+  color: var(--light-text);
+  border: none;
+  padding: .75rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1rem;
+}
+#apply-filters:hover {
+  background: #149174;
+}
+
+/* ==============================
+   Catalog & Listing Cards
+   ============================== */
+#catalog {
+  flex: 1;
+  margin: 1rem;
+}
+#catalog h1 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+#listing-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
 }
-.card {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 0.75rem;
-  transition: box-shadow 0.2s;
+.listing-card {
+  background: var(--light-text);
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
-.card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+.listing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
-.card img {
+.listing-img {
   width: 100%;
-  border-radius: 4px;
+  height: 150px;
+  object-fit: cover;
 }
-.card h2 {
+.listing-details {
+  padding: .75rem;
+}
+.listing-details h3 {
+  margin-bottom: .5rem;
   font-size: 1.1rem;
-  margin: 0.5rem 0;
+  color: var(--primary-color);
 }
-.card p {
-  font-size: 0.9rem;
-  color: #555;
+.listing-details p {
+  margin-bottom: .5rem;
+  font-size: .9rem;
 }
-footer {
-  background: #f4f4f4;
-  text-align: center;
-  padding: 0.75rem;
-  font-size: 0.9rem;
+.listing-rating .stars {
+  color: var(--accent-color);
+  margin-right: .25rem;
+}
+.btn {
+  display: inline-block;
+  margin-right: .5rem;
+  margin-top: .5rem;
+  padding: .5rem .75rem;
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--secondary-color);
+  color: var(--light-text);
+  cursor: pointer;
+  font-size: .9rem;
+  transition: background var(--transition-speed);
+}
+.btn:hover {
+  background: #149174;
 }
 
-    
-  </style>
+/* ==============================
+   Seller Profile & Management
+   ============================== */
+#seller-profile {
+  background: var(--light-text);
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin: 1rem;
+}
+#seller-profile h2 {
+  margin-bottom: .75rem;
+  color: var(--primary-color);
+}
+#seller-info p {
+  margin-bottom: .5rem;
+}
+#product-management {
+  margin-top: 1rem;
+}
+#product-management h3 {
+  margin-bottom: .5rem;
+}
+#add-new-listing {
+  margin-bottom: .75rem;
+}
+#listing-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#listing-table th,
+#listing-table td {
+  border: 1px solid #ccc;
+  padding: .5rem;
+  text-align: left;
+}
+#listing-table th {
+  background: var(--light-bg);
+  font-weight: 600;
+}
+
+/* ==============================
+   Cart & Checkout
+   ============================== */
+#cart {
+  background: var(--light-text);
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin: 1rem;
+}
+#cart h2 {
+  margin-bottom: .75rem;
+  color: var(--primary-color);
+}
+#cart-items .cart-item {
+  border-bottom: 1px solid #eee;
+  padding: .5rem 0;
+}
+#cart-summary {
+  margin-top: 1rem;
+  font-size: .95rem;
+}
+#cart-summary p {
+  margin-bottom: .5rem;
+}
+#checkout-button {
+  background: var(--accent-color);
+}
+#checkout-button:hover {
+  background: #d78d0e;
+}
+
+/* ==============================
+   Messaging Modal
+   ============================== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-content {
+  background: var(--light-text);
+  border-radius: var(--border-radius);
+  width: 100%;
+  max-width: 500px;
+  padding: 1rem;
+  position: relative;
+}
+.close-modal {
+  position: absolute;
+  top: .5rem; right: .5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+#message-text {
+  width: 100%;
+  height: 100px;
+  margin: .5rem 0;
+  padding: .5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid #ccc;
+}
+
+/* ==============================
+   Ratings & Reviews
+   ============================== */
+#reviews {
+  background: var(--light-text);
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin: 1rem;
+}
+#reviews h2 {
+  margin-bottom: .75rem;
+  color: var(--primary-color);
+}
+.review-item {
+  border-bottom: 1px solid #eee;
+  padding: .75rem 0;
+}
+.review-author {
+  font-size: .9rem;
+  color: var(--dark-text);
+  margin-bottom: .25rem;
+}
+.review-rating .stars {
+  color: var(--accent-color);
+  margin-bottom: .5rem;
+  display: inline-block;
+}
+#write-review {
+  margin-top: 1rem;
+}
+#write-review label {
+  display: block;
+  margin-bottom: .25rem;
+  font-weight: 600;
+}
+#write-review select,
+#write-review textarea {
+  width: 100%;
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  margin-bottom: .5rem;
+}
+#submit-review {
+  background: var(--secondary-color);
+}
+#submit-review:hover {
+  background: #149174;
+}
+
+/* ==============================
+   Subscription Plans & Payment
+   ============================== */
+#subscriptions {
+  background: var(--light-text);
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin: 1rem;
+}
+#subscriptions h2 {
+  margin-bottom: .75rem;
+  color: var(--primary-color);
+}
+.plan-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.plan-card {
+  flex: 1 1 200px;
+  background: var(--light-bg);
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.plan-card h3 {
+  margin-bottom: .5rem;
+}
+.plan-price {
+  font-size: 1.25rem;
+  color: var(--secondary-color);
+  margin-bottom: .75rem;
+}
+.select-plan {
+  background: var(--accent-color);
+}
+.select-plan:hover {
+  background: #d78d0e;
+}
+
+/* Payment form */
+#payment-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+#payment-form h3 {
+  margin-bottom: .75rem;
+  color: var(--primary-color);
+}
+#payment-form label {
+  display: block;
+  margin: .5rem 0 .25rem;
+}
+#payment-form input {
+  width: 100%;
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+}
+#pay-now {
+  margin-top: 1rem;
+  background: var(--secondary-color);
+}
+#pay-now:hover {
+  background: #149174;
+}
+
+/* ==============================
+   Footer
+   ============================== */
+#main-footer {
+  background: var(--primary-color);
+  color: var(--light-text);
+  text-align: center;
+  padding: 1rem .5rem;
+  margin-top: 2rem;
+}
+</style>
 </head>
-<body>
-  <header>
-    <h1>All‑in‑One Market</h1>
-    <input
-      type="search"
-      id="searchInput"
-      placeholder="Search for books, gadgets, hair‑braiding…"
-    />
+
+  <body>
+  <!-- Header & Global Search -->
+  <header id="main-header">
+    <nav class="navbar">
+      <a href="#" class="logo">All‑in‑One Market</a>
+      <ul class="nav-links">
+        <li><a href="#catalog">Catalog</a></li>
+        <li><a href="#subscriptions">Subscribe</a></li>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#cart">Cart (<span id="cart-count">0</span>)</a></li>
+      </ul>
+      <div class="search-container">
+        <input type="search" id="global-search" placeholder="Search products, services, sellers…" />
+        <button id="search-button">Search</button>
+      </div>
+    </nav>
   </header>
 
-  <main id="results">
-    <!-- Seller cards will be injected here -->
+  <!-- Faceted Filters -->
+  <aside id="filters">
+    <h2>Filter Results</h2>
+    <div class="filter-group">
+      <label for="filter-category">Category</label>
+      <select id="filter-category">
+        <option value="">All</option>
+        <option value="books">Books</option>
+        <option value="electronics">Electronics</option>
+        <option value="fashion">Fashion</option>
+        <option value="services">Services</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="filter-location">Location</label>
+      <input type="text" id="filter-location" placeholder="City, Region…" />
+    </div>
+    <div class="filter-group">
+      <label for="filter-price-min">Price Range</label>
+      <input type="number" id="filter-price-min" placeholder="Min" />
+      <input type="number" id="filter-price-max" placeholder="Max" />
+    </div>
+    <div class="filter-group">
+      <label for="filter-rating">Minimum Rating</label>
+      <select id="filter-rating">
+        <option value="0">Any</option>
+        <option value="1">1 ★ & up</option>
+        <option value="2">2 ★ & up</option>
+        <option value="3">3 ★ & up</option>
+        <option value="4">4 ★ & up</option>
+      </select>
+    </div>
+    <button id="apply-filters">Apply Filters</button>
+  </aside>
+
+  <!-- Main Catalog / Search Results -->
+  <main id="catalog">
+    <h1>Product & Service Listings</h1>
+    <div id="listing-container">
+      <!-- Example Card (to be duplicated dynamically) -->
+      <article class="listing-card" data-id="">
+        <img src="" alt="Product Image" class="listing-img" />
+        <div class="listing-details">
+          <h3 class="listing-title">Product/Service Title</h3>
+          <p class="listing-seller">By <a href="#seller-profile" class="seller-link">Seller Name</a></p>
+          <p class="listing-category">Category: <span></span></p>
+          <p class="listing-price">Price: <span></span></p>
+          <div class="listing-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-count">(0 reviews)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+          <button class="btn message-seller">Message Seller</button>
+        </div>
+      </article>
+      <!-- /Example Card -->
+    </div>
   </main>
 
-  <footer>
-    <p>© 2025 All‑in‑One Market Prototype</p>
+  <!-- Seller Profile & Product Management -->
+  <section id="seller-profile">
+    <h2>Seller Profile: <span id="seller-name">Seller Name</span></h2>
+    <div id="seller-info">
+      <p>Email: <span id="seller-email"></span></p>
+      <p>Joined: <span id="seller-joined-date"></span></p>
+      <p>Subscription Plan: <span id="seller-plan"></span> (Expires: <span id="seller-plan-expiry"></span>)</p>
+    </div>
+
+    <div id="product-management">
+      <h3>Your Products & Services</h3>
+      <button id="add-new-listing" class="btn">Add New Listing</button>
+      <table id="listing-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic rows of seller's listings -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Checkout & Cart -->
+  <section id="cart">
+    <h2>Your Cart</h2>
+    <div id="cart-items">
+      <!-- Cart items injected here -->
+    </div>
+    <div id="cart-summary">
+      <p>Subtotal: <span id="cart-subtotal">₵0.00</span></p>
+      <p>Taxes: <span id="cart-taxes">₵0.00</span></p>
+      <p>Total: <span id="cart-total">₵0.00</span></p>
+      <button id="checkout-button" class="btn">Proceed to Checkout</button>
+    </div>
+  </section>
+
+  <!-- Messaging Modal -->
+  <div id="message-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3>Message <span id="modal-seller-name"></span></h3>
+      <textarea id="message-text" placeholder="Write your message…"></textarea>
+      <button id="send-message" class="btn">Send Message</button>
+    </div>
+  </div>
+
+  <!-- Ratings & Reviews -->
+  <section id="reviews">
+    <h2>Ratings & Reviews</h2>
+    <div id="review-list">
+      <!-- Dynamic list of reviews -->
+      <article class="review-item">
+        <p class="review-author"><strong>User Name</strong> on <time datetime="">2025-07-28</time></p>
+        <div class="review-rating"><span class="stars">★★★★☆</span></div>
+        <p class="review-text">Review content goes here…</p>
+      </article>
+    </div>
+    <div id="write-review">
+      <h3>Write a Review</h3>
+      <label for="review-rating">Your Rating:</label>
+      <select id="review-rating">
+        <option value="5">5 ★</option>
+        <option value="4">4 ★</option>
+        <option value="3">3 ★</option>
+        <option value="2">2 ★</option>
+        <option value="1">1 ★</option>
+      </select>
+      <textarea id="review-text" placeholder="Share your experience…"></textarea>
+      <button id="submit-review" class="btn">Submit Review</button>
+    </div>
+  </section>
+
+  <!-- Subscription Plans & Payment -->
+  <section id="subscriptions">
+    <h2>Choose a Subscription Plan</h2>
+    <div class="plan-cards">
+      <div class="plan-card" data-plan="monthly">
+        <h3>Monthly</h3>
+        <p class="plan-price">₵8 / month</p>
+        <button class="btn select-plan">Select Plan</button>
+      </div>
+      <div class="plan-card" data-plan="semiannual">
+        <h3>6 Months</h3>
+        <p class="plan-price">₵40 / 6 months</p>
+        <button class="btn select-plan">Select Plan</button>
+      </div>
+      <div class="plan-card" data-plan="annual">
+        <h3>Annual</h3>
+        <p class="plan-price">₵75 / year</p>
+        <button class="btn select-plan">Select Plan</button>
+      </div>
+    </div>
+
+    <!-- Payment Form (to be wired up with payment gateway) -->
+    <form id="payment-form">
+      <h3>Payment Details</h3>
+      <label for="card-holder-name">Name on Card</label>
+      <input type="text" id="card-holder-name" required />
+
+      <label for="card-number">Card Number</label>
+      <input type="text" id="card-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required />
+
+      <label for="card-expiry">Expiry Date</label>
+      <input type="text" id="card-expiry" placeholder="MM/YY" required />
+
+      <label for="card-cvc">CVC</label>
+      <input type="text" id="card-cvc" maxlength="4" required />
+
+      <button type="submit" id="pay-now" class="btn">Pay Now</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer id="main-footer">
+    <p>© 2025 All‑in‑One Market. All rights reserved.</p>
   </footer>
+</body>
 
   <script>
-// Pseudo “seller profiles” with products/services
-const sellers = [
-  {
-    id: 1,
-    name: "Amina’s Book Corner",
-    category: "Books",
-    product: "Introduction to HTML",
-    price: "₵30",
-    img: "https://via.placeholder.com/300x200?text=Book"
-  },
-  {
-    id: 2,
-    name: "Bright Braids",
-    category: "Hair Braiding",
-    product: "Cornrow Styles",
-    price: "₵50",
-    img: "https://via.placeholder.com/300x200?text=Braids"
-  },
-  {
-    id: 3,
-    name: "Gadget Hub",
-    category: "Electronics",
-    product: "Wireless Earbuds",
-    price: "₵150",
-    img: "https://via.placeholder.com/300x200?text=Gadgets"
-  },
-  {
-    id: 4,
-    name: "Style Street",
-    category: "Fashion",
-    product: "Denim Jacket",
-    price: "₵200",
-    img: "https://via.placeholder.com/300x200?text=Clothes"
+// ================================
+// All‑in‑One Market Frontend Logic
+// ================================
+
+// ------------------------
+// Global State & Data
+// ------------------------
+
+const sellers = [];
+const cart = [];
+let currentUser = {
+  id: null,
+  role: 'guest',       // 'guest', 'buyer', 'seller'
+  subscription: null   // { plan: 'monthly'|'semiannual'|'annual', expiry: Date }
+};
+
+// Programmatically generate 200 sellers with 10 products each (2000 products total)
+for (let i = 1; i <= 200; i++) {
+  const seller = {
+    id: i,
+    name: `Seller ${i}`,
+    email: `seller${i}@market.com`,
+    joined: new Date(2025, Math.floor(Math.random()*7), Math.ceil(Math.random()*28)),
+    subscription: null,
+    products: []
+  };
+  for (let j = 1; j <= 10; j++) {
+    seller.products.push({
+      id: parseInt(`${i}${j}`),
+      title: `Product ${i}-${j}`,
+      description: `This is a detailed description for Product ${i}-${j}. It covers features and use cases.`,
+      category: ['Books', 'Electronics', 'Fashion', 'Services'][j % 4],
+      price: (Math.random() * 300 + 20).toFixed(2),
+      img: `https://via.placeholder.com/300x200?text=Prod%20${i}-${j}`,
+      reviews: [],
+      rating: 0
+    });
   }
-  // …add more mock entries here
-];
+  sellers.push(seller);
+}
 
-const resultsEl = document.getElementById('results');
-const searchInput = document.getElementById('searchInput');
+// ------------------------
+// Subscription Management
+// ------------------------
 
-function renderCards(list) {
-  resultsEl.innerHTML = '';
-  if (!list.length) {
-    resultsEl.innerHTML = '<p>No sellers found.</p>';
+const subscriptionPlans = {
+  monthly:   { price: 8,   durationDays: 30 },
+  semiannual:{ price: 40,  durationDays: 182 },
+  annual:    { price: 75,  durationDays: 365 }
+};
+
+/**
+ * Select a plan for the current user.
+ * @param {string} planKey - 'monthly'|'semiannual'|'annual'
+ */
+function selectPlan(planKey) {
+  if (!currentUser.id || currentUser.role !== 'seller') {
+    alert('You must be logged in as a seller to subscribe.');
     return;
   }
-  list.forEach(s => {
-    const card = document.createElement('div');
-    card.className = 'card';
+  const plan = subscriptionPlans[planKey];
+  if (!plan) return;
+  const now = new Date();
+  const expiry = new Date(now.getTime() + plan.durationDays * 24*60*60*1000);
+  currentUser.subscription = { plan: planKey, expiry };
+  updateDashboard();
+  alert(`Subscribed to ${planKey} plan. Expires on ${expiry.toDateString()}.`);
+}
+
+/**
+ * Update subscription dashboard UI.
+ */
+function updateDashboard() {
+  const dashPlan = document.getElementById('seller-plan');
+  const dashExpiry = document.getElementById('seller-plan-expiry');
+  if (currentUser.subscription) {
+    dashPlan.textContent = currentUser.subscription.plan;
+    dashExpiry.textContent = currentUser.subscription.expiry.toDateString();
+  } else {
+    dashPlan.textContent = 'None';
+    dashExpiry.textContent = 'N/A';
+  }
+}
+
+// ------------------------
+// Rendering Helpers
+// ------------------------
+
+const listingContainer = document.getElementById('listing-container');
+const cartCountEl = document.getElementById('cart-count');
+const cartItemsEl = document.getElementById('cart-items');
+const cartSubtotalEl = document.getElementById('cart-subtotal');
+const cartTaxesEl = document.getElementById('cart-taxes');
+const cartTotalEl = document.getElementById('cart-total');
+const globalSearchInput = document.getElementById('global-search');
+const applyFiltersBtn = document.getElementById('apply-filters');
+
+/**
+ * Render product listings based on filtered sellers/products.
+ * @param {Array} items - Array of { seller, product } objects
+ */
+function renderListings(items) {
+  listingContainer.innerHTML = '';
+  if (items.length === 0) {
+    listingContainer.innerHTML = '<p>No results found.</p>';
+    return;
+  }
+  items.forEach(({seller, product}) => {
+    const card = document.createElement('article');
+    card.className = 'listing-card';
+    card.dataset.id = product.id;
     card.innerHTML = `
-      <img src="${s.img}" alt="${s.product}" />
-      <h2>${s.name}</h2>
-      <p><strong>${s.product}</strong> (${s.category})</p>
-      <p>Price: ${s.price}</p>
-      <button onclick="alert('Contact ${s.name}!')">Contact Seller</button>
-    `;
-    resultsEl.appendChild(card);
+      <img src="${product.img}" alt="${product.title}" class="listing-img" />
+      <div class="listing-details">
+        <h3 class="listing-title">${product.title}</h3>
+        <p class="listing-seller">
+          By <a href="#seller-profile" class="seller-link" data-seller-id="${seller.id}">${seller.name}</a>
+        </p>
+        <p class="listing-category">Category: ${product.category}</p>
+        <p class="listing-price">₵${product.price}</p>
+        <div class="listing-rating">
+          <span class="stars">${renderStars(product.rating)}</span>
+          <span class="rating-count">(${product.reviews.length} reviews)</span>
+        </div>
+        <button class="btn add-to-cart" data-product-id="${product.id}">Add to Cart</button>
+        <button class="btn message-seller" data-seller-id="${seller.id}">Message Seller</button>
+      </div>`;
+    listingContainer.appendChild(card);
   });
 }
 
-// Initial render: show all
-renderCards(sellers);
+/**
+ * Render star icons based on rating.
+ * @param {number} rating - 0..5
+ * @returns {string}
+ */
+function renderStars(rating) {
+  const fullStars = Math.floor(rating);
+  const halfStar = rating - fullStars >= 0.5;
+  let html = '';
+  for (let i = 0; i < fullStars; i++) html += '★';
+  if (halfStar) html += '½';
+  for (let i = fullStars + (halfStar?1:0); i < 5; i++) html += '☆';
+  return html;
+}
 
-// Filter on search
-searchInput.addEventListener('input', () => {
-  const term = searchInput.value.trim().toLowerCase();
-  const filtered = sellers.filter(s =>
-    s.name.toLowerCase().includes(term) ||
-    s.product.toLowerCase().includes(term) ||
-    s.category.toLowerCase().includes(term)
-  );
-  renderCards(filtered);
+// ------------------------
+// Search & Filtering
+// ------------------------
+
+/**
+ * Perform global search + filters.
+ */
+function applySearchAndFilters() {
+  const term = globalSearchInput.value.trim().toLowerCase();
+  const category = document.getElementById('filter-category').value;
+  const location = document.getElementById('filter-location').value.trim().toLowerCase();
+  const priceMin = parseFloat(document.getElementById('filter-price-min').value) || 0;
+  const priceMax = parseFloat(document.getElementById('filter-price-max').value) || Infinity;
+  const ratingMin = parseInt(document.getElementById('filter-rating').value) || 0;
+
+  const results = [];
+  sellers.forEach(seller => {
+    if (location && !seller.name.toLowerCase().includes(location)) return;
+    seller.products.forEach(prod => {
+      if (term && !(
+        prod.title.toLowerCase().includes(term) ||
+        prod.description.toLowerCase().includes(term) ||
+        seller.name.toLowerCase().includes(term)
+      )) return;
+      if (category && prod.category.toLowerCase() !== category) return;
+      const price = parseFloat(prod.price);
+      if (price < priceMin || price > priceMax) return;
+      if (prod.rating < ratingMin) return;
+      results.push({ seller, product: prod });
+    });
+  });
+
+  renderListings(results);
+}
+
+// ------------------------
+// Cart & Checkout
+// ------------------------
+
+/**
+ * Add a product to the cart.
+ * @param {number} productId
+ */
+function addToCart(productId) {
+  const flat = [];
+  sellers.forEach(s => flat.push(...s.products.map(p => ({ seller: s, product: p }))));
+  const item = flat.find(({product}) => product.id === productId);
+  if (!item) return;
+  cart.push(item);
+  updateCartUI();
+}
+
+/**
+ * Update cart UI: count, list, totals.
+ */
+function updateCartUI() {
+  cartCountEl.textContent = cart.length;
+  cartItemsEl.innerHTML = '';
+  let subtotal = 0;
+  cart.forEach(({seller, product}, idx) => {
+    subtotal += parseFloat(product.price);
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <p>${product.title} by ${seller.name} – ₵${product.price}
+        <button class="remove-from-cart" data-idx="${idx}">×</button>
+      </p>`;
+    cartItemsEl.appendChild(div);
+  });
+  const taxes = subtotal * 0.075;
+  const total = subtotal + taxes;
+  cartSubtotalEl.textContent = `₵${subtotal.toFixed(2)}`;
+  cartTaxesEl.textContent = `₵${taxes.toFixed(2)}`;
+  cartTotalEl.textContent = `₵${total.toFixed(2)}`;
+}
+
+/**
+ * Remove item from cart by index.
+ */
+function removeFromCart(idx) {
+  cart.splice(idx, 1);
+  updateCartUI();
+}
+
+/**
+ * Simulate checkout.
+ */
+function checkout() {
+  if (cart.length === 0) {
+    alert('Your cart is empty!');
+    return;
+  }
+  alert(`Checked out ${cart.length} items. Thank you for your purchase!`);
+  cart.length = 0;
+  updateCartUI();
+}
+
+// ------------------------
+// Messaging
+// ------------------------
+
+const messageModal = document.getElementById('message-modal');
+const messageText = document.getElementById('message-text');
+let currentMessagingSeller = null;
+
+/**
+ * Open messaging modal to seller.
+ * @param {number} sellerId
+ */
+function openMessageModal(sellerId) {
+  const seller = sellers.find(s => s.id === sellerId);
+  if (!seller) return;
+  currentMessagingSeller = seller;
+  document.getElementById('modal-seller-name').textContent = seller.name;
+  messageText.value = '';
+  messageModal.style.display = 'block';
+}
+
+/**
+ * Send message to seller (simulated).
+ */
+function sendMessage() {
+  if (!currentMessagingSeller) return;
+  const text = messageText.value.trim();
+  if (!text) { alert('Please enter a message.'); return; }
+  alert(`Message sent to ${currentMessagingSeller.name}: "${text}"`);
+  closeMessageModal();
+}
+
+/**
+ * Close messaging modal.
+ */
+function closeMessageModal() {
+  messageModal.style.display = 'none';
+  currentMessagingSeller = null;
+}
+
+// ------------------------
+// Ratings & Reviews
+// ------------------------
+
+/**
+ * Submit a review for a product.
+ */
+function submitReview() {
+  const sel = document.querySelector('.seller-link.active');
+  const prodId = parseInt(document.querySelector('.listing-card.active').dataset.id);
+  const rating = parseInt(document.getElementById('review-rating').value);
+  const text = document.getElementById('review-text').value.trim();
+  if (!rating || !text) { alert('Please provide rating and review text.'); return; }
+  const seller = sellers.find(s => s.id === parseInt(sel.dataset.sellerId));
+  const product = seller.products.find(p => p.id === prodId);
+  product.reviews.push({ author: 'You', date: new Date(), rating, text });
+  // Recalculate average rating
+  product.rating = product.reviews.reduce((sum,r)=>sum+r.rating,0) / product.reviews.length;
+  alert('Thank you for your review!');
+  // Optionally re-render reviews section
+}
+
+// ------------------------
+// Event Listeners
+// ------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Initial render: all products
+  applySearchAndFilters();
+
+  // Global search
+  globalSearchInput.addEventListener('input', applySearchAndFilters);
+  document.getElementById('search-button').addEventListener('click', applySearchAndFilters);
+
+  // Filters
+  applyFiltersBtn.addEventListener('click', applySearchAndFilters);
+
+  // Delegated listing clicks
+  listingContainer.addEventListener('click', e => {
+    if (e.target.matches('.add-to-cart')) {
+      addToCart(parseInt(e.target.dataset.productId));
+    }
+    if (e.target.matches('.remove-from-cart')) {
+      removeFromCart(parseInt(e.target.dataset.idx));
+    }
+    if (e.target.matches('.message-seller')) {
+      openMessageModal(parseInt(e.target.dataset.sellerId));
+    }
+    if (e.target.matches('.seller-link')) {
+      // Open seller profile - left as exercise
+    }
+  });
+
+  // Cart removal
+  cartItemsEl.addEventListener('click', e => {
+    if (e.target.matches('.remove-from-cart')) {
+      removeFromCart(parseInt(e.target.dataset.idx));
+    }
+  });
+
+  // Checkout
+  document.getElementById('checkout-button').addEventListener('click', checkout);
+
+  // Messaging modal
+  document.getElementById('send-message').addEventListener('click', sendMessage);
+  document.querySelector('.close-modal').addEventListener('click', closeMessageModal);
+
+  // Subscription selects
+  document.querySelectorAll('.select-plan').forEach(btn => {
+    btn.addEventListener('click', () => selectPlan(btn.parentElement.dataset.plan));
+  });
+
+  // Review submission
+  document.getElementById('submit-review').addEventListener('click', submitReview);
 });
 
-    
-  </script>
-</body>
+
+</script>
+
 </html>
