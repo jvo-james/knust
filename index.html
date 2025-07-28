@@ -1486,24 +1486,24 @@ textarea { resize: vertical; min-height: 100px; }
     <button class="slider-prev">&larr;</button>
     <div class="slides">
       <div class="slide active">
-        <img src="https://source.unsplash.com/1600x500/?shopping,store" alt="Fast, free shipping">
-        <div class="slide-caption">
+      <img id="slide-img-1" alt="Fast, free shipping">
+               <div class="slide-caption">
           <h2>Fast, Free Shipping</h2>
           <p>Unlimited access to deals & more</p>
           <button class="btn-hero">Join Premium</button>
         </div>
       </div>
       <div class="slide">
-        <img src="https://source.unsplash.com/1600x500/?electronics,gadgets" alt="Latest Gadgets">
-        <div class="slide-caption">
+      <img id="slide-img-2" alt="Fast, free shipping">
+               <div class="slide-caption">
           <h2>Latest Gadgets</h2>
           <p>Discover the newest in tech</p>
           <button class="btn-hero">Shop Now</button>
         </div>
       </div>
       <div class="slide">
-        <img src="https://source.unsplash.com/1600x500/?fashion,clothes" alt="Summer Fashion">
-        <div class="slide-caption">
+      <img id="slide-img-3" alt="Fast, free shipping">
+               <div class="slide-caption">
           <h2>Sizzling Summer Fashion</h2>
           <p>Trends for him & her</p>
           <button class="btn-hero">Explore</button>
@@ -1518,27 +1518,33 @@ textarea { resize: vertical; min-height: 100px; }
     <h2>Shop by Category</h2>
     <div class="categories-grid">
       <article class="category-card">
-        <img src="https://source.unsplash.com/400x300/?books,library" alt="Books">
-        <h3><a href="#">Books</a></h3>
+ <article class="category-card" data-category="books">
+    <img alt="Books">
+   <h3><a href="#">Books</a></h3>
       </article>
       <article class="category-card">
-        <img src="https://source.unsplash.com/400x300/?electronics,device" alt="Electronics">
+<article class="category-card" data-category="electronics">
+      <img alt="Electronics">
         <h3><a href="#">Electronics</a></h3>
       </article>
       <article class="category-card">
-        <img src="https://source.unsplash.com/400x300/?fashion,clothing" alt="Fashion">
+<article class="category-card" data-category="fashion">
+      <img alt="Fashion">
         <h3><a href="#">Fashion</a></h3>
       </article>
       <article class="category-card">
-        <img src="https://source.unsplash.com/400x300/?home,decor" alt="Home & Kitchen">
+<article class="category-card" data-category="home">
+      <img alt="Home & Kitchen">
         <h3><a href="#">Home & Kitchen</a></h3>
       </article>
       <article class="category-card">
-        <img src="https://source.unsplash.com/400x300/?beauty,makeup" alt="Beauty">
+<article class="category-card" data-category="beauty">
+    <img alt="Beauty">
         <h3><a href="#">Beauty</a></h3>
       </article>
       <article class="category-card">
-        <img src="https://source.unsplash.com/400x300/?services,consulting" alt="Services">
+<article class="category-card" data-category="services">
+     <img alt="Services">
         <h3><a href="#">Services</a></h3>
       </article>
     </div>
@@ -1681,11 +1687,7 @@ textarea { resize: vertical; min-height: 100px; }
 </body>
 
   <script>
-// ================================
-// MyMarketplace Frontend Logic
-// ================================
 
-// ---------- Global Data ----------
 const products = [];
 const categories = ['Books','Electronics','Fashion','Home & Kitchen','Beauty','Services'];
 const cart = [];
@@ -1898,6 +1900,16 @@ document.body.addEventListener('click', e=>{
 renderFeatured();
 updateCartUI();
 
+    document.querySelectorAll('.category-card').forEach(card => {
+    const cat = card.dataset.category;           // e.g. "books"
+    const img = card.querySelector('img');
+    img.src = `https://source.unsplash.com/400x300/?${cat}`; 
+    });
+
+     ['shopping,store','electronics,gadgets','fashion,clothes'].forEach((tag,i) => {
+   document.getElementById(`slide-img-${i+1}`).src =
+     `https://source.unsplash.com/1600x500/?${tag}`;
+ });
   </script>
 
 </html>
