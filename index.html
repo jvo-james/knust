@@ -478,25 +478,14 @@ display: none;
     <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
     <div class="slides">
       <div class="slide active">
-          <img
-        id="slide-img-1"
-       src="${ makeImageUrl('fast shipping', 1) }"
-        alt="Fast, free shipping"
-        loading="lazy"
-      >
+           <img id="slide-img-1" src="" alt="Fast, free shipping" loading="lazy">
         <div class="slide-caption">
           <h2><i class="fas fa-shipping-fast"></i> Fast, Free Shipping</h2>
           <p>Unlimited access to deals & more</p>
           <button class="btn-hero"><i class="fas fa-gem"></i> Join Premium</button>
         </div>
       </div>
-      <div class="slide">
-        <img
-        id="slide-img-2"
-        src="${ makeImageUrl('latest gadgets', 2) }"
-        alt="Latest Gadgets"
-        loading="lazy"
-      >
+        <img id="slide-img-2" src="" alt="Latest Gadgets" loading="lazy">
         <div class="slide-caption">
           <h2><i class="fas fa-microchip"></i> Latest Gadgets</h2>
           <p>Discover the newest in tech</p>
@@ -504,12 +493,7 @@ display: none;
         </div>
       </div>
       <div class="slide">
-         <img
-        id="slide-img-3"
-        src="${ makeImageUrl('summer fashion', 3) }"
-        alt="Sizzling Summer Fashion"
-        loading="lazy"
-      >
+    <img id="slide-img-3" src="" alt="Sizzling Summer Fashion" loading="lazy">
         <div class="slide-caption">
           <h2><i class="fas fa-sun"></i> Sizzling Summer Fashion</h2>
           <p>Trends for him & her</p>
@@ -525,51 +509,27 @@ display: none;
     <h2><i class="fas fa-th-large"></i> Shop by Category</h2>
     <div class="categories-grid">
       <article class="category-card" data-category="books">
-       <img
-       src="${ makeImageUrl('books', 'cat-books') }"
-       alt="Books"
-       loading="lazy"
-     >
+      <img data-cat-img="Books" data-cat-seed="cat-books" src="" alt="Books" loading="lazy">
         <h3><i class="fas fa-book-open"></i> Books</h3>
       </article>
       <article class="category-card" data-category="electronics">
-        <img
-       src="${ makeImageUrl('electronics', 'cat-electronics') }"
-       alt="Electronics"
-       loading="lazy"
-     >
+       <img data-cat-img="Electronic" data-cat-seed="cat-electronics" src="" alt="Electronic" loading="lazy">
         <h3><i class="fas fa-tv"></i> Electronics</h3>
       </article>
       <article class="category-card" data-category="fashion">
-        <img
-       src="${ makeImageUrl('fashion', 'cat-fashion') }"
-       alt="Fashion"
-       loading="lazy"
-     >
+     <img data-cat-img="Fashion" data-cat-seed="cat-fashion" src="" alt="Fashion" loading="lazy">
         <h3><i class="fas fa-tshirt"></i> Fashion</h3>
       </article>
       <article class="category-card" data-category="home">
-         <img
-       src="${ makeImageUrl('kitchen', 'cat-kitchen') }"
-       alt="Home & Kitchen"
-       loading="lazy"
-     >
+        <img data-cat-img="Kitchen" data-cat-seed="cat-kitchen" src="" alt="Home & Kitchen" loading="lazy">
         <h3><i class="fas fa-blender"></i> Home & Kitchen</h3>
       </article>
       <article class="category-card" data-category="beauty">
-         <img
-       src="${ makeImageUrl('makeup', 'cat-makeup') }"
-       alt="Makeup"
-       loading="lazy"
-     >
+         <img data-cat-img="Makeup" data-cat-seed="cat-makeup" src="" alt="Makeup" loading="lazy">
         <h3><i class="fas fa-heart"></i> Beauty</h3>
       </article>
       <article class="category-card" data-category="services">
-         <img
-       src="${ makeImageUrl('consulting', 'cat-consulting') }"
-       alt="Services"
-       loading="lazy"
-     >
+    <img data-cat-img="consulting" data-cat-seed="cat-consulting" src="" alt="Services" loading="lazy">
         <h3><i class="fas fa-concierge-bell"></i> Services</h3>
       </article>
     </div>
@@ -715,6 +675,17 @@ display: none;
    return `https://source.unsplash.com/400x400/?${encodeURIComponent(keywords)}&sig=${seed}`;
  }
 
+      document.getElementById('slide-img-1').src = makeImageUrl('fast shipping', 1, 800, 500);
+   document.getElementById('slide-img-2').src = makeImageUrl('latest gadgets', 2, 800, 500);
+   document.getElementById('slide-img-3').src = makeImageUrl('summer fashion', 3, 800, 500);
+
+   // 2️⃣ Category images
+   document.querySelectorAll('[data-cat-img]').forEach(imgEl => {
+     const cat    = imgEl.getAttribute('data-cat-img');
+     const seed   = imgEl.getAttribute('data-cat-seed');
+     // use smaller size for category cards
+     imgEl.src     = makeImageUrl(cat.toLowerCase(), seed, 400, 300);
+   });
        const cartPreview = document.getElementById('cart-preview');
      const cartLink    = document.getElementById('cart-link');
      cartLink.onclick = e => {
