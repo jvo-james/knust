@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mock Marketplace Demo</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    #search { width: 300px; padding: 8px; margin-bottom: 10px; }
+    .product { border: 1px solid #ddd; padding: 10px; margin: 5px 0; display: flex; }
+    .product img { width: 80px; height: 80px; object-fit: cover; margin-right: 10px; }
+    .pagination { margin-top: 15px; }
+    .pagination button { padding: 5px 10px; margin-right: 5px; }
+  </style>
+  <!-- Faker.js UMD bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker/dist/faker.umd.min.js"></script>
+</head>
+<body>
+
+  <h1>🔎 Live Search Marketplace</h1>
+  <input id="search" placeholder="Type to search products…" />
+
+  <div id="results"></div>
+
+  <div class="pagination">
+    <button id="prev" disabled>← Prev</button>
+    <span id="page-info">Page 1</span>
+    <button id="next" disabled>Next →</button>
+  </div>
+
+  <script>
+    // Grab Faker from the CDN bundle
+    const { faker } = window['faker'];
+
+    // Generate 50 vendors and 200 products in memory
+    const NUM_VENDORS = 50, NUM_PRODUCTS = 200;
+    const vendors = Array.from({ length: NUM_VENDORS }).map(() => {
+      const id = faker.string.uuid();
+      return { id, name: faker.company.name(), avatar: 'https://i.pravatar.cc/100?u='+id };
+    });
+    const products = Array.from({ length: NUM_PRODUCTS }).map(() => {
+      const id = faker.string.uuid();
+      return {
+        id,
+        title: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        price: faker.commerce.price(5, 500, 2),
+        category: faker.commerce.department(),
+        image: 'https://picsum.photos/seed/'+id+'/100/100',
+        vendorId: faker.helpers.arrayElement(vendors).id
+      };
+    });
+
+    // UI state
+    const perPage = 20;
+    let page = 1, lastQuery = '';
+
+    // DOM refs
+    const input = document.getElementById('search');
+    const results = document.getElementById('results');
+    const btnPrev = document.getElementById('prev');
+    const btnNext = document.getElementById('next');
+    const pageInfo = document.getElementById('page-info');
+
+    // Render function
+    function renderPage(query, pg) {
+      const filtered = query
+        ? products.filter(p => p.title.toLowerCase().includes(query.toLowerCase()))
+        : products;
+      const totalPages = Math.ceil(filtered.length / perPage);
+      page = Math.max(1, Math.min(pg, totalPages));
+
+      const start = (page - 1) * perPage;
+      const pageItems = filtered.slice(start, start + perPage);
+
+      if (!pageItems.length) {
+        results.innerHTML = '<p>No products found.</p>';
+      } else {
+        results.innerHTML = pageItems.map(p => `
+          <div class="product">
+            <img src="${p.image}" alt="">
+            <div>
+              <strong>${p.title}</strong><br>
+              ${p.category} — GHS ${p.price}<br>
+              <small>${p.description.slice(0,60)}…</small>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      pageInfo.textContent = `Page ${page} of ${totalPages}`;
+      btnPrev.disabled = page <= 1;
+      btnNext.disabled = page >= totalPages;
+    }
+
+    // Event handlers
+    let debounce;
+    input.addEventListener('input', e => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        lastQuery = e.target.value;
+        renderPage(lastQuery, 1);
+      }, 200);
+    });
+    btnPrev.addEventListener('click', () => renderPage(lastQuery, page - 1));
+    btnNext.addEventListener('click', () => renderPage(lastQuery, page + 1));
+
+    // Initial render
+    renderPage('', 1);
+  </script>
+
+</body>
+</html>
