@@ -706,14 +706,11 @@ display: none;
        alert(`Opening seller page for ${name} (demo)`);
      };
       
-      function makeImageUrl(category, id) {
-    const seed = encodeURIComponent(category.replace(/\s+/g, '') + '-' + id);
-    return `https://picsum.photos/seed/${seed}/400/400`;
-  }
-     function makeImageUrl(keywords, seed) {
-    const s = encodeURIComponent((keywords || '').replace(/\s+/g,'') + '-' + seed);
-    return `https://picsum.photos/seed/${s}/800/500`;
-  }  
+    function makeImageUrl(keywords, seed, width = 400, height = 400) {
+        const s = encodeURIComponent((keywords || '').replace(/\s+/g,'') + '-' + seed);
+        return `https://picsum.photos/seed/${s}/${width}/${height}`;
+      }
+      
       function makeUnsplashUrl(keywords, seed) {
    return `https://source.unsplash.com/400x400/?${encodeURIComponent(keywords)}&sig=${seed}`;
  }
@@ -724,7 +721,9 @@ display: none;
        e.preventDefault();
        cartPreview.classList.toggle('open');
      };
-      
+       const closeCartBtn = document.querySelector('#cart-preview .close-cart');
+      closeCartBtn.onclick = () => cartPreview.classList.remove('open');
+
        const namePools = {
    Books: [
      'JavaScript Deep Dive','CSS Mastery','Effective Java','Python 101','Data Structures Explained',
@@ -933,21 +932,7 @@ display: none;
         });
         cartSubtotal.textContent = subtotal.toFixed(2);
       }
-      document.body.addEventListener('click', e=>{
-         if (e.target.closest('.add-to-cart')) {
-   const id = +e.target.closest('.product-card').dataset.id;
-   cart.push(products.find(p => p.id === id));
-   updateCart();
- }
- if (e.target.closest('.view-details')) {
-   const id = +e.target.closest('.product-card').dataset.id;
-   showDetail(id);    
- }
-        if(e.target.matches('.remove-item')){
-          cart.splice(+e.target.dataset.idx,1);
-          updateCart();
-        }
-      });
+    
       cartCheckout.onclick = ()=>{
         alert(`Checked out ${cart.length} items. Thank you!`);
         cart.length = 0; updateCart();
@@ -956,7 +941,6 @@ closeCartBtn.onclick = () => cartPreview.classList.remove('open');
       // Product Detail
       function showDetail(id) {
         modal.classList.remove('hidden');
-       return;
         const p = products.find(x=>x.id===id);
         if(!p) return;
         document.getElementById('detail-main-image').loading = 'lazy';
@@ -989,11 +973,33 @@ closeCartBtn.onclick = () => cartPreview.classList.remove('open');
        document.getElementById('product-modal').classList.add('hidden');
         resultsMain.classList.remove('hidden');
       };
-      document.body.addEventListener('click', e=>{
-        const card = e.target.closest('.product-card');
-        if(card) showDetail(+card.dataset.id);
+     
+        document.body.addEventListener('click', e => {
+        if (e.target.closest('.add-to-cart')) {
+          const id = +e.target.closest('.product-card').dataset.id;
+          cart.push(products.find(p => p.id === id));
+          updateCart();
+          return;
+        }
+        // View details button
+        if (e.target.closest('.view-details')) {
+          const id = +e.target.closest('.product-card').dataset.id;
+          showDetail(id);
+          return;
+        }
+        // Close modal on backdrop
+        if (e.target === modal) {
+          modal.classList.add('hidden');
+          return;
+        }
+        // Remove item from cart
+        if (e.target.matches('.remove-item')) {
+          cart.splice(+e.target.dataset.idx, 1);
+          updateCart();
+          return;
+        }
       });
-      closeBtn.onclick = () => modal.classList.add('hidden');
+     closeBtn.onclick = () => modal.classList.add('hidden');
      modal.onclick = e => {
        if (e.target === modal) modal.classList.add('hidden');
      };
