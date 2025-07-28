@@ -5,20 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>All‑in‑One Market</title>
   <link rel="stylesheet" href="style.css" />
+
   <style>
- /* ==============================
-   Variables & Reset
+/* ==============================
+   Variables & Global Resets
    ============================== */
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #18bc9c;
-  --accent-color: #f39c12;
-  --light-bg: #f7f9fa;
+  --primary-color: #1a202c;
+  --secondary-color: #2d3748;
+  --accent-color: #ed64a6;
+  --highlight-color: #f6ad55;
+  --light-bg: #ffffff;
+  --dark-bg: #edf2f7;
   --light-text: #ffffff;
-  --dark-text: #333333;
+  --dark-text: #2d3748;
+  --muted-text: #718096;
   --border-radius: 8px;
   --transition-speed: 0.3s;
-  --max-width: 1200px;
+  --max-width: 1300px;
+  --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 *,
@@ -29,1013 +34,971 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
   color: var(--dark-text);
-  background-color: var(--light-bg);
+  background: var(--dark-bg);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 /* ==============================
-   Container Utilities
+   Utility Classes
    ============================== */
+.hidden { display: none !important; }
 .container {
   width: 90%;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 1rem 0;
 }
+.btn {
+  display: inline-block;
+  background: var(--accent-color);
+  color: var(--light-text);
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background var(--transition-speed), transform var(--transition-speed);
+  text-decoration: none;
+}
+.btn:hover {
+  background: var(--highlight-color);
+  transform: translateY(-2px);
+}
+.btn:active {
+  transform: translateY(0);
+}
 
 /* ==============================
-   Header & Navigation
+   HEADER (Fixed)
    ============================== */
-#main-header {
-  background-color: var(--primary-color);
-  color: var(--light-text);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+#site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: var(--primary-color);
+  z-index: 1000;
+  box-shadow: var(--box-shadow);
 }
-.navbar {
+#site-header .top-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--light-text);
+  padding: 0.5rem 0;
+}
+#site-header .top-bar a {
+  color: var(--light-text);
+  margin-left: 1rem;
+  text-decoration: none;
+}
+#site-header .main-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem .5rem;
+  padding: 1rem 0;
 }
-.logo {
-  font-size: 1.75rem;
+#site-header .logo {
+  font-size: 1.8rem;
   font-weight: bold;
   color: var(--light-text);
   text-decoration: none;
 }
-.nav-links {
-  list-style: none;
+#site-header .search-bar {
   display: flex;
-  gap: 1.5rem;
+  flex: 1;
+  margin: 0 2rem;
 }
-.nav-links a {
-  color: var(--light-text);
-  text-decoration: none;
-  padding: .5rem .75rem;
-  border-radius: var(--border-radius);
-  transition: background var(--transition-speed);
-}
-.nav-links a:hover {
-  background-color: rgba(255,255,255,0.1);
-}
-
-.search-container {
-  position: relative;
-}
-#global-search {
-  padding: .5rem 1rem;
+#site-header select,
+#site-header input {
+  padding: 0.6rem;
   border: none;
-  border-radius: var(--border-radius);
-  width: 250px;
-  transition: width var(--transition-speed);
-}
-#global-search:focus {
-  width: 300px;
-  outline: none;
-}
-#search-button {
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--secondary-color);
-  color: var(--light-text);
-  border: none;
-  padding: .4rem .8rem;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: background var(--transition-speed);
-}
-#search-button:hover {
-  background: #149174;
-}
-
-/* ==============================
-   Sidebar Filters
-   ============================== */
-#filters {
-  background: var(--light-text);
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  margin: 1rem;
-  max-width: 300px;
-}
-#filters h2 {
-  margin-bottom: 1rem;
-  color: var(--primary-color);
-}
-.filter-group {
-  margin-bottom: 1rem;
-}
-.filter-group label {
-  display: block;
-  margin-bottom: .25rem;
-  font-weight: 600;
-}
-.filter-group input,
-.filter-group select {
-  width: 100%;
-  padding: .5rem;
-  border: 1px solid #ccc;
-  border-radius: var(--border-radius);
-}
-#apply-filters {
-  display: block;
-  width: 100%;
-  background: var(--secondary-color);
-  color: var(--light-text);
-  border: none;
-  padding: .75rem;
-  border-radius: var(--border-radius);
-  cursor: pointer;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
   font-size: 1rem;
 }
-#apply-filters:hover {
-  background: #149174;
+#site-header input {
+  flex: 1;
+}
+#site-header .search-bar button {
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+#category-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+}
+#category-nav ul li a {
+  color: var(--light-text);
+  text-decoration: none;
+  padding: 0.4rem 0.6rem;
+  transition: background var(--transition-speed);
+}
+#category-nav ul li a:hover {
+  background: rgba(255,255,255,0.1);
+  border-radius: var(--border-radius);
 }
 
 /* ==============================
-   Catalog & Listing Cards
+   HERO SLIDER
    ============================== */
-#catalog {
-  flex: 1;
-  margin: 1rem;
+#hero-slider {
+  position: relative;
+  margin-top: 120px;
+  overflow: hidden;
+  height: 500px;
 }
-#catalog h1 {
+#hero-slider .slides {
+  display: flex;
+  transition: transform 0.8s ease;
+}
+#hero-slider .slide {
+  min-width: 100%;
+  position: relative;
+  opacity: 0;
+  transition: opacity var(--transition-speed);
+}
+#hero-slider .slide.active {
+  opacity: 1;
+}
+#hero-slider .slide img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+#hero-slider .slide-caption {
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+  background: rgba(0,0,0,0.4);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  color: var(--light-text);
+}
+#hero-slider .slide-caption h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+#hero-slider .slide-caption p {
+  font-size: 1.2rem;
   margin-bottom: 1rem;
+}
+.slider-prev,
+.slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: var(--light-text);
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  font-size: 1.5rem;
+}
+.slider-prev { left: 1rem; }
+.slider-next { right: 1rem; }
+
+/* ==============================
+   CATEGORY HIGHLIGHTS
+   ============================== */
+#category-highlights {
+  padding: 3rem 0;
+  background: var(--light-bg);
+}
+#category-highlights h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
   color: var(--primary-color);
 }
-#listing-container {
+.categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 1.5rem;
 }
-.listing-card {
-  background: var(--light-text);
-  border: 1px solid #ddd;
+.category-card {
+  background: var(--dark-bg);
   border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  box-shadow: var(--box-shadow);
+  transition: transform var(--transition-speed);
 }
-.listing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+.category-card:hover {
+  transform: translateY(-5px);
 }
-.listing-img {
+.category-card img {
   width: 100%;
   height: 150px;
   object-fit: cover;
 }
-.listing-details {
-  padding: .75rem;
+.category-card h3 {
+  text-align: center;
+  padding: 1rem 0;
 }
-.listing-details h3 {
-  margin-bottom: .5rem;
-  font-size: 1.1rem;
+.category-card h3 a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ==============================
+   FEATURED PRODUCTS
+   ============================== */
+#featured-products {
+  padding: 3rem 0;
+}
+#featured-products h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
   color: var(--primary-color);
 }
-.listing-details p {
-  margin-bottom: .5rem;
-  font-size: .9rem;
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: 1.5rem;
 }
-.listing-rating .stars {
-  color: var(--accent-color);
-  margin-right: .25rem;
-}
-.btn {
-  display: inline-block;
-  margin-right: .5rem;
-  margin-top: .5rem;
-  padding: .5rem .75rem;
-  border: none;
+.product-card {
+  background: var(--light-bg);
   border-radius: var(--border-radius);
-  background: var(--secondary-color);
-  color: var(--light-text);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
   cursor: pointer;
-  font-size: .9rem;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.product-card h3 {
+  font-size: 1.1rem;
+  margin: 0.8rem;
+  color: var(--primary-color);
+}
+.product-card .product-price {
+  margin: 0 0.8rem;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+.product-card .product-rating {
+  margin: 0 0.8rem 1rem;
+  color: var(--highlight-color);
+}
+
+/* ==============================
+   LOAD MORE BUTTON
+   ============================== */
+.btn-load-more {
+  display: block;
+  margin: 2rem auto;
+  background: var(--primary-color);
+}
+.btn-load-more:hover { background: var(--secondary-color); }
+
+/* ==============================
+   SEARCH RESULTS & PAGINATION
+   ============================== */
+#search-results {
+  padding: 3rem 0;
+}
+#search-results .product-card { /* reuse above */ }
+#pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+}
+.page-btn {
+  background: var(--light-bg);
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
   transition: background var(--transition-speed);
 }
-.btn:hover {
-  background: #149174;
-}
-
-/* ==============================
-   Seller Profile & Management
-   ============================== */
-#seller-profile {
-  background: var(--light-text);
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  margin: 1rem;
-}
-#seller-profile h2 {
-  margin-bottom: .75rem;
-  color: var(--primary-color);
-}
-#seller-info p {
-  margin-bottom: .5rem;
-}
-#product-management {
-  margin-top: 1rem;
-}
-#product-management h3 {
-  margin-bottom: .5rem;
-}
-#add-new-listing {
-  margin-bottom: .75rem;
-}
-#listing-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-#listing-table th,
-#listing-table td {
-  border: 1px solid #ccc;
-  padding: .5rem;
-  text-align: left;
-}
-#listing-table th {
-  background: var(--light-bg);
-  font-weight: 600;
-}
-
-/* ==============================
-   Cart & Checkout
-   ============================== */
-#cart {
-  background: var(--light-text);
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  margin: 1rem;
-}
-#cart h2 {
-  margin-bottom: .75rem;
-  color: var(--primary-color);
-}
-#cart-items .cart-item {
-  border-bottom: 1px solid #eee;
-  padding: .5rem 0;
-}
-#cart-summary {
-  margin-top: 1rem;
-  font-size: .95rem;
-}
-#cart-summary p {
-  margin-bottom: .5rem;
-}
-#checkout-button {
+.page-btn.active,
+.page-btn:hover {
   background: var(--accent-color);
-}
-#checkout-button:hover {
-  background: #d78d0e;
+  color: var(--light-text);
+  border-color: var(--accent-color);
 }
 
 /* ==============================
-   Messaging Modal
+   CART PREVIEW SIDEBAR
    ============================== */
-.modal {
-  display: none;
+#cart-preview {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  align-items: center;
-  justify-content: center;
+  top: 120px;
+  right: 0;
+  width: 300px;
+  background: var(--light-bg);
+  border-left: 1px solid #e2e8f0;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
   padding: 1rem;
+  z-index: 900;
 }
-.modal-content {
-  background: var(--light-text);
-  border-radius: var(--border-radius);
-  width: 100%;
-  max-width: 500px;
-  padding: 1rem;
-  position: relative;
-}
-.close-modal {
-  position: absolute;
-  top: .5rem; right: .5rem;
+#cart-preview h2 {
   font-size: 1.5rem;
-  cursor: pointer;
-}
-#message-text {
-  width: 100%;
-  height: 100px;
-  margin: .5rem 0;
-  padding: .5rem;
-  border-radius: var(--border-radius);
-  border: 1px solid #ccc;
-}
-
-/* ==============================
-   Ratings & Reviews
-   ============================== */
-#reviews {
-  background: var(--light-text);
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  margin: 1rem;
-}
-#reviews h2 {
-  margin-bottom: .75rem;
+  margin-bottom: 1rem;
   color: var(--primary-color);
 }
-.review-item {
-  border-bottom: 1px solid #eee;
-  padding: .75rem 0;
-}
-.review-author {
-  font-size: .9rem;
-  color: var(--dark-text);
-  margin-bottom: .25rem;
-}
-.review-rating .stars {
-  color: var(--accent-color);
-  margin-bottom: .5rem;
-  display: inline-block;
-}
-#write-review {
-  margin-top: 1rem;
-}
-#write-review label {
-  display: block;
-  margin-bottom: .25rem;
-  font-weight: 600;
-}
-#write-review select,
-#write-review textarea {
-  width: 100%;
-  padding: .5rem;
-  border: 1px solid #ccc;
-  border-radius: var(--border-radius);
-  margin-bottom: .5rem;
-}
-#submit-review {
-  background: var(--secondary-color);
-}
-#submit-review:hover {
-  background: #149174;
-}
-
-/* ==============================
-   Subscription Plans & Payment
-   ============================== */
-#subscriptions {
-  background: var(--light-text);
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  margin: 1rem;
-}
-#subscriptions h2 {
-  margin-bottom: .75rem;
-  color: var(--primary-color);
-}
-.plan-cards {
+.cart-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  align-items: center;
   margin-bottom: 1rem;
 }
-.plan-card {
-  flex: 1 1 200px;
-  background: var(--light-bg);
-  border: 1px solid #ccc;
+.cart-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
   border-radius: var(--border-radius);
+  margin-right: 0.75rem;
+}
+.cart-item .item-info {
+  flex: 1;
+}
+.cart-item .remove-item {
+  background: transparent;
+  color: var(--muted-text);
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+}
+.cart-summary {
+  margin-top: 2rem;
   text-align: center;
-  padding: 1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
-.plan-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-.plan-card h3 {
-  margin-bottom: .5rem;
-}
-.plan-price {
-  font-size: 1.25rem;
-  color: var(--secondary-color);
-  margin-bottom: .75rem;
-}
-.select-plan {
-  background: var(--accent-color);
-}
-.select-plan:hover {
-  background: #d78d0e;
-}
-
-/* Payment form */
-#payment-form {
-  max-width: 500px;
-  margin: 0 auto;
-}
-#payment-form h3 {
-  margin-bottom: .75rem;
-  color: var(--primary-color);
-}
-#payment-form label {
-  display: block;
-  margin: .5rem 0 .25rem;
-}
-#payment-form input {
+.btn-checkout {
   width: 100%;
-  padding: .5rem;
-  border: 1px solid #ccc;
-  border-radius: var(--border-radius);
+  background: var(--primary-color);
 }
-#pay-now {
-  margin-top: 1rem;
+.btn-checkout:hover {
   background: var(--secondary-color);
-}
-#pay-now:hover {
-  background: #149174;
 }
 
 /* ==============================
-   Footer
+   PRODUCT DETAIL VIEW
    ============================== */
-#main-footer {
-  background: var(--primary-color);
-  color: var(--light-text);
-  text-align: center;
-  padding: 1rem .5rem;
-  margin-top: 2rem;
+#product-detail {
+  padding: 3rem 0;
+  background: var(--light-bg);
 }
-</style>
-</head>
+#detail-back {
+  margin-bottom: 1.5rem;
+  background: none;
+  color: var(--muted-text);
+}
+#detail-back:hover {
+  color: var(--primary-color);
+}
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.detail-gallery {
+  position: relative;
+}
+.detail-gallery .main-img {
+  width: 100%;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+.thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.thumbnails img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: transform var(--transition-speed);
+}
+.thumbnails img:hover {
+  transform: scale(1.1);
+}
+.detail-info h1 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+.detail-info p {
+  margin: 0.5rem 0;
+}
+.detail-info #detail-price {
+  font-size: 1.8rem;
+  color: var(--accent-color);
+  font-weight: bold;
+}
+.features-list {
+  list-style: disc inside;
+  margin: 1rem 0;
+}
+.features-list li {
+  margin-bottom: 0.5rem;
+}
 
-  <body>
-  <!-- Header & Global Search -->
-  <header id="main-header">
-    <nav class="navbar">
-      <a href="#" class="logo">All‑in‑One Market</a>
-      <ul class="nav-links">
-        <li><a href="#catalog">Catalog</a></li>
-        <li><a href="#subscriptions">Subscribe</a></li>
-        <li><a href="#dashboard">Dashboard</a></li>
-        <li><a href="#cart">Cart (<span id="cart-count">0</span>)</a></li>
-      </ul>
-      <div class="search-container">
-        <input type="search" id="global-search" placeholder="Search products, services, sellers…" />
-        <button id="search-button">Search</button>
+/* ==============================
+   DESCRIPTION & REVIEWS
+   ============================== */
+.detail-extra {
+  margin-top: 3rem;
+}
+.description h2,
+.reviews h2 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+#detail-description {
+  line-height: 1.8;
+}
+.review-item {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem 0;
+}
+.review-item p:first-child {
+  font-weight: 600;
+}
+.review-item p:nth-child(2) {
+  color: var(--highlight-color);
+  margin: 0.5rem 0;
+}
+
+/* ==============================
+   FOOTER
+   ============================== */
+#site-footer {
+  background: var(--secondary-color);
+  color: var(--light-text);
+  padding: 2rem 0;
+  margin-top: 3rem;
+}
+#site-footer .footer-links {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+#site-footer .footer-links div {
+  margin-bottom: 1rem;
+}
+#site-footer .footer-links h4 {
+  margin-bottom: 0.5rem;
+}
+#site-footer .footer-links a {
+  display: block;
+  color: var(--light-text);
+  text-decoration: none;
+  margin-bottom: 0.3rem;
+}
+#site-footer .footer-bottom {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* ==============================
+   Media Queries
+   ============================== */
+@media (max-width: 1024px) {
+  .detail-layout { grid-template-columns: 1fr; }
+  #hero-slider { height: 400px; }
+  #hero-slider .slide img { height: 400px; }
+  #site-header .main-nav { flex-direction: column; gap: 1rem; }
+}
+@media (max-width: 768px) {
+  #category-nav ul { display: none; }
+  .container { width: 95%; }
+  #cart-preview { display: none; }
+  #hero-slider { height: 300px; }
+  #hero-slider .slide img { height: 300px; }
+}
+@media (max-width: 480px) {
+  .btn { padding: 0.5rem 1rem; }
+  #hero-slider { height: 200px; }
+  #hero-slider .slide-caption h2 { font-size: 1.5rem; }
+  #hero-slider .slide-caption p { font-size: 1rem; }
+  #site-header .search-bar { flex-direction: column; }
+}
+
+                                                                                                                                                                                           -->
+</style>
+
+</head>
+<body>
+  <!-- HEADER & NAVIGATION -->
+  <header id="site-header">
+    <div class="top-bar container">
+      <div class="location">
+        <span>Delivering to:</span>
+        <a href="#" id="change-location">Current Location</a>
       </div>
-    </nav>
+      <div class="account-cart">
+        <a href="#" id="account-link">Hello, Sign in</a>
+        <a href="#" id="orders-link">Orders</a>
+        <a href="#" id="cart-link">
+          Cart (<span id="cart-count">57</span>)
+        </a>
+      </div>
+    </div>
+    <div class="main-nav container">
+      <a href="#" class="logo">MyMarketplace</a>
+      <div class="search-bar">
+        <select id="search-category">
+          <option value="all">All</option>
+          <option value="books">Books</option>
+          <option value="electronics">Electronics</option>
+          <option value="fashion">Fashion</option>
+          <option value="services">Services</option>
+        </select>
+        <input type="text" id="search-input" placeholder="Search everything…" />
+        <button id="search-btn">Search</button>
+      </div>
+      <nav id="category-nav">
+        <ul>
+          <li><a href="#">Books</a></li>
+          <li><a href="#">Electronics</a></li>
+          <li><a href="#">Fashion</a></li>
+          <li><a href="#">Home & Kitchen</a></li>
+          <li><a href="#">Beauty</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">More ▾</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <!-- Faceted Filters -->
-  <aside id="filters">
-    <h2>Filter Results</h2>
-    <div class="filter-group">
-      <label for="filter-category">Category</label>
-      <select id="filter-category">
-        <option value="">All</option>
-        <option value="books">Books</option>
-        <option value="electronics">Electronics</option>
-        <option value="fashion">Fashion</option>
-        <option value="services">Services</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label for="filter-location">Location</label>
-      <input type="text" id="filter-location" placeholder="City, Region…" />
-    </div>
-    <div class="filter-group">
-      <label for="filter-price-min">Price Range</label>
-      <input type="number" id="filter-price-min" placeholder="Min" />
-      <input type="number" id="filter-price-max" placeholder="Max" />
-    </div>
-    <div class="filter-group">
-      <label for="filter-rating">Minimum Rating</label>
-      <select id="filter-rating">
-        <option value="0">Any</option>
-        <option value="1">1 ★ & up</option>
-        <option value="2">2 ★ & up</option>
-        <option value="3">3 ★ & up</option>
-        <option value="4">4 ★ & up</option>
-      </select>
-    </div>
-    <button id="apply-filters">Apply Filters</button>
-  </aside>
-
-  <!-- Main Catalog / Search Results -->
-  <main id="catalog">
-    <h1>Product & Service Listings</h1>
-    <div id="listing-container">
-      <!-- Example Card (to be duplicated dynamically) -->
-      <article class="listing-card" data-id="">
-        <img src="" alt="Product Image" class="listing-img" />
-        <div class="listing-details">
-          <h3 class="listing-title">Product/Service Title</h3>
-          <p class="listing-seller">By <a href="#seller-profile" class="seller-link">Seller Name</a></p>
-          <p class="listing-category">Category: <span></span></p>
-          <p class="listing-price">Price: <span></span></p>
-          <div class="listing-rating">
-            <span class="stars">★★★★★</span>
-            <span class="rating-count">(0 reviews)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-          <button class="btn message-seller">Message Seller</button>
+  <!-- HERO SLIDER -->
+  <section id="hero-slider">
+    <button class="slider-prev">&larr;</button>
+    <div class="slides">
+      <div class="slide active">
+        <img src="https://source.unsplash.com/1600x500/?shopping,store" alt="Fast, free shipping">
+        <div class="slide-caption">
+          <h2>Fast, Free Shipping</h2>
+          <p>Unlimited access to deals & more</p>
+          <button class="btn-hero">Join Premium</button>
         </div>
-      </article>
-      <!-- /Example Card -->
+      </div>
+      <div class="slide">
+        <img src="https://source.unsplash.com/1600x500/?electronics,gadgets" alt="Latest Gadgets">
+        <div class="slide-caption">
+          <h2>Latest Gadgets</h2>
+          <p>Discover the newest in tech</p>
+          <button class="btn-hero">Shop Now</button>
+        </div>
+      </div>
+      <div class="slide">
+        <img src="https://source.unsplash.com/1600x500/?fashion,clothes" alt="Summer Fashion">
+        <div class="slide-caption">
+          <h2>Sizzling Summer Fashion</h2>
+          <p>Trends for him & her</p>
+          <button class="btn-hero">Explore</button>
+        </div>
+      </div>
     </div>
+    <button class="slider-next">&rarr;</button>
+  </section>
+
+  <!-- CATEGORY HIGHLIGHTS -->
+  <section id="category-highlights" class="container">
+    <h2>Shop by Category</h2>
+    <div class="categories-grid">
+      <article class="category-card">
+        <img src="https://source.unsplash.com/400x300/?books,library" alt="Books">
+        <h3><a href="#">Books</a></h3>
+      </article>
+      <article class="category-card">
+        <img src="https://source.unsplash.com/400x300/?electronics,device" alt="Electronics">
+        <h3><a href="#">Electronics</a></h3>
+      </article>
+      <article class="category-card">
+        <img src="https://source.unsplash.com/400x300/?fashion,clothing" alt="Fashion">
+        <h3><a href="#">Fashion</a></h3>
+      </article>
+      <article class="category-card">
+        <img src="https://source.unsplash.com/400x300/?home,decor" alt="Home & Kitchen">
+        <h3><a href="#">Home & Kitchen</a></h3>
+      </article>
+      <article class="category-card">
+        <img src="https://source.unsplash.com/400x300/?beauty,makeup" alt="Beauty">
+        <h3><a href="#">Beauty</a></h3>
+      </article>
+      <article class="category-card">
+        <img src="https://source.unsplash.com/400x300/?services,consulting" alt="Services">
+        <h3><a href="#">Services</a></h3>
+      </article>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section id="featured-products" class="container">
+    <h2>Featured Deals</h2>
+    <div class="products-grid">
+      <!-- repeat dynamically -->
+      <article class="product-card" data-id="101">
+        <img src="https://source.unsplash.com/400x400/?backpack" alt="Travel Backpack">
+        <h3><a href="#">Travel Backpack</a></h3>
+        <p class="product-price">₵120.00</p>
+        <p class="product-rating">★★★★☆ (34)</p>
+      </article>
+      <article class="product-card" data-id="102">
+        <img src="https://source.unsplash.com/400x400/?headphones" alt="Wireless Headphones">
+        <h3><a href="#">Wireless Headphones</a></h3>
+        <p class="product-price">₵250.00</p>
+        <p class="product-rating">★★★★★ (128)</p>
+      </article>
+      <article class="product-card" data-id="103">
+        <img src="https://source.unsplash.com/400x400/?jacket,denim" alt="Denim Jacket">
+        <h3><a href="#">Denim Jacket</a></h3>
+        <p class="product-price">₵180.00</p>
+        <p class="product-rating">★★★☆☆ (12)</p>
+      </article>
+      <article class="product-card" data-id="104">
+        <img src="https://source.unsplash.com/400x400/?book,reading" alt="Programming Book">
+        <h3><a href="#">Learn JavaScript</a></h3>
+        <p class="product-price">₵45.00</p>
+        <p class="product-rating">★★★★☆ (87)</p>
+      </article>
+      <!-- … more featured … -->
+    </div>
+    <button class="btn-load-more">See More Deals</button>
+  </section>
+
+  <!-- MAIN SEARCH RESULTS AREA (initially empty) -->
+  <main id="search-results" class="container">
+    <!-- dynamically injected product cards from 2000-item catalog -->
   </main>
 
-  <!-- Seller Profile & Product Management -->
-  <section id="seller-profile">
-    <h2>Seller Profile: <span id="seller-name">Seller Name</span></h2>
-    <div id="seller-info">
-      <p>Email: <span id="seller-email"></span></p>
-      <p>Joined: <span id="seller-joined-date"></span></p>
-      <p>Subscription Plan: <span id="seller-plan"></span> (Expires: <span id="seller-plan-expiry"></span>)</p>
-    </div>
+  <!-- PAGINATION -->
+  <nav id="pagination" class="container">
+    <button class="page-btn">« Prev</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <span>…</span>
+    <button class="page-btn">Next »</button>
+  </nav>
 
-    <div id="product-management">
-      <h3>Your Products & Services</h3>
-      <button id="add-new-listing" class="btn">Add New Listing</button>
-      <table id="listing-table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Dynamic rows of seller's listings -->
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Checkout & Cart -->
-  <section id="cart">
+  <!-- CART PREVIEW SIDEBAR -->
+  <aside id="cart-preview">
     <h2>Your Cart</h2>
-    <div id="cart-items">
-      <!-- Cart items injected here -->
+    <div class="cart-items">
+      <!-- many items -->
+      <div class="cart-item">
+        <img src="https://source.unsplash.com/80x80/?book" alt="Book">
+        <div class="item-info">
+          <p class="item-title">Learn Python</p>
+          <p class="item-qty">Qty: 1</p>
+          <p class="item-price">₵60.00</p>
+        </div>
+        <button class="remove-item">×</button>
+      </div>
+      <!-- … repeat for all current cart items … -->
     </div>
-    <div id="cart-summary">
-      <p>Subtotal: <span id="cart-subtotal">₵0.00</span></p>
-      <p>Taxes: <span id="cart-taxes">₵0.00</span></p>
-      <p>Total: <span id="cart-total">₵0.00</span></p>
-      <button id="checkout-button" class="btn">Proceed to Checkout</button>
+    <div class="cart-summary">
+      <p>Subtotal: ₵1,245.00</p>
+      <button class="btn-checkout">Proceed to Checkout</button>
+    </div>
+  </aside>
+
+  <!-- PRODUCT DETAIL VIEW (hidden by default) -->
+  <section id="product-detail" class="container" style="display:none;">
+    <button id="detail-back" class="btn">&larr; Back to results</button>
+    <div class="detail-layout">
+      <!-- Gallery -->
+      <div class="detail-gallery">
+        <img id="detail-main-image" src="" alt="">
+        <div id="detail-thumbnails" class="thumbnails">
+          <!-- small imgs -->
+        </div>
+      </div>
+      <!-- Info -->
+      <div class="detail-info">
+        <h1 id="detail-title">Product Title</h1>
+        <p>By <a href="#" id="detail-seller">Seller Name</a></p>
+        <div id="detail-rating">★★★★★ <span id="detail-review-count">(0)</span></div>
+        <p class="detail-price">₵<span id="detail-price">0.00</span></p>
+        <p><strong>Availability:</strong> <span id="detail-stock">In stock</span></p>
+        <p><strong>Shipping:</strong> <span id="detail-shipping">2–4 days</span></p>
+        <ul id="detail-features" class="features-list">
+          <!-- <li>Feature A</li> … -->
+        </ul>
+        <button id="detail-add-cart" class="btn">Add to Cart</button>
+      </div>
+    </div>
+    <!-- Description & Reviews -->
+    <div class="detail-extra">
+      <section class="description">
+        <h2>Description</h2>
+        <p id="detail-description">Full product description…</p>
+      </section>
+      <section class="reviews">
+        <h2>Customer Reviews</h2>
+        <div id="detail-reviews-list">
+          <!-- <article class="review">…</article> -->
+        </div>
+      </section>
     </div>
   </section>
 
-  <!-- Messaging Modal -->
-  <div id="message-modal" class="modal">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <h3>Message <span id="modal-seller-name"></span></h3>
-      <textarea id="message-text" placeholder="Write your message…"></textarea>
-      <button id="send-message" class="btn">Send Message</button>
-    </div>
-  </div>
-
-  <!-- Ratings & Reviews -->
-  <section id="reviews">
-    <h2>Ratings & Reviews</h2>
-    <div id="review-list">
-      <!-- Dynamic list of reviews -->
-      <article class="review-item">
-        <p class="review-author"><strong>User Name</strong> on <time datetime="">2025-07-28</time></p>
-        <div class="review-rating"><span class="stars">★★★★☆</span></div>
-        <p class="review-text">Review content goes here…</p>
-      </article>
-    </div>
-    <div id="write-review">
-      <h3>Write a Review</h3>
-      <label for="review-rating">Your Rating:</label>
-      <select id="review-rating">
-        <option value="5">5 ★</option>
-        <option value="4">4 ★</option>
-        <option value="3">3 ★</option>
-        <option value="2">2 ★</option>
-        <option value="1">1 ★</option>
-      </select>
-      <textarea id="review-text" placeholder="Share your experience…"></textarea>
-      <button id="submit-review" class="btn">Submit Review</button>
-    </div>
-  </section>
-
-  <!-- Subscription Plans & Payment -->
-  <section id="subscriptions">
-    <h2>Choose a Subscription Plan</h2>
-    <div class="plan-cards">
-      <div class="plan-card" data-plan="monthly">
-        <h3>Monthly</h3>
-        <p class="plan-price">₵8 / month</p>
-        <button class="btn select-plan">Select Plan</button>
+  <!-- FOOTER -->
+  <footer id="site-footer">
+    <div class="footer-links container">
+      <div>
+        <h4>Get to Know Us</h4>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
       </div>
-      <div class="plan-card" data-plan="semiannual">
-        <h3>6 Months</h3>
-        <p class="plan-price">₵40 / 6 months</p>
-        <button class="btn select-plan">Select Plan</button>
+      <div>
+        <h4>Make Money with Us</h4>
+        <a href="#">Sell on Marketplace</a>
+        <a href="#">Advertise Your Products</a>
       </div>
-      <div class="plan-card" data-plan="annual">
-        <h3>Annual</h3>
-        <p class="plan-price">₵75 / year</p>
-        <button class="btn select-plan">Select Plan</button>
+      <div>
+        <h4>Let Us Help You</h4>
+        <a href="#">Your Account</a>
+        <a href="#">Returns Center</a>
       </div>
     </div>
-
-    <!-- Payment Form (to be wired up with payment gateway) -->
-    <form id="payment-form">
-      <h3>Payment Details</h3>
-      <label for="card-holder-name">Name on Card</label>
-      <input type="text" id="card-holder-name" required />
-
-      <label for="card-number">Card Number</label>
-      <input type="text" id="card-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required />
-
-      <label for="card-expiry">Expiry Date</label>
-      <input type="text" id="card-expiry" placeholder="MM/YY" required />
-
-      <label for="card-cvc">CVC</label>
-      <input type="text" id="card-cvc" maxlength="4" required />
-
-      <button type="submit" id="pay-now" class="btn">Pay Now</button>
-    </form>
-  </section>
-
-  <!-- Footer -->
-  <footer id="main-footer">
-    <p>© 2025 All‑in‑One Market. All rights reserved.</p>
+    <div class="footer-bottom container">
+      <p>© 2025 MyMarketplace. All rights reserved.</p>
+    </div>
   </footer>
 </body>
 
   <script>
 // ================================
-// All‑in‑One Market Frontend Logic
+// MyMarketplace Frontend Logic
 // ================================
 
-// ------------------------
-// Global State & Data
-// ------------------------
-
-const sellers = [];
+// ---------- Global Data ----------
+const products = [];
+const categories = ['Books','Electronics','Fashion','Home & Kitchen','Beauty','Services'];
 const cart = [];
-let currentUser = {
-  id: null,
-  role: 'guest',       // 'guest', 'buyer', 'seller'
-  subscription: null   // { plan: 'monthly'|'semiannual'|'annual', expiry: Date }
-};
 
-// Programmatically generate 200 sellers with 10 products each (2000 products total)
-for (let i = 1; i <= 200; i++) {
-  const seller = {
-    id: i,
-    name: `Seller ${i}`,
-    email: `seller${i}@market.com`,
-    joined: new Date(2025, Math.floor(Math.random()*7), Math.ceil(Math.random()*28)),
-    subscription: null,
-    products: []
+// Generate 2000 products with realistic Unsplash images
+for (let i = 1; i <= 2000; i++) {
+  const category = categories[i % categories.length];
+  const title = `${category} Item ${i}`;
+  const price = (Math.random() * 300 + 10).toFixed(2);
+  const rating = Math.floor(Math.random() * 5) + 1;
+  const reviewCount = Math.floor(Math.random() * 200);
+  const gallery = Array.from({length:4}, (_,k) =>
+    `https://source.unsplash.com/400x400/?${category.toLowerCase()},sig=${i*10+k}`
+  );
+  const reviews = Array.from({length: Math.floor(Math.random()*5)}, (_,r)=>({
+    author: `User${r+1}`,
+    date: new Date(2025,7,Math.ceil(Math.random()*28)).toDateString(),
+    rating: Math.floor(Math.random()*5)+1,
+    text: `Review ${r+1} for product ${i}`
+  }));
+  products.push({ id:i, title, category, price, rating, reviewCount, gallery, reviews, stock: Math.floor(Math.random()*50)+1, shipping:`${1+Math.floor(Math.random()*3)}–${3+Math.floor(Math.random()*3)} days` });
+}
+
+// ---------- DOM References ----------
+const slideEls        = document.querySelectorAll('#hero-slider .slide');
+const prevBtn         = document.querySelector('.slider-prev');
+const nextBtn         = document.querySelector('.slider-next');
+const categoryNav     = document.querySelectorAll('#category-nav ul li a');
+const featuredGrid    = document.querySelector('#featured-products .products-grid');
+const loadMoreBtn     = document.querySelector('.btn-load-more');
+const searchInput     = document.getElementById('search-input');
+const searchBtn       = document.getElementById('search-btn');
+const searchCategory  = document.getElementById('search-category');
+const resultsMain     = document.getElementById('search-results');
+const paginationEl    = document.getElementById('pagination');
+const cartCountEl     = document.getElementById('cart-count');
+const cartPreviewEl   = document.querySelector('#cart-preview .cart-items');
+const cartSubtotalEl  = document.querySelector('#cart-preview .cart-summary p');
+const cartCheckoutBtn = document.querySelector('.btn-checkout');
+const detailSection   = document.getElementById('product-detail');
+const backToResults   = document.getElementById('detail-back');
+
+// ---------- Hero Slider ----------
+let currentSlide = 0;
+function showSlide(idx) {
+  slideEls[currentSlide].classList.remove('active');
+  currentSlide = (idx + slideEls.length) % slideEls.length;
+  slideEls[currentSlide].classList.add('active');
+}
+prevBtn.onclick = ()=> showSlide(currentSlide - 1);
+nextBtn.onclick = ()=> showSlide(currentSlide + 1);
+setInterval(()=> showSlide(currentSlide + 1), 5000);
+
+// ---------- Render Categories ----------
+categoryNav.forEach(link=>{
+  link.onclick = e=>{
+    e.preventDefault();
+    const cat = link.textContent.trim();
+    renderSearchResults(products.filter(p=>p.category===cat),1);
   };
-  for (let j = 1; j <= 10; j++) {
-    seller.products.push({
-      id: parseInt(`${i}${j}`),
-      title: `Product ${i}-${j}`,
-      description: `This is a detailed description for Product ${i}-${j}. It covers features and use cases.`,
-      category: ['Books', 'Electronics', 'Fashion', 'Services'][j % 4],
-      price: (Math.random() * 300 + 20).toFixed(2),
-      img: `https://via.placeholder.com/300x200?text=Prod%20${i}-${j}`,
-      reviews: [],
-      rating: 0
-    });
-  }
-  sellers.push(seller);
-}
-
-// ------------------------
-// Subscription Management
-// ------------------------
-
-const subscriptionPlans = {
-  monthly:   { price: 8,   durationDays: 30 },
-  semiannual:{ price: 40,  durationDays: 182 },
-  annual:    { price: 75,  durationDays: 365 }
-};
-
-/**
- * Select a plan for the current user.
- * @param {string} planKey - 'monthly'|'semiannual'|'annual'
- */
-function selectPlan(planKey) {
-  if (!currentUser.id || currentUser.role !== 'seller') {
-    alert('You must be logged in as a seller to subscribe.');
-    return;
-  }
-  const plan = subscriptionPlans[planKey];
-  if (!plan) return;
-  const now = new Date();
-  const expiry = new Date(now.getTime() + plan.durationDays * 24*60*60*1000);
-  currentUser.subscription = { plan: planKey, expiry };
-  updateDashboard();
-  alert(`Subscribed to ${planKey} plan. Expires on ${expiry.toDateString()}.`);
-}
-
-/**
- * Update subscription dashboard UI.
- */
-function updateDashboard() {
-  const dashPlan = document.getElementById('seller-plan');
-  const dashExpiry = document.getElementById('seller-plan-expiry');
-  if (currentUser.subscription) {
-    dashPlan.textContent = currentUser.subscription.plan;
-    dashExpiry.textContent = currentUser.subscription.expiry.toDateString();
-  } else {
-    dashPlan.textContent = 'None';
-    dashExpiry.textContent = 'N/A';
-  }
-}
-
-// ------------------------
-// Rendering Helpers
-// ------------------------
-
-const listingContainer = document.getElementById('listing-container');
-const cartCountEl = document.getElementById('cart-count');
-const cartItemsEl = document.getElementById('cart-items');
-const cartSubtotalEl = document.getElementById('cart-subtotal');
-const cartTaxesEl = document.getElementById('cart-taxes');
-const cartTotalEl = document.getElementById('cart-total');
-const globalSearchInput = document.getElementById('global-search');
-const applyFiltersBtn = document.getElementById('apply-filters');
-
-/**
- * Render product listings based on filtered sellers/products.
- * @param {Array} items - Array of { seller, product } objects
- */
-function renderListings(items) {
-  listingContainer.innerHTML = '';
-  if (items.length === 0) {
-    listingContainer.innerHTML = '<p>No results found.</p>';
-    return;
-  }
-  items.forEach(({seller, product}) => {
-    const card = document.createElement('article');
-    card.className = 'listing-card';
-    card.dataset.id = product.id;
-    card.innerHTML = `
-      <img src="${product.img}" alt="${product.title}" class="listing-img" />
-      <div class="listing-details">
-        <h3 class="listing-title">${product.title}</h3>
-        <p class="listing-seller">
-          By <a href="#seller-profile" class="seller-link" data-seller-id="${seller.id}">${seller.name}</a>
-        </p>
-        <p class="listing-category">Category: ${product.category}</p>
-        <p class="listing-price">₵${product.price}</p>
-        <div class="listing-rating">
-          <span class="stars">${renderStars(product.rating)}</span>
-          <span class="rating-count">(${product.reviews.length} reviews)</span>
-        </div>
-        <button class="btn add-to-cart" data-product-id="${product.id}">Add to Cart</button>
-        <button class="btn message-seller" data-seller-id="${seller.id}">Message Seller</button>
-      </div>`;
-    listingContainer.appendChild(card);
-  });
-}
-
-/**
- * Render star icons based on rating.
- * @param {number} rating - 0..5
- * @returns {string}
- */
-function renderStars(rating) {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating - fullStars >= 0.5;
-  let html = '';
-  for (let i = 0; i < fullStars; i++) html += '★';
-  if (halfStar) html += '½';
-  for (let i = fullStars + (halfStar?1:0); i < 5; i++) html += '☆';
-  return html;
-}
-
-// ------------------------
-// Search & Filtering
-// ------------------------
-
-/**
- * Perform global search + filters.
- */
-function applySearchAndFilters() {
-  const term = globalSearchInput.value.trim().toLowerCase();
-  const category = document.getElementById('filter-category').value;
-  const location = document.getElementById('filter-location').value.trim().toLowerCase();
-  const priceMin = parseFloat(document.getElementById('filter-price-min').value) || 0;
-  const priceMax = parseFloat(document.getElementById('filter-price-max').value) || Infinity;
-  const ratingMin = parseInt(document.getElementById('filter-rating').value) || 0;
-
-  const results = [];
-  sellers.forEach(seller => {
-    if (location && !seller.name.toLowerCase().includes(location)) return;
-    seller.products.forEach(prod => {
-      if (term && !(
-        prod.title.toLowerCase().includes(term) ||
-        prod.description.toLowerCase().includes(term) ||
-        seller.name.toLowerCase().includes(term)
-      )) return;
-      if (category && prod.category.toLowerCase() !== category) return;
-      const price = parseFloat(prod.price);
-      if (price < priceMin || price > priceMax) return;
-      if (prod.rating < ratingMin) return;
-      results.push({ seller, product: prod });
-    });
-  });
-
-  renderListings(results);
-}
-
-// ------------------------
-// Cart & Checkout
-// ------------------------
-
-/**
- * Add a product to the cart.
- * @param {number} productId
- */
-function addToCart(productId) {
-  const flat = [];
-  sellers.forEach(s => flat.push(...s.products.map(p => ({ seller: s, product: p }))));
-  const item = flat.find(({product}) => product.id === productId);
-  if (!item) return;
-  cart.push(item);
-  updateCartUI();
-}
-
-/**
- * Update cart UI: count, list, totals.
- */
-function updateCartUI() {
-  cartCountEl.textContent = cart.length;
-  cartItemsEl.innerHTML = '';
-  let subtotal = 0;
-  cart.forEach(({seller, product}, idx) => {
-    subtotal += parseFloat(product.price);
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    div.innerHTML = `
-      <p>${product.title} by ${seller.name} – ₵${product.price}
-        <button class="remove-from-cart" data-idx="${idx}">×</button>
-      </p>`;
-    cartItemsEl.appendChild(div);
-  });
-  const taxes = subtotal * 0.075;
-  const total = subtotal + taxes;
-  cartSubtotalEl.textContent = `₵${subtotal.toFixed(2)}`;
-  cartTaxesEl.textContent = `₵${taxes.toFixed(2)}`;
-  cartTotalEl.textContent = `₵${total.toFixed(2)}`;
-}
-
-/**
- * Remove item from cart by index.
- */
-function removeFromCart(idx) {
-  cart.splice(idx, 1);
-  updateCartUI();
-}
-
-/**
- * Simulate checkout.
- */
-function checkout() {
-  if (cart.length === 0) {
-    alert('Your cart is empty!');
-    return;
-  }
-  alert(`Checked out ${cart.length} items. Thank you for your purchase!`);
-  cart.length = 0;
-  updateCartUI();
-}
-
-// ------------------------
-// Messaging
-// ------------------------
-
-const messageModal = document.getElementById('message-modal');
-const messageText = document.getElementById('message-text');
-let currentMessagingSeller = null;
-
-/**
- * Open messaging modal to seller.
- * @param {number} sellerId
- */
-function openMessageModal(sellerId) {
-  const seller = sellers.find(s => s.id === sellerId);
-  if (!seller) return;
-  currentMessagingSeller = seller;
-  document.getElementById('modal-seller-name').textContent = seller.name;
-  messageText.value = '';
-  messageModal.style.display = 'block';
-}
-
-/**
- * Send message to seller (simulated).
- */
-function sendMessage() {
-  if (!currentMessagingSeller) return;
-  const text = messageText.value.trim();
-  if (!text) { alert('Please enter a message.'); return; }
-  alert(`Message sent to ${currentMessagingSeller.name}: "${text}"`);
-  closeMessageModal();
-}
-
-/**
- * Close messaging modal.
- */
-function closeMessageModal() {
-  messageModal.style.display = 'none';
-  currentMessagingSeller = null;
-}
-
-// ------------------------
-// Ratings & Reviews
-// ------------------------
-
-/**
- * Submit a review for a product.
- */
-function submitReview() {
-  const sel = document.querySelector('.seller-link.active');
-  const prodId = parseInt(document.querySelector('.listing-card.active').dataset.id);
-  const rating = parseInt(document.getElementById('review-rating').value);
-  const text = document.getElementById('review-text').value.trim();
-  if (!rating || !text) { alert('Please provide rating and review text.'); return; }
-  const seller = sellers.find(s => s.id === parseInt(sel.dataset.sellerId));
-  const product = seller.products.find(p => p.id === prodId);
-  product.reviews.push({ author: 'You', date: new Date(), rating, text });
-  // Recalculate average rating
-  product.rating = product.reviews.reduce((sum,r)=>sum+r.rating,0) / product.reviews.length;
-  alert('Thank you for your review!');
-  // Optionally re-render reviews section
-}
-
-// ------------------------
-// Event Listeners
-// ------------------------
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Initial render: all products
-  applySearchAndFilters();
-
-  // Global search
-  globalSearchInput.addEventListener('input', applySearchAndFilters);
-  document.getElementById('search-button').addEventListener('click', applySearchAndFilters);
-
-  // Filters
-  applyFiltersBtn.addEventListener('click', applySearchAndFilters);
-
-  // Delegated listing clicks
-  listingContainer.addEventListener('click', e => {
-    if (e.target.matches('.add-to-cart')) {
-      addToCart(parseInt(e.target.dataset.productId));
-    }
-    if (e.target.matches('.remove-from-cart')) {
-      removeFromCart(parseInt(e.target.dataset.idx));
-    }
-    if (e.target.matches('.message-seller')) {
-      openMessageModal(parseInt(e.target.dataset.sellerId));
-    }
-    if (e.target.matches('.seller-link')) {
-      // Open seller profile - left as exercise
-    }
-  });
-
-  // Cart removal
-  cartItemsEl.addEventListener('click', e => {
-    if (e.target.matches('.remove-from-cart')) {
-      removeFromCart(parseInt(e.target.dataset.idx));
-    }
-  });
-
-  // Checkout
-  document.getElementById('checkout-button').addEventListener('click', checkout);
-
-  // Messaging modal
-  document.getElementById('send-message').addEventListener('click', sendMessage);
-  document.querySelector('.close-modal').addEventListener('click', closeMessageModal);
-
-  // Subscription selects
-  document.querySelectorAll('.select-plan').forEach(btn => {
-    btn.addEventListener('click', () => selectPlan(btn.parentElement.dataset.plan));
-  });
-
-  // Review submission
-  document.getElementById('submit-review').addEventListener('click', submitReview);
 });
 
+// ---------- Featured Products ----------
+let featuredPage = 0;
+const FEATURED_PER_PAGE = 8;
+function renderFeatured() {
+  const start = featuredPage * FEATURED_PER_PAGE;
+  const chunk = products.slice(start, start + FEATURED_PER_PAGE);
+  chunk.forEach(p=>{
+    const art = document.createElement('article');
+    art.className='product-card'; art.dataset.id=p.id;
+    art.innerHTML=`
+      <img src="${p.gallery[0]}" alt="${p.title}">
+      <h3><a href="#">${p.title}</a></h3>
+      <p class="product-price">₵${p.price}</p>
+      <p class="product-rating">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})</p>
+    `;
+    featuredGrid.appendChild(art);
+  });
+}
+loadMoreBtn.onclick = ()=>{
+  featuredPage++;
+  renderFeatured();
+};
 
-</script>
+// ---------- Search & Pagination ----------
+const RESULTS_PER_PAGE = 12;
+let currentResults = [], currentPage=1;
+function renderSearchResults(list, page) {
+  currentResults = list;
+  currentPage = page;
+  resultsMain.innerHTML = '';
+  const start = (page-1)*RESULTS_PER_PAGE;
+  const chunk = list.slice(start, start+RESULTS_PER_PAGE);
+  chunk.forEach(p=>{
+    const art = document.createElement('article');
+    art.className='product-card'; art.dataset.id=p.id;
+    art.innerHTML=`
+      <img src="${p.gallery[0]}" alt="${p.title}">
+      <h3><a href="#">${p.title}</a></h3>
+      <p class="product-price">₵${p.price}</p>
+      <p class="product-rating">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})</p>
+    `;
+    resultsMain.appendChild(art);
+  });
+  renderPagination(list.length, page);
+}
+function renderPagination(total, page) {
+  paginationEl.innerHTML='';
+  const pages = Math.ceil(total/RESULTS_PER_PAGE);
+  const prev = document.createElement('button'); prev.className='page-btn'; prev.textContent='« Prev';
+  prev.disabled=page===1; prev.onclick=()=>renderSearchResults(currentResults, page-1);
+  paginationEl.appendChild(prev);
+  for (let i=1;i<=pages;i++){
+    const btn=document.createElement('button');
+    btn.className='page-btn'+(i===page?' active':''); btn.textContent=i;
+    btn.onclick=()=>renderSearchResults(currentResults,i);
+    paginationEl.appendChild(btn);
+  }
+  const next=document.createElement('button'); next.className='page-btn'; next.textContent='Next »';
+  next.disabled=page===pages; next.onclick=()=>renderSearchResults(currentResults,page+1);
+  paginationEl.appendChild(next);
+}
+searchBtn.onclick = ()=> {
+  const term=searchInput.value.toLowerCase();
+  const cat=searchCategory.value;
+  const filtered=products.filter(p=>{
+    return (cat==='all'||p.category===cat)
+        && p.title.toLowerCase().includes(term);
+  });
+  renderSearchResults(filtered,1);
+};
+
+// ---------- Cart Preview ----------
+function updateCartUI() {
+  cartCountEl.textContent = cart.length;
+  cartPreviewEl.innerHTML = '';
+  let subtotal = 0;
+  cart.forEach((p,i)=>{
+    subtotal += parseFloat(p.price);
+    const d = document.createElement('div'); d.className='cart-item';
+    d.innerHTML=`
+      <img src="${p.gallery[0]}" alt="${p.title}">
+      <div class="item-info">
+        <p class="item-title">${p.title}</p>
+        <p class="item-qty">Qty: 1</p>
+        <p class="item-price">₵${p.price}</p>
+      </div>
+      <button class="remove-item" data-idx="${i}">×</button>
+    `;
+    cartPreviewEl.appendChild(d);
+  });
+  cartSubtotalEl.textContent = `Subtotal: ₵${subtotal.toFixed(2)}`;
+}
+document.body.addEventListener('click', e=>{
+  if (e.target.matches('.add-to-cart')) {
+    const id=+e.target.closest('.product-card').dataset.id;
+    const p=products.find(x=>x.id===id);
+    cart.push(p); updateCartUI();
+  }
+  if (e.target.matches('.remove-item')) {
+    cart.splice(+e.target.dataset.idx,1); updateCartUI();
+  }
+});
+cartCheckoutBtn.onclick = ()=> {
+  alert(`Checked out ${cart.length} items. Thank you!`);
+  cart.length=0; updateCartUI();
+};
+
+// ---------- Product Detail View ----------
+function showDetail(id) {
+  const p = products.find(x=>x.id===id);
+  if (!p) return;
+  document.getElementById('catalog')?.classList.add('hidden');
+  document.getElementById('search-results')?.classList.add('hidden');
+  detailSection.style.display='block';
+  document.getElementById('detail-main-image').src=p.gallery[0];
+  const thumbs=document.getElementById('detail-thumbnails'); thumbs.innerHTML='';
+  p.gallery.forEach(src=>{
+    const img=document.createElement('img'); img.src=src; img.className='thumb';
+    img.onclick=()=>document.getElementById('detail-main-image').src=src;
+    thumbs.appendChild(img);
+  });
+  document.getElementById('detail-title').textContent=p.title;
+  document.getElementById('detail-seller').textContent='MyMarketplace Seller';
+  document.getElementById('detail-rating').innerHTML=
+    `${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} <span>(${p.reviewCount})</span>`;
+  document.getElementById('detail-price').textContent=p.price;
+  document.getElementById('detail-stock').textContent=p.stock;
+  document.getElementById('detail-shipping').textContent=p.shipping;
+  const feats=document.getElementById('detail-features'); feats.innerHTML='';
+  ['High quality','Best seller','Limited stock'].forEach(f=>{
+    const li=document.createElement('li'); li.textContent=f; feats.appendChild(li);
+  });
+}
+backToResults.onclick = ()=>{
+  detailSection.style.display='none';
+  document.getElementById('search-results')?.classList.remove('hidden');
+};
+
+// Wire clicks on product cards for detail
+document.body.addEventListener('click', e=>{
+  if (e.target.closest('.product-card')) {
+    const id=+e.target.closest('.product-card').dataset.id;
+    showDetail(id);
+  }
+});
+
+// ---------- Initialize ----------
+renderFeatured();
+updateCartUI();
+
+  </script>
 
 </html>
