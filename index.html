@@ -157,7 +157,7 @@ display: none;
   }
   .slide-caption h2 { font-size: 1.75rem; }
   .slide-caption p { font-size: 1rem; }
- }
+ 
         .slide { position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; transition:opacity var(--transition); }
     .slide.active { position:relative; opacity:1; }
    .slide-caption h2 {
@@ -824,11 +824,6 @@ display: none;
         });
       }
       loadMoreBtn.onclick = ()=>{ featuredPage++; renderFeatured(); };
-
-       function makeImageUrl(category, id, title = '') {
-  const seed = encodeURIComponent(category + '-' + id);
-   return `https://picsum.photos/seed/${seed}/400/400`;
- }
 
       
       // Search & Pagination
