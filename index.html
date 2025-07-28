@@ -1431,7 +1431,8 @@ textarea { resize: vertical; min-height: 100px; }
   display: block;
 }
 
-
+.category-card img {
+ border: 2px solid red;  }
 
   
 </style>
@@ -1529,7 +1530,7 @@ textarea { resize: vertical; min-height: 100px; }
       <img alt="Fashion">
         <h3><a href="#">Fashion</a></h3>
       </article>
-<article class="category-card" data-category="home">
+<article class="category-card" data-category="home,kitchen">
       <img alt="Home & Kitchen">
         <h3><a href="#">Home & Kitchen</a></h3>
       </article>
@@ -1537,7 +1538,7 @@ textarea { resize: vertical; min-height: 100px; }
     <img alt="Beauty">
         <h3><a href="#">Beauty</a></h3>
       </article>
-<article class="category-card" data-category="services">
+<article class="category-card" data-category="services,consulting">
      <img alt="Services">
         <h3><a href="#">Services</a></h3>
       </article>
@@ -1895,10 +1896,13 @@ document.addEventListener('DOMContentLoaded', ()=> {
     updateCartUI();
 
     // Randomize category images
-    document.querySelectorAll('.category-card').forEach(card => {
-      const cat = card.dataset.category;
-      card.querySelector('img').src = `https://source.unsplash.com/400x300/?${cat}`;
-    });
+   document.querySelectorAll('.category-card').forEach(card => {
+    const cat = card.dataset.category;
+    const img = card.querySelector('img');
+    const url = `https://source.unsplash.com/400x300/?${cat}`;
+    console.log('→ setting', img, 'to', url);
+    img.src = url;
+  });
 
     // Randomize hero slides
     ['shopping,store','electronics,gadgets','fashion,clothes']
