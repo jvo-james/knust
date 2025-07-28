@@ -1,112 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mock Marketplace Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All‑in‑One Market</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body { font-family: sans-serif; margin: 20px; }
-    #search { width: 300px; padding: 8px; margin-bottom: 10px; }
-    .product { border: 1px solid #ddd; padding: 10px; margin: 5px 0; display: flex; }
-    .product img { width: 80px; height: 80px; object-fit: cover; margin-right: 10px; }
-    .pagination { margin-top: 15px; }
-    .pagination button { padding: 5px 10px; margin-right: 5px; }
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+header {
+  background: #333;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+header input {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  width: 80%;
+  max-width: 400px;
+  border: none;
+  border-radius: 4px;
+}
+main {
+  flex: 1;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.75rem;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.card img {
+  width: 100%;
+  border-radius: 4px;
+}
+.card h2 {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+.card p {
+  font-size: 0.9rem;
+  color: #555;
+}
+footer {
+  background: #f4f4f4;
+  text-align: center;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+}
+
+    
   </style>
-  <!-- Faker.js UMD bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker/dist/faker.umd.min.js"></script>
 </head>
 <body>
+  <header>
+    <h1>All‑in‑One Market</h1>
+    <input
+      type="search"
+      id="searchInput"
+      placeholder="Search for books, gadgets, hair‑braiding…"
+    />
+  </header>
 
-  <h1>🔎 Live Search Marketplace</h1>
-  <input id="search" placeholder="Type to search products…" />
+  <main id="results">
+    <!-- Seller cards will be injected here -->
+  </main>
 
-  <div id="results"></div>
-
-  <div class="pagination">
-    <button id="prev" disabled>← Prev</button>
-    <span id="page-info">Page 1</span>
-    <button id="next" disabled>Next →</button>
-  </div>
+  <footer>
+    <p>© 2025 All‑in‑One Market Prototype</p>
+  </footer>
 
   <script>
-    // Grab Faker from the CDN bundle
-    const { faker } = window['faker'];
+// Pseudo “seller profiles” with products/services
+const sellers = [
+  {
+    id: 1,
+    name: "Amina’s Book Corner",
+    category: "Books",
+    product: "Introduction to HTML",
+    price: "₵30",
+    img: "https://via.placeholder.com/300x200?text=Book"
+  },
+  {
+    id: 2,
+    name: "Bright Braids",
+    category: "Hair Braiding",
+    product: "Cornrow Styles",
+    price: "₵50",
+    img: "https://via.placeholder.com/300x200?text=Braids"
+  },
+  {
+    id: 3,
+    name: "Gadget Hub",
+    category: "Electronics",
+    product: "Wireless Earbuds",
+    price: "₵150",
+    img: "https://via.placeholder.com/300x200?text=Gadgets"
+  },
+  {
+    id: 4,
+    name: "Style Street",
+    category: "Fashion",
+    product: "Denim Jacket",
+    price: "₵200",
+    img: "https://via.placeholder.com/300x200?text=Clothes"
+  }
+  // …add more mock entries here
+];
 
-    // Generate 50 vendors and 200 products in memory
-    const NUM_VENDORS = 50, NUM_PRODUCTS = 200;
-    const vendors = Array.from({ length: NUM_VENDORS }).map(() => {
-      const id = faker.string.uuid();
-      return { id, name: faker.company.name(), avatar: 'https://i.pravatar.cc/100?u='+id };
-    });
-    const products = Array.from({ length: NUM_PRODUCTS }).map(() => {
-      const id = faker.string.uuid();
-      return {
-        id,
-        title: faker.commerce.productName(),
-        description: faker.commerce.productDescription(),
-        price: faker.commerce.price(5, 500, 2),
-        category: faker.commerce.department(),
-        image: 'https://picsum.photos/seed/'+id+'/100/100',
-        vendorId: faker.helpers.arrayElement(vendors).id
-      };
-    });
+const resultsEl = document.getElementById('results');
+const searchInput = document.getElementById('searchInput');
 
-    // UI state
-    const perPage = 20;
-    let page = 1, lastQuery = '';
+function renderCards(list) {
+  resultsEl.innerHTML = '';
+  if (!list.length) {
+    resultsEl.innerHTML = '<p>No sellers found.</p>';
+    return;
+  }
+  list.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${s.img}" alt="${s.product}" />
+      <h2>${s.name}</h2>
+      <p><strong>${s.product}</strong> (${s.category})</p>
+      <p>Price: ${s.price}</p>
+      <button onclick="alert('Contact ${s.name}!')">Contact Seller</button>
+    `;
+    resultsEl.appendChild(card);
+  });
+}
 
-    // DOM refs
-    const input = document.getElementById('search');
-    const results = document.getElementById('results');
-    const btnPrev = document.getElementById('prev');
-    const btnNext = document.getElementById('next');
-    const pageInfo = document.getElementById('page-info');
+// Initial render: show all
+renderCards(sellers);
 
-    // Render function
-    function renderPage(query, pg) {
-      const filtered = query
-        ? products.filter(p => p.title.toLowerCase().includes(query.toLowerCase()))
-        : products;
-      const totalPages = Math.ceil(filtered.length / perPage);
-      page = Math.max(1, Math.min(pg, totalPages));
+// Filter on search
+searchInput.addEventListener('input', () => {
+  const term = searchInput.value.trim().toLowerCase();
+  const filtered = sellers.filter(s =>
+    s.name.toLowerCase().includes(term) ||
+    s.product.toLowerCase().includes(term) ||
+    s.category.toLowerCase().includes(term)
+  );
+  renderCards(filtered);
+});
 
-      const start = (page - 1) * perPage;
-      const pageItems = filtered.slice(start, start + perPage);
-
-      if (!pageItems.length) {
-        results.innerHTML = '<p>No products found.</p>';
-      } else {
-        results.innerHTML = pageItems.map(p => `
-          <div class="product">
-            <img src="${p.image}" alt="">
-            <div>
-              <strong>${p.title}</strong><br>
-              ${p.category} — GHS ${p.price}<br>
-              <small>${p.description.slice(0,60)}…</small>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      pageInfo.textContent = `Page ${page} of ${totalPages}`;
-      btnPrev.disabled = page <= 1;
-      btnNext.disabled = page >= totalPages;
-    }
-
-    // Event handlers
-    let debounce;
-    input.addEventListener('input', e => {
-      clearTimeout(debounce);
-      debounce = setTimeout(() => {
-        lastQuery = e.target.value;
-        renderPage(lastQuery, 1);
-      }, 200);
-    });
-    btnPrev.addEventListener('click', () => renderPage(lastQuery, page - 1));
-    btnNext.addEventListener('click', () => renderPage(lastQuery, page + 1));
-
-    // Initial render
-    renderPage('', 1);
+    
   </script>
-
 </body>
 </html>
