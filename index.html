@@ -1628,8 +1628,8 @@ textarea { resize: vertical; min-height: 100px; }
       const rating = Math.floor(Math.random() * 5) + 1;
       const reviewCount = Math.floor(Math.random() * 200);
       const gallery = Array.from({ length: 4 }, (_, k) =>
-        `https://source.unsplash.com/400x400/?${category.toLowerCase()},sig=${i*10+k}`
-      );
+       `https://source.unsplash.com/400x400/?${category.toLowerCase()}&sig=${i*10+k}`
+     );
       const reviews = Array.from({ length: Math.floor(Math.random()*5) }, (_, r) => ({
         author: `User${r+1}`,
         date: new Date(2025,7,Math.ceil(Math.random()*28)).toDateString(),
