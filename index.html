@@ -1517,32 +1517,26 @@ textarea { resize: vertical; min-height: 100px; }
   <section id="category-highlights" class="container">
     <h2>Shop by Category</h2>
     <div class="categories-grid">
-      <article class="category-card">
  <article class="category-card" data-category="books">
     <img alt="Books">
    <h3><a href="#">Books</a></h3>
       </article>
-      <article class="category-card">
 <article class="category-card" data-category="electronics">
       <img alt="Electronics">
         <h3><a href="#">Electronics</a></h3>
       </article>
-      <article class="category-card">
 <article class="category-card" data-category="fashion">
       <img alt="Fashion">
         <h3><a href="#">Fashion</a></h3>
       </article>
-      <article class="category-card">
 <article class="category-card" data-category="home">
       <img alt="Home & Kitchen">
         <h3><a href="#">Home & Kitchen</a></h3>
       </article>
-      <article class="category-card">
 <article class="category-card" data-category="beauty">
     <img alt="Beauty">
         <h3><a href="#">Beauty</a></h3>
       </article>
-      <article class="category-card">
 <article class="category-card" data-category="services">
      <img alt="Services">
         <h3><a href="#">Services</a></h3>
@@ -1895,21 +1889,24 @@ document.body.addEventListener('click', e=>{
     showDetail(id);
   }
 });
+document.addEventListener('DOMContentLoaded', ()=> {
+    // ---------- Initialize ----------
+    renderFeatured();
+    updateCartUI();
 
-// ---------- Initialize ----------
-renderFeatured();
-updateCartUI();
-
+    // Randomize category images
     document.querySelectorAll('.category-card').forEach(card => {
-    const cat = card.dataset.category;           // e.g. "books"
-    const img = card.querySelector('img');
-    img.src = `https://source.unsplash.com/400x300/?${cat}`; 
+      const cat = card.dataset.category;
+      card.querySelector('img').src = `https://source.unsplash.com/400x300/?${cat}`;
     });
 
-     ['shopping,store','electronics,gadgets','fashion,clothes'].forEach((tag,i) => {
-   document.getElementById(`slide-img-${i+1}`).src =
-     `https://source.unsplash.com/1600x500/?${tag}`;
- });
+    // Randomize hero slides
+    ['shopping,store','electronics,gadgets','fashion,clothes']
+      .forEach((tag,i) => {
+        document.getElementById(`slide-img-${i+1}`).src =
+          `https://source.unsplash.com/1600x500/?${tag}`;
+      });
+  });
   </script>
 
 </html>
