@@ -1889,9 +1889,9 @@ input:focus {
     </div>
     <div class="hero-content">
       <h2 class="hero-title">Welcome to <span id="typewriter"></span></h2>
-      <p class="hero-subtitle">Track, book and ride with confidence.</p>
+      <p class="hero-subtitle">Track a ride with confidence.</p>
       <div class="hero-buttons">
-  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book a Ride</a>
+  <a href="#book-ride" class="btn-primary" style="display: none;"><i class="fas fa-paper-plane"></i> Book a Ride</a>
   <a href="#live-shuttles" class="btn-secondary"><i class="fas fa-route"></i> See Live Shuttles</a>
       </div>
       <br>
@@ -1936,7 +1936,7 @@ input:focus {
 <button class="btn-secondary" id="ridesBtnLive" style="display:none; margin:2rem auto;">
   <i class="fas fa-history"></i> My Rides
 </button>
-    <section id="book-ride" class="section booking-section">
+    <section id="book-ride" style="display: none;" class="section booking-section">
       <h2><i class="fas fa-paper-plane"></i> Book Your Ride</h2>
       <form id="bookingForm">
         <div class="form-row">
@@ -1989,7 +1989,7 @@ input:focus {
       </form>
     </section>
 
-    <div class="history-buttons">
+    <div class="history-buttons" style="display: none;">
       <button id="prevRidesBtn" class="btn-secondary active"><i class="fas fa-archive"></i> Previous Rides</button>
       <button id="upcomingRidesBtn" class="btn-secondary"><i class="fas fa-clock"></i> Upcoming Rides</button>
       <button id="allRidesBtn" class="btn-secondary"><i class="fas fa-list"></i> All Rides</button>
