@@ -35,8 +35,8 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Helper: Unsplash URL by full title
-      function makeUnsplashUrlForProduct(title) {
-        return `https://source.unsplash.com/400x400/?${encodeURIComponent(title)}`;
+      function makeUnsplashUrlForProduct(title, sig) {
+        return `https://source.unsplash.com/400x400/?${encodeURIComponent(title)}&sig=${sig}`;
       }
 
       // Sample products
@@ -73,8 +73,8 @@
         list.forEach(p => {
           const card = document.createElement('div');
           card.className = 'card';
-          card.innerHTML = `
-            <img src="${makeUnsplashUrlForProduct(p.title)}" alt="${p.title}">
+         card.innerHTML = `
+            <img src="${makeUnsplashUrlForProduct(p.title, p.id)}" alt="${p.title}" loading="lazy">
             <h3>${p.title}</h3>
             <p>₵${p.price}</p>
           `;
