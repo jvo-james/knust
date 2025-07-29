@@ -650,6 +650,74 @@ display: none;
   transform: translateY(-1px);
 }
 
+#search-results .products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: 1.5rem;
+}
+#search-results .products-grid .product-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+#search-results .products-grid .product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+    .hero-search {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  width: 60%;
+  max-width: 800px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 3;
+}
+.hero-search input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  font-size: 1rem;
+}
+.hero-search button {
+  padding: 0 1rem;
+  background: var(--clr-primary);
+  color: #fff;
+  border: none;
+}
+.hero-search button:hover {
+  background: var(--clr-secondary);
+}
+.hero-cats {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+.hero-cats a {
+  background: var(--clr-light);
+  color: var(--clr-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.hero-cats a:hover {
+  background: var(--clr-primary);
+  color: #fff;
+}
+    .deal-of-day .slide-caption #deal-timer {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
   </style>
 </head>
 <body>
@@ -701,8 +769,20 @@ display: none;
 
   <!-- HERO SLIDER -->
   <section id="hero-slider">
+    <div class="hero-search">
+    <input type="text" id="hero-search-input" placeholder="Search for anything…" />
+    <button id="hero-search-btn"><i class="fas fa-search"></i></button>
+  </div>
     <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
     <div class="slides">
+      <div class="slide deal-of-day">
+    <img src="…" alt="Deal of the Day">
+    <div class="slide-caption">
+      <h2>🔥 Deal of the Day</h2>
+      <p id="deal-timer">00:00:00</p>
+      <button class="btn-hero" id="deal-btn">Shop Now</button>
+    </div>
+  </div>
       <div class="slide active">
            <img id="slide-img-1" src="" alt="Fast, free shipping" loading="lazy">
         <div class="slide-caption">
@@ -717,6 +797,12 @@ display: none;
           <h2><i class="fas fa-microchip"></i> Latest Gadgets</h2>
           <p>Discover the newest in tech</p>
           <button class="btn-hero"><i class="fas fa-shopping-bag"></i> Shop Now</button>
+         <div class="hero-cats">
+    <a href="#" data-cat="Electronics">Electronics</a>
+    <a href="#" data-cat="Books">Books</a>
+    <a href="#" data-cat="Fashion">Fashion</a>
+    <a href="#" data-cat="Home & Kitchen">Home & Kitchen</a>
+  </div>
         </div>
       </div>
       <div class="slide">
@@ -796,7 +882,6 @@ display: none;
     <div class="modal-content">
       <button class="modal-close">&times;</button>
       <section id="product-detail">
-    <button id="detail-back" class="btn modal-close"><i class="fas fa-arrow-left"></i> Back to results</button>
     <div class="detail-layout">
       <div class="detail-gallery">
         <img id="detail-main-image" src="" alt="Detail">
@@ -1014,7 +1099,6 @@ display: none;
       const cartSubtotal  = document.getElementById('cart-subtotal');
       const cartCheckout = document.querySelector('.btn-checkout');
       const detailSec    = document.getElementById('product-detail');
-      const backBtn      = document.getElementById('detail-back');
       const catLinks     = document.querySelectorAll('#category-nav a');
 
       // Hero Slider
@@ -1057,19 +1141,28 @@ display: none;
       const RESULTS_PER_PAGE = 12;
       let currentResults = [], currentPage = 1;
       function renderResults(list, page) {
-        currentResults = list; currentPage = page; resultsMain.innerHTML='';
+        currentResults = list;
+ currentPage = page;
+  resultsMain.innerHTML = '<div class="products-grid"></div>';
+  const grid = resultsMain.querySelector('.products-grid');
         const start = (page-1)*RESULTS_PER_PAGE;
-        list.slice(start, start+RESULTS_PER_PAGE).forEach(p=>{
-          const art = document.createElement('article');
-          art.className = 'product-card'; art.dataset.id = p.id;
-          art.innerHTML = `
-            <img src="${p.gallery[0]}" alt="${p.title}">
-            <h3><a href="#">${p.title}</a></h3>
-            <p class="product-price">₵${p.price}</p>
-            <p class="product-rating">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})</p>
-          `;
-          resultsMain.appendChild(art);
-        });
+        list.slice(start, start + RESULTS_PER_PAGE).forEach(p => {
+    const art = document.createElement('article');
+    art.className = 'product-card';
+    art.dataset.id = p.id;
+    art.innerHTML = `
+      <img src="${p.gallery[0]}" alt="${p.title}" loading="lazy">
+      <h3><a href="#">${p.title}</a></h3>
+      <p class="product-price">₵${p.price}</p>
+      <p class="product-rating">
+        ${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})
+      </p>
+      <div class="card-actions">
+        <button class="btn add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+        <button class="btn view-details"><i class="fas fa-info-circle"></i> View Details</button>
+      </div>`;
+    grid.appendChild(art);
+  });
         renderPagination(list.length, page);
       }
       function renderPagination(total, page) {
@@ -1113,21 +1206,24 @@ display: none;
         cartItems.innerHTML = '';
         let subtotal = 0;
         cart.forEach((p,i)=>{
-          subtotal += parseFloat(p.price);
+         const qty = p.qty || 1;
+    const lineTotal = parseFloat(p.price) * qty;
+    subtotal += lineTotal;
           const d = document.createElement('div');
           d.className='cart-item';
           d.dataset.id = p.id;
           d.innerHTML = `
-            <img src="${p.gallery[0]}" alt="${p.title}">
-            <div class="item-info">
-              <p class="item-title">${p.title}</p>
-              <p class="item-qty">
-                Qty: <input type="number" min="1" value="${p.qty||1}" data-idx="${i}" class="qty-input" />
-              </p>
-              <p class="item-price">₵${p.price}</p>
-            </div>
-            <button class="remove-item" data-idx="${i}">×</button>
-          `;
+      <img src="${p.gallery[0]}" alt="${p.title}">
+      <div class="item-info">
+        <p class="item-title">${p.title}</p>
+        <p class="item-qty">
+          Qty: <input type="number" min="1" value="${qty}" data-idx="${i}" class="qty-input" />
+        </p>
+        <p class="item-price">₵${lineTotal.toFixed(2)}</p>
+      </div>
+      <button class="remove-item" data-idx="${i}">×</button>
+    `;
+
          cartItems.appendChild(d);
         });
         cartSubtotal.textContent = subtotal.toFixed(2);
@@ -1154,6 +1250,9 @@ display: none;
       if (cartEl && !e.target.matches('.qty-input') && !e.target.closest('.remove-item')) {
         const id = +cartEl.dataset.id;
         showDetail(id);
+         const p = products.find(x => x.id === id);
+     renderResults([p], 1);
+     document.getElementById('search-results').scrollIntoView({ behavior: 'smooth' });
         cartSidebar.classList.remove('open');
       }
       });
@@ -1169,12 +1268,35 @@ display: none;
           msg.textContent = 'Invalid code.';
         }
       };
+
+      const ordersLink = document.getElementById('orders-link');
+      ordersLink.onclick = e => {
+   e.preventDefault();
+   if (cart.length === 0) {
+     alert('You have no orders yet.');
+     return;
+   }
+    const orderItems = cart.map(p => ({
+     id: p.id,
+     title: p.title,
+     price: p.price,
+     rating: p.rating,
+     reviewCount: p.reviewCount,
+     gallery: p.gallery
+   }));
+   renderResults(orderItems, 1);
+   document.getElementById('search-results').scrollIntoView({ behavior: 'smooth' });
+ };
      // Product Detail
       function showDetail(id) {
          modal.classList.add('open');
         modal.classList.remove('hidden');
         const p = products.find(x=>x.id===id);
         if(!p) return;
+         const mainImg = document.getElementById('detail-main-image');
+         mainImg.src     = p.gallery[0];
+         mainImg.alt     = p.title;
+         mainImg.loading = 'lazy';
         document.getElementById('detail-main-image').loading = 'lazy';
         const thumbs = document.getElementById('detail-thumbnails'); thumbs.innerHTML='';
         p.gallery.forEach(src=>{
@@ -1201,11 +1323,7 @@ display: none;
           revList.appendChild(art);
         });
       }
- backBtn.onclick = ()=>{
-      modal.classList.remove('open');
-      modal.classList.add('hidden');
-   resultsMain.classList.remove('hidden');
-      };
+ 
      
         document.body.addEventListener('click', e => {
         if (e.target.closest('.add-to-cart, .remove-from-cart')) {
@@ -1259,6 +1377,77 @@ display: none;
      modal.onclick = e => {
        if (e.target === modal) modal.classList.add('hidden');
      };
+      // Re‑scan all product cards + detail modal button, toggling their text & class
+function syncCartButtons() {
+  // In the grid and search results:
+  document.querySelectorAll('.product-card').forEach(card => {
+    const id = +card.dataset.id;
+    const btn = card.querySelector('.add-to-cart, .remove-from-cart');
+    if (!btn) return;
+
+    if (cart.some(p => p.id === id)) {
+      btn.classList.remove('add-to-cart');
+      btn.classList.add('remove-from-cart');
+      btn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove from Cart';
+    } else {
+      btn.classList.remove('remove-from-cart');
+      btn.classList.add('add-to-cart');
+      btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+    }
+  });
+
+  // In detail modal:
+  const detailBtn = document.getElementById('detail-add-cart');
+  if (detailBtn) {
+    const detailId = +detailBtn.dataset.id;
+    if (cart.some(p => p.id === detailId)) {
+      detailBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove from Cart';
+      detailBtn.classList.add('remove-from-cart');
+    } else {
+      detailBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+      detailBtn.classList.remove('remove-from-cart');
+    }
+  }
+}
+document.getElementById('hero-search-btn').onclick = () => {
+  const term = document.getElementById('hero-search-input').value;
+  document.getElementById('search-input').value = term;
+  document.getElementById('search-btn').click();
+};
+      document.querySelectorAll('.hero-cats a').forEach(a => {
+  a.onclick = e => {
+    e.preventDefault();
+    const cat = a.dataset.cat;
+    renderResults(products.filter(p => p.category === cat), 1);
+    window.scrollTo({ top: document.getElementById('search-results').offsetTop - 100, behavior: 'smooth' });
+  };
+});
+
+      function startDealTimer(durationSeconds) {
+  let t = durationSeconds;
+  const el = document.getElementById('deal-timer');
+  const iv = setInterval(() => {
+    const h = String(Math.floor(t/3600)).padStart(2,'0');
+    const m = String(Math.floor((t%3600)/60)).padStart(2,'0');
+    const s = String(t%60).padStart(2,'0');
+    el.textContent = `${h}:${m}:${s}`;
+    if (t-- <= 0) clearInterval(iv);
+  }, 1000);
+}
+startDealTimer(6*3600);  // 6‑hour deal
+document.getElementById('deal-btn').onclick = () => {
+  // link to that product or category
+  alert('Taking you to today’s deal!');
+};
+   slideEls.forEach(slide => {
+  slide.addEventListener('mouseenter', () => {
+    gsap.to(slide.querySelector('.slide-caption'), { y: -10, duration: 0.5 });
+  });
+  slide.addEventListener('mouseleave', () => {
+    gsap.to(slide.querySelector('.slide-caption'), { y: 0, duration: 0.5 });
+  });
+});
+
       // Initialize
       renderFeatured();
       updateCart();
