@@ -984,14 +984,9 @@ display: none;
        alert(`Opening seller page for ${name} (demo)`);
      };
       
-    function makeImageUrl(keywords, seed, width = 400, height = 400) {
-        const s = encodeURIComponent((keywords || '').replace(/\s+/g,'') + '-' + seed);
-        return `https://picsum.photos/seed/${s}/${width}/${height}`;
-      }
-      
-      function makeUnsplashUrl(keywords, seed) {
-   return `https://source.unsplash.com/400x400/?${encodeURIComponent(keywords)}&sig=${seed}`;
- }
+    function makeUnsplashUrlForProduct(title) {
+     return `https://source.unsplash.com/400x400/?${encodeURIComponent(title)}`;
+    }
 
       document.getElementById('slide-img-1').src = makeImageUrl('fast shipping', 1, 800, 500);
    document.getElementById('slide-img-2').src = makeImageUrl('latest gadgets', 2, 800, 500);
@@ -1068,10 +1063,9 @@ display: none;
         const price = (Math.random() * 300 + 10).toFixed(2);
         const rating = Math.floor(Math.random() * 5) + 1;
         const reviewCount = Math.floor(Math.random() * 200);
-         const gallery = Array.from({ length: 4 }, (_, k) => {
-         const mainWord = title.split(' ')[0];
-         return makeImageUrl(`${cat} ${mainWord}`, i * 10 + k, 400, 400);
-       });
+         const gallery = [
+        makeUnsplashUrlForProduct(title)
+      ];
         const reviews = Array.from({ length: Math.floor(Math.random()*5)}, (_, r)=>({
           author:`User${r+1}`,
           date: new Date(2025,7,Math.ceil(Math.random()*28)).toDateString(),
@@ -1120,9 +1114,13 @@ display: none;
           const art = document.createElement('article');
           art.className = 'product-card';
           art.dataset.id = p.id;
-          art.innerHTML = `
-           <img src="${p.gallery[0]}" alt="${p.title}" loading="lazy">
-             <h3><a href="#">${p.title}</a></h3>
+         art.innerHTML = `
+         <img
+           src="${ makeUnsplashUrlForProduct(p.title) }"
+           alt="${p.title}"
+           loading="lazy"
+         > 
+         <h3><a href="#">${p.title}</a></h3>
             <p class="product-price">₵${p.price}</p>
             <p class="product-rating">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)} (${p.reviewCount})</p>
              <div class="card-actions">
@@ -1151,7 +1149,10 @@ display: none;
     art.className = 'product-card';
     art.dataset.id = p.id;
     art.innerHTML = `
-      <img src="${p.gallery[0]}" alt="${p.title}" loading="lazy">
+          <img
+            src="${ makeUnsplashUrlForProduct(p.title) }"
+            alt="${p.title}"
+          >
       <h3><a href="#">${p.title}</a></h3>
       <p class="product-price">₵${p.price}</p>
       <p class="product-rating">
