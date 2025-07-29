@@ -118,8 +118,12 @@ display: none;
  }
 }
     .promo-cards {
-  position:absolute; top:25%; right:5%; display:flex; gap:.5rem; z-index:2;
-}
+position:absolute;
+  top: 50%; right: 5%;
+  transform: translateY(-50%);
+  display:flex; gap:1rem;
+  z-index:2;
+    }
 .promo-card {
   background:#fff; border-radius:4px; overflow:hidden;
   box-shadow:0 2px 8px rgba(0,0,0,.2); position:relative;
@@ -149,7 +153,7 @@ display: none;
    margin-top: 140px;
    overflow: hidden;
    height: 100vh;
-       min-height: 400px;
+       min-height: 500px;
        max-height: 800px;
    background: #000;
  }
@@ -1034,9 +1038,9 @@ display: none;
    return `https://source.unsplash.com/400x400/?${encodeURIComponent(keywords)}&sig=${seed}`;
  }
 
-      document.getElementById('slide-img-1').src = makeImageUrl('fast shipping', 1, 800, 500);
-   document.getElementById('slide-img-2').src = makeImageUrl('latest gadgets', 2, 800, 500);
-   document.getElementById('slide-img-3').src = makeImageUrl('summer fashion', 3, 800, 500);
+      document.getElementById('slide-img-1').src = 'van.webp';
+   document.getElementById('slide-img-2').src = 'gadget.jpg';
+   document.getElementById('slide-img-3').src = 'fashion.jpg';
 
    document.querySelectorAll('[data-cat-img]').forEach(imgEl => {
      const cat    = imgEl.getAttribute('data-cat-img');
