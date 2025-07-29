@@ -1865,7 +1865,7 @@ input:focus {
         <a href="#live-shuttles" class="nav-btn" title="Live"><i class="fas fa-route"></i> </a>
         <a href="#book-ride" class="nav-btn" title="Book"><i class="fas fa-paper-plane"></i> </a>
         <a href="#quick-book" class="nav-btn" title="Quick Book"><i class="fas fa-thumbs-up"></i> </a>
-        <button class="nav-btn" id="ridesBtnHeader"><i class="fas fa-history"></i> My Rides</button>
+        <button class="nav-btn" style="display: none;" id="ridesBtnHeader"><i class="fas fa-history"></i> My Rides</button>
       </nav>
     </div>
    <div id="globalOverlay"></div>
@@ -1876,7 +1876,7 @@ input:focus {
         <a href="#book-ride" class="nav-btn"><i class="fas fa-paper-plane"></i> Book</a>
         <a href="#quick-book" class="nav-btn"><i class="fas fa-thumbs-up"></i> Quick Book</a>
        <button id="openTrackerMobile" class="nav-btn"><i class="fas fa-shuttle-van"></i> Tracker</button>
-   <button class="nav-btn" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
+   <button class="nav-btn" style ="display: none;" id="ridesBtnMobile"><i class="fas fa-history"></i> My Rides</button>
     </aside>
    <div id="sidebarOverlay" class="sidebar-overlay"></div>
   </header>
@@ -2076,7 +2076,7 @@ input:focus {
       <button class="close-btn" data-close="ksbQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-university"></i> Quick Book: KSB</h3>
       <p>Secure your seat on the next shuttle departing to/from KSB.</p>
-  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+  <a href="#book-ride" style ="display: none;" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="medicalQuickModal">
@@ -2084,7 +2084,7 @@ input:focus {
       <button class="close-btn" data-close="medicalQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-hospital"></i> Quick Book: Medical Village</h3>
       <p>Reserve your spot for the next shuttle at Medical Village.</p>
-  <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+  <a href="#book-ride" style ="display: none;" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="bruneiQuickModal">
@@ -2092,7 +2092,7 @@ input:focus {
       <button class="close-btn" data-close="bruneiQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-tree"></i> Quick Book: Brunei</h3>
       <p>Get on the green route—book your Brunei shuttle now.</p>
- <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+ <a href="#book-ride" style ="display: none;" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="caselyQuickModal">
@@ -2100,7 +2100,7 @@ input:focus {
       <button class="close-btn" data-close="caselyQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-university"></i> Quick Book: Casely Hayeford</h3>
       <p>Hop on the shuttle serving Casely Hayeford—reserve now.</p>
- <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+ <a href="#book-ride" style ="display: none;" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="scienceQuickModal">
@@ -2108,7 +2108,7 @@ input:focus {
       <button class="close-btn" data-close="scienceQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-flask"></i> Quick Book: College of Science</h3>
       <p>Lock in your seat to/from the College of Science shuttle.</p>
- <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+ <a href="#book-ride" style ="display: none;" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
   <div class="modal-overlay" id="commerceQuickModal">
@@ -2116,7 +2116,7 @@ input:focus {
       <button class="close-btn" data-close="commerceQuickModal"><i class="fas fa-times"></i></button>
       <h3><i class="fas fa-shopping-bag"></i> Quick Book: Commercial Area</h3>
       <p>Secure your seat on the busy Commercial Area route.</p>
- <a href="#book-ride" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
+ <a href="#book-ride" style ="display: none;" class="btn-primary"><i class="fas fa-paper-plane"></i> Book Now</a>
     </div>
   </div>
 
@@ -2124,14 +2124,7 @@ input:focus {
     <section class="section faq-section" id="faq">
       <h2><i class="fas fa-question-circle"></i> FAQs</h2>
       <div class="accordion">
-        <div class="accordion-item">
-          <button class="accordion-header"><i class="fas fa-chevron-down"></i> How do I cancel?</button>
-          <div class="accordion-body">Tap the trash icon in “My Rides.”</div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header"><i class="fas fa-chevron-down"></i> Can I book for others?</button>
-          <div class="accordion-body">Yes, enter their student ID in the form.</div>
-        </div>
+        
         <div class="accordion-item">
           <button class="accordion-header"><i class="fas fa-chevron-down"></i> Weekend service?</button>
           <div class="accordion-body">Saturdays 7 AM–2 PM, no service Sundays.</div>
