@@ -630,6 +630,26 @@ display: none;
   background: var(--clr-muted);
   border-radius: 4px;
 }
+
+    #promo-code {
+  width: 60%;
+  padding: .5rem;
+  border: 1px solid var(--clr-muted);
+  border-radius: 4px 0 0 4px;
+}
+#apply-promo {
+  background: var(--clr-secondary);
+  color: var(--clr-light);
+  font-weight: 600;
+  padding: .5rem 1rem;
+  border-radius: 0 4px 4px 0;
+  transition: background var(--transition), transform var(--transition);
+}
+#apply-promo:hover {
+  background: var(--clr-primary);
+  transform: translateY(-1px);
+}
+
   </style>
 </head>
 <body>
@@ -951,8 +971,8 @@ display: none;
 
       // State
       const products = [];
+      const cart = JSON.parse(localStorage.getItem('myCart') || '[]');
       const categories = ['Books','Electronics','Fashion','Home & Kitchen','Beauty','Services'];
-      const cart = [];
 
       // Generate Products
       for (let i = 1; i <= 2000; i++) {
@@ -1111,6 +1131,7 @@ display: none;
          cartItems.appendChild(d);
         });
         cartSubtotal.textContent = subtotal.toFixed(2);
+        localStorage.setItem('myCart', JSON.stringify(cart));
       }
     
       cartCheckout.onclick = ()=>{
@@ -1129,12 +1150,12 @@ display: none;
 
       // Open modal when clicking a cart item
       document.body.addEventListener('click', e => {
-        const el = e.target.closest('.cart-item');
-        if (el) {
-          const id = +el.dataset.id;
-          showDetail(id);
-          cartSidebar.classList.remove('open');
-        }
+         const cartEl = e.target.closest('.cart-item');
+      if (cartEl && !e.target.matches('.qty-input') && !e.target.closest('.remove-item')) {
+        const id = +cartEl.dataset.id;
+        showDetail(id);
+        cartSidebar.classList.remove('open');
+      }
       });
 
       // Promo code logic (demo)
@@ -1150,6 +1171,7 @@ display: none;
       };
      // Product Detail
       function showDetail(id) {
+         modal.classList.add('open');
         modal.classList.remove('hidden');
         const p = products.find(x=>x.id===id);
         if(!p) return;
@@ -1180,14 +1202,31 @@ display: none;
         });
       }
       backBtn.onclick = ()=>{
-       document.getElementById('product-modal').classList.add('hidden');
-        resultsMain.classList.remove('hidden');
+ backBtn.onclick = ()=>{
+      modal.classList.remove('open');
+      modal.classList.add('hidden');
+   resultsMain.classList.remove('hidden');
       };
      
         document.body.addEventListener('click', e => {
-        if (e.target.closest('.add-to-cart')) {
-          const id = +e.target.closest('.product-card').dataset.id;
-          cart.push(products.find(p => p.id === id));
+        if (e.target.closest('.add-to-cart, .remove-from-cart')) {
+          const btn = e.target.closest('button');
+          const card = e.target.closest('.product-card');
+          const id = +card.dataset.id;
+          const idx = cart.findIndex(p => p.id === id);
+          if (idx === -1) {
+            // add
+            cart.push({ ...products.find(p => p.id === id), qty: 1 });
+            btn.classList.remove('add-to-cart');
+            btn.classList.add('remove-from-cart');
+            btn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove from Cart';
+          } else {
+            // remove
+            cart.splice(idx, 1);
+            btn.classList.remove('remove-from-cart');
+            btn.classList.add('add-to-cart');
+            btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+          }
           updateCart();
           return;
         }
@@ -1214,7 +1253,10 @@ display: none;
           return;
         }
       });
-     closeBtn.onclick = () => modal.classList.add('hidden');
+      closeBtn.onclick = () => {
+       modal.classList.remove('open');
+       modal.classList.add('hidden');
+     };
      modal.onclick = e => {
        if (e.target === modal) modal.classList.add('hidden');
      };
