@@ -2,98 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Product→Image Demo</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f5f5f5; margin:0; padding:2rem; }
-    h1 { text-align:center; margin-bottom:1rem; }
-    #featured, #results { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; }
-    .card { background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); text-align:center; }
-    .card img { width:100%; height:150px; object-fit:cover; }
-    .card h3 { font-size:1rem; margin:.5rem 0; padding:0 .5rem; }
-    .card p { color:#FF9900; font-weight:bold; margin-bottom:.5rem; }
-    #search-bar { text-align:center; margin:2rem 0; }
-    #search-bar input { padding:.5rem; width:200px; }
-    #search-bar button { padding:.5rem 1rem; }
+    body { font-family:sans-serif; margin:2rem; background:#f5f5f5; }
+    h1, h2 { margin-bottom:.5rem; }
+    .search { margin-bottom:1.5rem; }
+    .search input { padding:.5rem; width:300px; }
+    .search button { padding:.5rem 1rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
+    .card { background:#fff; padding:1rem; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; }
+    .card img { width:100%; height:120px; object-fit:cover; border-radius:4px; margin-bottom:.75rem; }
+    .card h3 { margin:.5rem 0; font-size:1.1rem; }
+    .card p { color:#d35400; font-weight:bold; }
   </style>
 </head>
 <body>
 
   <h1>All‑in‑One Market Demo</h1>
-
-  <div id="search-bar">
-    <input type="text" id="search-input" placeholder="Search products…">
-    <button id="search-btn">Search</button>
+  <div class="search">
+    <input id="searchInput" placeholder="Search products…">
+    <button id="searchBtn">Search</button>
   </div>
 
   <h2>Featured Products</h2>
-  <div id="featured"></div>
+  <div id="featuredGrid" class="grid"></div>
 
   <h2>Search Results</h2>
-  <div id="results"></div>
+  <div id="searchGrid" class="grid"></div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Helper: Unsplash URL by full title
-      function makeUnsplashUrlForProduct(title, sig) {
-        return `https://source.unsplash.com/400x400/?${encodeURIComponent(title)}&sig=${sig}`;
-      }
+    // --- data setup ---
+    const products = [
+      { id: 1, title: 'JavaScript Deep Dive',      price: 85.46 },
+      { id: 2, title: 'NoiseCancel 3000',           price: 35.66 },
+      { id: 3, title: 'Effective Java',             price: 98.82 },
+      { id: 4, title: '4K Drone',                   price: 42.28 },
+      { id: 5, title: 'You Don’t Know JS',          price:106.62 },
+      { id: 6, title: 'UltraLaptop Pro',            price: 16.79 },
+      { id: 7, title: 'CSS Mastery',                price: 44.57 },
+      { id: 8, title: 'SmartWatch X',               price: 82.91 }
+    ];
 
-      // Sample products
-      const products = [];
-      const namePools = {
-        Books: [
-          'JavaScript Deep Dive','CSS Mastery','Effective Java','Python 101','You Don’t Know JS'
-        ],
-        Electronics: [
-          'UltraLaptop Pro','NoiseCancel 3000','SmartWatch X','4K Drone','Wireless Earbuds'
-        ]
-      };
-      const categories = Object.keys(namePools);
-      // Generate 20 products
-      for (let i=0; i<20; i++) {
-        const cat = categories[i % categories.length];
-        const title = namePools[cat][i % namePools[cat].length] + ` ${i+1}`;
-        const price = (Math.random()*100+10).toFixed(2);
-        products.push({ id:i, title, price, category:cat });
-      }
+    // --- helper: picsum seed URL ---
+    function makePicsumUrl(title,id){
+      const seed = encodeURIComponent(title.replace(/\s+/g,''));
+      return `https://picsum.photos/seed/${seed + id}/400/200`;
+    }
 
-      const featuredEl = document.getElementById('featured');
-      const resultsEl  = document.getElementById('results');
-      const searchInput = document.getElementById('search-input');
-      const searchBtn   = document.getElementById('search-btn');
-
-      // Render a grid of cards into `el`
-      function renderGrid(list, el) {
-        el.innerHTML = '';
-        if (!list.length) {
-          el.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#777;">No products found.</p>';
-          return;
-        }
-        list.forEach(p => {
-          const card = document.createElement('div');
-          card.className = 'card';
-         card.innerHTML = `
-            <img src="${makeUnsplashUrlForProduct(p.title, p.id)}" alt="${p.title}" loading="lazy">
-            <h3>${p.title}</h3>
-            <p>₵${p.price}</p>
-          `;
-          el.appendChild(card);
-        });
-      }
-
-      // Initial featured (first 8)
-      renderGrid(products.slice(0,8), featuredEl);
-
-      // Search handler
-      searchBtn.addEventListener('click', () => {
-        const term = searchInput.value.trim().toLowerCase();
-        const filtered = products.filter(p =>
-          p.title.toLowerCase().includes(term)
-        );
-        renderGrid(filtered, resultsEl);
+    // --- render a grid of cards into a container ---
+    function renderGrid(list, container){
+      container.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${makePicsumUrl(p.title,p.id)}" alt="${p.title}">
+          <h3>${p.title}</h3>
+          <p>₵${p.price.toFixed(2)}</p>
+        `;
+        container.appendChild(card);
       });
+    }
+
+    // --- initial featured render ---
+    const featuredGrid = document.getElementById('featuredGrid');
+    renderGrid(products.slice(0,6), featuredGrid);
+
+    // --- search logic ---
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      const results = products.filter(p => p.title.toLowerCase().includes(term));
+      renderGrid(results, document.getElementById('searchGrid'));
     });
   </script>
+
 </body>
 </html>
