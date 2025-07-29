@@ -466,6 +466,170 @@ display: none;
   .cart-item:hover {
     background: #f0f0f0;
   }
+    .modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+.modal.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Modal container */
+.modal-content {
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 900px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  transform: translateY(-20px);
+  animation: slideDown 0.4s ease-out forwards;
+}
+
+/* Slide-down animation */
+@keyframes slideDown {
+  to { transform: translateY(0); }
+}
+
+/* Close button */
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  font-size: 1.5rem;
+  color: var(--clr-secondary);
+  transition: transform var(--transition);
+}
+.modal-close:hover {
+  transform: scale(1.2);
+}
+
+/* Detail layout enhancements */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+@media (max-width: 700px) {
+  .detail-layout { grid-template-columns: 1fr; }
+}
+
+/* Gallery styling */
+.detail-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.detail-gallery .main-img {
+  width: 100%;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.thumbnails {
+  display: flex;
+  gap: 0.5rem;
+}
+.thumbnails img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.thumbnails img:hover,
+.thumbnails img.active {
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Info panel */
+.detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.detail-info h1 {
+  font-size: 2rem;
+  color: var(--clr-secondary);
+  margin-bottom: 0.5rem;
+}
+.detail-info p,
+.detail-info .detail-price,
+.detail-info .detail-stock,
+.detail-info .detail-shipping {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.detail-price {
+  font-size: 1.75rem;
+  color: var(--clr-primary);
+  font-weight: 700;
+}
+.features-list {
+  list-style: disc inside;
+  padding-left: 1rem;
+  color: var(--clr-muted);
+}
+
+/* Action buttons */
+#detail-add-cart {
+  margin-top: 1rem;
+  align-self: start;
+  background: var(--clr-primary);
+  color: var(--clr-light);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: background var(--transition), transform var(--transition);
+}
+#detail-add-cart:hover {
+  background: var(--clr-secondary);
+  transform: translateY(-2px);
+}
+
+/* Extra sections */
+.detail-extra {
+  margin-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1.5rem;
+}
+.detail-extra h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--clr-secondary);
+}
+.detail-extra p,
+.detail-extra article {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Scrollbar styling */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--clr-muted);
+  border-radius: 4px;
+}
   </style>
 </head>
 <body>
