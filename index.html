@@ -117,7 +117,32 @@ display: none;
    display: none; /* hide search bar on mobile nav */
  }
 }
-    
+    .promo-cards {
+  position:absolute; top:25%; right:5%; display:flex; gap:.5rem; z-index:2;
+}
+.promo-card {
+  background:#fff; border-radius:4px; overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.2); position:relative;
+}
+.promo-card img { display:block; width:100px; height:100px; object-fit:cover; }
+.promo-card span {
+  position:absolute; bottom:0; left:0; right:0;
+  background:rgba(0,0,0,.6); color:#fff; text-align:center; padding:.25rem 0;
+  font-size:.875rem;
+}
+    .bottom-bar {
+  position:absolute; bottom:0; left:0; right:0;
+  display:flex; justify-content:space-between;
+  background:rgba(255,255,255,.9); padding:.75rem 5%;
+  font-size:.875rem; color:var(--clr-secondary);
+}
+.bottom-bar .free-shipping i,
+.bottom-bar .flash-sale i { margin-right:.25rem; }
+.bottom-bar .flash-sale a { margin-left:.25rem; color:var(--clr-secondary); text-decoration:underline; }
+    .badge-trends {
+  display:inline-block; background:#fff; color:var(--clr-primary);
+  font-weight:700; padding:.25rem .5rem; border-radius:2px; margin-bottom:.5rem;
+}
     /* Hero Slider */
     #hero-slider {
    position: relative;
@@ -789,7 +814,15 @@ display: none;
           <h2><i class="fas fa-shipping-fast"></i> Fast, Free Shipping</h2>
           <p>Unlimited access to deals & more</p>
           <button class="btn-hero"><i class="fas fa-gem"></i> Join Premium</button>
-        </div>
+        
+          <span class="badge-trends">Trends</span>
+        <h1>#DelicaRomance <i class="fas fa-chevron-right"></i></h1>
+      </div>
+      <div class="promo-cards">
+        <div class="promo-card"><img src="" alt="" loading="lazy"><span>$31.00</span></div>
+        <div class="promo-card"><img src="" alt="" loading="lazy"><span>$18.00</span></div>
+      </div>
+      </div>
       </div>
       <div class="slide">
         <img id="slide-img-2" src="" alt="Latest Gadgets" loading="lazy">
@@ -815,6 +848,14 @@ display: none;
       </div>
     </div>
     <button class="slider-next"><i class="fas fa-chevron-right"></i></button>
+ <div class="bottom-bar">
+    <div class="free-shipping">
+      <i class="fas fa-truck"></i> Free Shipping <span>Buy $190.00 more to get</span>
+    </div>
+    <div class="flash-sale">
+      <i class="fas fa-bolt"></i> Flash Sale <a href="#">View more</a>
+    </div>
+ </div>
   </section>
 
   <!-- CATEGORY HIGHLIGHTS -->
