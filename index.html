@@ -123,7 +123,9 @@ display: none;
    position: relative;
    margin-top: 140px;
    overflow: hidden;
-   height: 500px;
+   height: 75vh;
+       min-height: 400px;
+       max-height: 800px;
    background: #000;
  }
  /* Darken slides and add a subtle overlay */
@@ -313,7 +315,24 @@ display: none;
    }
 
     /* Product Detail */
-    #product-detail { padding:4rem 0; display:none; }
+    #product-detail { padding:4rem 0; }
+
+    .card-actions .btn {
+      background: var(--clr-primary);
+      color: var(--clr-light);
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .card-actions .btn.view-details {
+      background: var(--clr-secondary);
+    }
+    .card-actions .btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
     .detail-layout { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
     #detail-main-image { width:100%; border-radius:8px; margin-bottom:1rem; }
 
@@ -325,8 +344,10 @@ display: none;
 
     /* Responsive */
     @media (max-width:992px) { .search-bar { display:none; } .detail-layout { grid-template-columns:1fr; } }
-    @media (max-width:768px) { #hero-slider { height:300px; } .slide-caption h2 { font-size:2rem; } }
- 
+  @media (max-width:768px) {
+      #hero-slider { height:50vh; min-height:250px; }
+      .slide-caption h2 { font-size:2rem; }
+    } 
    .modal {
      position: fixed;
      top: 0; left: 0; right: 0; bottom: 0;
@@ -426,7 +447,25 @@ display: none;
   font-size: 0.875rem;
   padding: 0.5rem;
 }
-
+.item-qty {
+    display: flex;
+   align-items: center;
+    gap: 0.25rem;
+  }
+  .item-qty input {
+    width: 3rem;
+    padding: 0.25rem;
+    text-align: center;
+    border: 1px solid var(--clr-muted);
+    border-radius: 4px;
+ }
+ .cart-item {
+   cursor: pointer;
+    transition: background var(--transition);
+  }
+  .cart-item:hover {
+    background: #f0f0f0;
+  }
   </style>
 </head>
 <body>
@@ -555,7 +594,13 @@ display: none;
     <h2><i class="fas fa-shopping-cart"></i> Your Cart
      <button class="close-cart">&times;</button>
     </h2>
-    <div class="cart-items"></div>
+   <div class="cart-items"></div>
+    <div class="cart-extra">
+      <label for="promo-code">Promo Code:</label>
+      <input type="text" id="promo-code" placeholder="Enter code" />
+      <button id="apply-promo" class="btn">Apply</button>
+      <p id="promo-message" style="margin-top:.5rem;color:var(--clr-primary);"></p>
+    </div>
     <div class="cart-summary">
       <p>Subtotal: ₵<span id="cart-subtotal">0.00</span></p>
       <button class="btn-checkout"><i class="fas fa-credit-card"></i> Proceed to Checkout</button>
@@ -683,7 +728,6 @@ display: none;
    document.getElementById('slide-img-2').src = makeImageUrl('latest gadgets', 2, 800, 500);
    document.getElementById('slide-img-3').src = makeImageUrl('summer fashion', 3, 800, 500);
 
-   // 2️⃣ Category images
    document.querySelectorAll('[data-cat-img]').forEach(imgEl => {
      const cat    = imgEl.getAttribute('data-cat-img');
      const seed   = imgEl.getAttribute('data-cat-seed');
@@ -751,15 +795,14 @@ display: none;
         const cat = categories[i % categories.length];
          const pool = namePools[cat] || [`${cat} Item`];
         const rawTitle = pool[(i - 1) % pool.length];
-        const title = `${rawTitle} (${i})`;
+        const title = rawTitle;
         const price = (Math.random() * 300 + 10).toFixed(2);
         const rating = Math.floor(Math.random() * 5) + 1;
         const reviewCount = Math.floor(Math.random() * 200);
-       const gallery = Array.from({ length: 4 }, (_, k) => {
-   const mainWord = title.split(' ')[0];
-   const terms = `${cat},${mainWord}`;
-   return makeUnsplashUrl(terms, i * 10 + k);
- });
+         const gallery = Array.from({ length: 4 }, (_, k) => {
+         const mainWord = title.split(' ')[0];
+         return makeImageUrl(`${cat} ${mainWord}`, i * 10 + k, 400, 400);
+       });
         const reviews = Array.from({ length: Math.floor(Math.random()*5)}, (_, r)=>({
           author:`User${r+1}`,
           date: new Date(2025,7,Math.ceil(Math.random()*28)).toDateString(),
@@ -889,11 +932,14 @@ display: none;
           subtotal += parseFloat(p.price);
           const d = document.createElement('div');
           d.className='cart-item';
+          d.dataset.id = p.id;
           d.innerHTML = `
             <img src="${p.gallery[0]}" alt="${p.title}">
             <div class="item-info">
               <p class="item-title">${p.title}</p>
-              <p class="item-qty">Qty: 1</p>
+              <p class="item-qty">
+                Qty: <input type="number" min="1" value="${p.qty||1}" data-idx="${i}" class="qty-input" />
+              </p>
               <p class="item-price">₵${p.price}</p>
             </div>
             <button class="remove-item" data-idx="${i}">×</button>
@@ -908,7 +954,37 @@ display: none;
         cart.length = 0; updateCart();
       };
  closeCartBtn.onclick = () => cartSidebar.classList.remove('open');
-      // Product Detail
+     document.body.addEventListener('input', e => {
+        if (e.target.matches('.qty-input')) {
+          const idx = +e.target.dataset.idx;
+          const newQty = Math.max(1, +e.target.value);
+          cart[idx].qty = newQty;
+          updateCart();
+        }
+      });
+
+      // Open modal when clicking a cart item
+      document.body.addEventListener('click', e => {
+        const el = e.target.closest('.cart-item');
+        if (el) {
+          const id = +el.dataset.id;
+          showDetail(id);
+          cartSidebar.classList.remove('open');
+        }
+      });
+
+      // Promo code logic (demo)
+      document.getElementById('apply-promo').onclick = () => {
+        const code = document.getElementById('promo-code').value.trim();
+        const msg = document.getElementById('promo-message');
+        if (code.toUpperCase() === 'SAVE10') {
+          cartSubtotal.textContent = (parseFloat(cartSubtotal.textContent) * 0.9).toFixed(2);
+          msg.textContent = 'Promo applied: 10% off!';
+        } else {
+          msg.textContent = 'Invalid code.';
+        }
+      };
+     // Product Detail
       function showDetail(id) {
         modal.classList.remove('hidden');
         const p = products.find(x=>x.id===id);
@@ -953,6 +1029,11 @@ display: none;
         }
         // View details button
         if (e.target.closest('.view-details')) {
+          const id = +e.target.closest('.product-card').dataset.id;
+          showDetail(id);
+          return;
+        }
+          if (e.target.closest('.product-card') && !e.target.closest('.add-to-cart')) {
           const id = +e.target.closest('.product-card').dataset.id;
           showDetail(id);
           return;
