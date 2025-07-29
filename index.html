@@ -743,78 +743,6 @@ display: none;
   font-weight: bold;
   margin-bottom: 1rem;
 }
-    /* ─── MOBILE HEADER LAYOUT ─── */
-header#site-header {
-  padding: 0;            /* remove extra top‑bar padding on mobile */
-}
-header#site-header .top-bar {
-  display: none;         /* hide your old top bar on small screens */
-}
-
-/* Header icon row */
-header#site-header .main-nav.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1rem;
-  background: var(--clr-light);
-  box-shadow: none;      /* remove bottom shadow on this row */
-}
-header#site-header .main-nav.container .logo {
-  order: 3;              /* center the logo */
-  flex: 1;
-  text-align: center;
-}
-header#site-header .main-nav.container > *:not(.logo) {
-  order: 1;              /* make all icons flank the logo */
-}
-header#site-header .main-nav.container a,
-header#site-header .main-nav.container button {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: var(--clr-secondary);
-}
-header#site-header .main-nav.container button#nav-toggle {
-  order: 1;              /* hamburger at far left */
-}
-header#site-header .main-nav.container #search-btn {
-  order: 2;              /* search icon next to hamburger */
-}
-header#site-header .main-nav.container .account-cart {
-  display: flex;
-  gap: 0.75rem;
-  order: 4;              /* move sign‑in & orders into the icon row if you like */
-}
-header#site-header .main-nav.container #cart-link {
-  order: 5;              /* cart icon far right */
-}
-
-/* Category nav below */
-@media (max-width: 768px) {
-  #category-nav {
-    display: flex;
-    overflow-x: auto;
-    background: var(--clr-light);
-    border-bottom: 1px solid #ececec;
-  }
-  #category-nav ul {
-    display: flex;
-    gap: 1rem;
-    padding: .5rem 1rem;
-  }
-  #category-nav li a {
-    font-size: .875rem;
-    color: var(--clr-secondary);
-    white-space: nowrap;
-  }
-  #category-nav li a.active,
-  #category-nav li a:hover {
-    color: var(--clr-primary);
-    font-weight: 600;
-  }
-}
-
   </style>
 </head>
 <body>
@@ -849,7 +777,7 @@ header#site-header .main-nav.container #cart-link {
           <option>Services</option>
         </select>
         <input type="text" id="search-input" placeholder="Search everything…">
- <button id="search-btn" class="btn-icon" type="button"><i class="fas fa-search"></i></button>
+ <button id="search-btn" type="button"><i class="fas fa-search"></i></button>
       </div>
       <nav id="category-nav">
         <ul>
@@ -873,38 +801,29 @@ header#site-header .main-nav.container #cart-link {
     <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
     <div class="slides">
       <div class="slide deal-of-day">
-        <img src="https://source.unsplash.com/1600x500/?deal,shopping"
-             alt="Deal of the Day" loading="lazy">
+    <img src="…" alt="Deal of the Day">
     <div class="slide-caption">
       <h2>🔥 Deal of the Day</h2>
       <p id="deal-timer">00:00:00</p>
       <button class="btn-hero" id="deal-btn">Shop Now</button>
     </div>
   </div>
-       <div class="slide active">
-        <img id="slide-img-1"
-             src="https://source.unsplash.com/1600x500/?fashion,model"
-             alt="Fast, free shipping" loading="lazy">
-
-        <div class="slide-overlay">
+      <div class="slide active">
+           <img id="slide-img-1" src="" alt="Fast, free shipping" loading="lazy">
+        <div class="slide-caption">
+          <h2><i class="fas fa-shipping-fast"></i> Fast, Free Shipping</h2>
+          <p>Unlimited access to deals & more</p>
+          <button class="btn-hero"><i class="fas fa-gem"></i> Join Premium</button>
+        
           <span class="badge-trends">Trends</span>
-          <h1>#DelicaRomance <i class="fas fa-chevron-right"></i></h1>
-        </div>
-
-        <div class="promo-cards">
-          <div class="promo-card">
-            <img src="https://source.unsplash.com/200x200/?woman,dress"
-                 alt="Promo 1" loading="lazy">
-            <span>$31.00</span>
-          </div>
-          <div class="promo-card">
-            <img src="https://source.unsplash.com/200x200/?pants,white"
-                 alt="Promo 2" loading="lazy">
-            <span>$18.00</span>
-          </div>
-        </div>
+        <h1>#DelicaRomance <i class="fas fa-chevron-right"></i></h1>
       </div>
-     </div>
+      <div class="promo-cards">
+        <div class="promo-card"><img src="" alt="" loading="lazy"><span>$31.00</span></div>
+        <div class="promo-card"><img src="" alt="" loading="lazy"><span>$18.00</span></div>
+      </div>
+      </div>
+      </div>
       <div class="slide">
         <img id="slide-img-2" src="" alt="Latest Gadgets" loading="lazy">
         <div class="slide-caption">
