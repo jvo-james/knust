@@ -3,81 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>All‑in‑One Market Demo (Picsum Seed)</title>
+  <title>All‑in‑One Market – Keyworded Images</title>
   <style>
-    body { font-family:sans-serif; background:#f5f5f5; padding:2rem; }
-    h1 { margin-bottom:1rem; }
-    .search { margin-bottom:2rem; }
-    .search input { padding:.5rem; width:300px; }
-    .search button { padding:.5rem 1rem; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
-    .card { background:#fff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); overflow:hidden; text-align:center; }
-    .card img { width:100%; height:140px; object-fit:cover; }
-    .card h3 { margin:.75rem 0 .25rem; font-size:1.1rem; }
-    .card p { color:#d35400; font-weight:bold; margin-bottom:.75rem; }
+    body { font-family: sans-serif; background: #f5f5f5; padding: 2rem; }
+    h1 { margin-bottom: 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1rem; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); overflow: hidden; text-align:center; }
+    .card img { width: 100%; height: 140px; object-fit: cover; }
+    .card h3 { margin: .75rem 0 .25rem; font-size: 1.1rem; }
+    .card p { color: #d35400; font-weight: bold; margin-bottom: .75rem; }
   </style>
 </head>
 <body>
 
   <h1>All‑in‑One Market Demo</h1>
 
-  <div class="search">
-    <input id="searchInput" placeholder="Search products…">
-    <button id="searchBtn">Search</button>
-  </div>
-
   <h2>Featured Products</h2>
-  <div id="featuredGrid" class="grid"></div>
-
-  <h2>Search Results</h2>
-  <div id="searchGrid" class="grid"></div>
-
+  <div id="grid" class="grid"></div>
 
   <script>
-    // — 1) Sample data
+    // 1) Define products *with explicit image URLs*  
     const products = [
-      { id:1,  title:'JavaScript Deep Dive', price:85.46 },
-      { id:2,  title:'NoiseCancel 3000',    price:35.66 },
-      { id:3,  title:'Effective Java',      price:98.82 },
-      { id:4,  title:'4K Drone',            price:42.28 },
-      { id:5,  title:'You Don’t Know JS',   price:106.62 },
-      { id:6,  title:'UltraLaptop Pro',     price:16.79 },
-      { id:7,  title:'CSS Mastery',         price:44.57 },
-      { id:8,  title:'SmartWatch X',        price:82.91 },
-      // …add more if you like
+      { title: 'JavaScript Deep Dive',    price: 85.46, img: 'https://source.unsplash.com/400x200/?javascript,code'        },
+      { title: 'NoiseCancel 3000',         price: 35.66, img: 'https://source.unsplash.com/400x200/?headphones,noise'     },
+      { title: 'Effective Java',           price: 98.82, img: 'https://source.unsplash.com/400x200/?coffee,java'         },
+      { title: '4K Drone',                 price: 42.28, img: 'https://source.unsplash.com/400x200/?drone,4k'           },
+      { title: 'You Don’t Know JS',        price:106.62, img: 'https://source.unsplash.com/400x200/?javascript,learning' },
+      { title: 'UltraLaptop Pro',          price: 16.79, img: 'https://source.unsplash.com/400x200/?laptop,computer'     },
+      { title: 'CSS Mastery',              price: 44.57, img: 'https://source.unsplash.com/400x200/?css,design'           },
+      { title: 'SmartWatch X',             price: 82.91, img: 'https://source.unsplash.com/400x200/?smartwatch,wearable'  }
     ];
 
-    // — 2) Generate a deterministic Picsum URL based on product title
-    function makeImageUrl(title) {
-      // Picsum seed endpoint: https://picsum.photos/seed/{seed}/{width}/{height}
-      const seed = encodeURIComponent(title.replace(/\s+/g,''));
-      return `https://picsum.photos/seed/${seed}/400/200`;
-    }
-
-    // — 3) Renders a list of products into the given container
-    function renderGrid(list, container) {
-      container.innerHTML = '';
-      list.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <img src="${makeImageUrl(p.title)}" alt="${p.title}">
-          <h3>${p.title}</h3>
-          <p>₵${p.price.toFixed(2)}</p>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // — 4) Initial featured
-    const featuredGrid = document.getElementById('featuredGrid');
-    renderGrid(products.slice(0,6), featuredGrid);
-
-    // — 5) Search functionality
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const term = document.getElementById('searchInput').value.toLowerCase();
-      const matches = products.filter(p => p.title.toLowerCase().includes(term));
-      renderGrid(matches, document.getElementById('searchGrid'));
+    // 2) Render
+    const grid = document.getElementById('grid');
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.title}">
+        <h3>${p.title}</h3>
+        <p>₵${p.price.toFixed(2)}</p>
+      `;
+      grid.appendChild(card);
     });
   </script>
 
