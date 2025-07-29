@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Product→Image Demo</title>
+  <title>Product→Image Demo (Unsplash)</title>
   <style>
     body { font-family:sans-serif; margin:2rem; background:#f5f5f5; }
     h1, h2 { margin-bottom:.5rem; }
@@ -20,6 +20,7 @@
 <body>
 
   <h1>All‑in‑One Market Demo</h1>
+
   <div class="search">
     <input id="searchInput" placeholder="Search products…">
     <button id="searchBtn">Search</button>
@@ -32,7 +33,7 @@
   <div id="searchGrid" class="grid"></div>
 
   <script>
-    // --- data setup ---
+    // 1) Data
     const products = [
       { id: 1, title: 'JavaScript Deep Dive',      price: 85.46 },
       { id: 2, title: 'NoiseCancel 3000',           price: 35.66 },
@@ -41,23 +42,24 @@
       { id: 5, title: 'You Don’t Know JS',          price:106.62 },
       { id: 6, title: 'UltraLaptop Pro',            price: 16.79 },
       { id: 7, title: 'CSS Mastery',                price: 44.57 },
-      { id: 8, title: 'SmartWatch X',               price: 82.91 }
+      { id: 8, title: 'SmartWatch X',               price: 82.91 },
+      // …extend as needed
     ];
 
-    // --- helper: picsum seed URL ---
-    function makePicsumUrl(title,id){
-      const seed = encodeURIComponent(title.replace(/\s+/g,''));
-      return `https://picsum.photos/seed/${seed + id}/400/200`;
+    // 2) Build an Unsplash URL that searches by product title
+    function makeUnsplashUrl(title) {
+      // e.g. https://source.unsplash.com/400x200/?JavaScript%20Deep%20Dive
+      return 'https://source.unsplash.com/400x200/?' + encodeURIComponent(title);
     }
 
-    // --- render a grid of cards into a container ---
-    function renderGrid(list, container){
+    // 3) Render a list of products into a grid
+    function renderGrid(list, container) {
       container.innerHTML = '';
       list.forEach(p => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-          <img src="${makePicsumUrl(p.title,p.id)}" alt="${p.title}">
+          <img src="${makeUnsplashUrl(p.title)}" alt="${p.title}">
           <h3>${p.title}</h3>
           <p>₵${p.price.toFixed(2)}</p>
         `;
@@ -65,11 +67,11 @@
       });
     }
 
-    // --- initial featured render ---
+    // 4) Initial featured
     const featuredGrid = document.getElementById('featuredGrid');
     renderGrid(products.slice(0,6), featuredGrid);
 
-    // --- search logic ---
+    // 5) Search behavior
     document.getElementById('searchBtn').addEventListener('click', () => {
       const term = document.getElementById('searchInput').value.toLowerCase();
       const results = products.filter(p => p.title.toLowerCase().includes(term));
