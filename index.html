@@ -308,6 +308,181 @@ display: block;
   .deal-card img { height: 140px; }
 }
 
+  /* ─── MAIN MARKET STYLES ─────────────────────────────────────────────────── */
+
+/* Section base */
+.main-market {
+  padding: 60px 0;
+  background: #fdfdfd;
+}
+.main-market .section-title {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+/* Filter Bar */
+.market-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.market-bar .filters select {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+.market-bar .view-toggle i {
+  font-size: 1.2rem;
+  color: #888;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: color .2s;
+}
+.market-bar .view-toggle i.active,
+.market-bar .view-toggle i:hover {
+  color: #ff3860;
+}
+
+/* Products Grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 24px;
+}
+
+/* Product Card */
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: transform .2s, box-shadow .2s;
+  display: flex;
+  flex-direction: column;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+/* Media (Image + Badge) */
+.card-media {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* 4:3 aspect */
+  background: #f0f0f0;
+}
+.card-media img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.badge {
+  position: absolute;
+  top: 8px; left: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #fff;
+  text-transform: uppercase;
+}
+.badge.new { background: #28a745; }
+.badge.trending { background: #ff3860; }
+
+/* Body */
+.card-body {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.product-title {
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  color: #222;
+  flex: 0;
+}
+.price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ff3860;
+  margin-bottom: 8px;
+}
+.seller {
+  font-size: 0.875rem;
+  color: #555;
+  margin-bottom: 12px;
+}
+.seller a {
+  color: #ff3860;
+  transition: color .2s;
+}
+.seller a:hover { color: #c32f50; }
+
+/* Add to Cart Button */
+.btn-cart {
+  margin-top: auto;
+  background: #ff3860;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, transform .2s;
+}
+.btn-cart i {
+  margin-right: 6px;
+}
+.btn-cart:hover {
+  background: #e02e56;
+  transform: translateY(-2px);
+}
+
+/* Load More */
+.load-more-wrap {
+  text-align: center;
+  margin-top: 32px;
+}
+.btn-load-more {
+  background: #ff3860;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.btn-load-more:hover {
+  background: #e02e56;
+  transform: translateY(-2px);
+}
+
+/* Responsive Tweaks */
+@media (max-width: 768px) {
+  .market-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .market-bar .view-toggle {
+    margin-left: 0;
+  }
+  .card-body {
+    padding: 12px;
+  }
+}
+
   </style>
 </head>
 
@@ -565,6 +740,720 @@ display: block;
       </div>
     </div>
   </section>
+
+  <!-- ─── MAIN MARKET ────────────────────────────────────────────────────────── -->
+<section class="main-market">
+  <div class="container">
+    <!-- Section Title -->
+    <h2 class="section-title">Discover Everything You Need</h2>
+
+    <!-- Filter / Sort Bar -->
+    <div class="market-bar">
+      <div class="filters">
+        <label>
+          Sort by:
+          <select>
+            <option>Trending</option>
+            <option>Price: Low to High</option>
+            <option>Price: High to Low</option>
+            <option>Newest</option>
+            <option>Top Rated</option>
+          </select>
+        </label>
+      </div>
+      <div class="view-toggle">
+        <i class="fas fa-th-large active" title="Grid view"></i>
+        <i class="fas fa-list" title="List view"></i>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+
+    <div class="products-grid">
+  <!-- Product 1 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product1.jpg" alt="Stylish Handbag" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Stylish Handbag</h3>
+      <p class="price">₵149.00</p>
+      <p class="seller">by <a href="/seller/ama-mensah">Ama Mensah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 2 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product2.jpg" alt="Wireless Earbuds" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Wireless Earbuds</h3>
+      <p class="price">₵199.00</p>
+      <p class="seller">by <a href="/seller/kwame-asante">Kwame Asante</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 3 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product3.jpg" alt="Cotton T‑Shirt" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Cotton T‑Shirt</h3>
+      <p class="price">₵59.00</p>
+      <p class="seller">by <a href="/seller/adwoa-boateng">Adwoa Boateng</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 4 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product4.jpg" alt="Leather Wallet" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Leather Wallet</h3>
+      <p class="price">₵89.00</p>
+      <p class="seller">by <a href="/seller/kojo-owusu">Kojo Owusu</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 5 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product5.jpg" alt="Running Shoes" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Running Shoes</h3>
+      <p class="price">₵249.00</p>
+      <p class="seller">by <a href="/seller/yaa-adusei">Yaa Adusei</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 6 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product6.jpg" alt="Smartwatch" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Smartwatch</h3>
+      <p class="price">₵299.00</p>
+      <p class="seller">by <a href="/seller/kofi-amankwah">Kofi Amankwah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 7 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product7.jpg" alt="Hardcover Novel" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Hardcover Novel</h3>
+      <p class="price">₵79.00</p>
+      <p class="seller">by <a href="/seller/efua-owusu">Efua Owusu</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 8 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product8.jpg" alt="Phone Case" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Phone Case</h3>
+      <p class="price">₵25.00</p>
+      <p class="seller">by <a href="/seller/nana-osei">Nana Osei</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 9 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product9.jpg" alt="Sunglasses" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Sunglasses</h3>
+      <p class="price">₵65.00</p>
+      <p class="seller">by <a href="/seller/abena-acheampong">Abena Acheampong</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 10 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product10.jpg" alt="Ceramic Mug" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Ceramic Mug</h3>
+      <p class="price">₵35.00</p>
+      <p class="seller">by <a href="/seller/yaw-koranteng">Yaw Koranteng</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 11 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product11.jpg" alt="Backpack" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Backpack</h3>
+      <p class="price">₵129.00</p>
+      <p class="seller">by <a href="/seller/esi-boateng">Esi Boateng</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 12 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product12.jpg" alt="Matte Lipstick" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Matte Lipstick</h3>
+      <p class="price">₵45.00</p>
+      <p class="seller">by <a href="/seller/kwabena-agyeman">Kwabena Agyeman</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 13 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product13.jpg" alt="Over‑Ear Headphones" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Over‑Ear Headphones</h3>
+      <p class="price">₵189.00</p>
+      <p class="seller">by <a href="/seller/maame-agyapong">Maame Agyapong</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 14 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product14.jpg" alt="Laptop Sleeve" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Laptop Sleeve</h3>
+      <p class="price">₵75.00</p>
+      <p class="seller">by <a href="/seller/kwaku-mensah">Kwaku Mensah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 15 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product15.jpg" alt="Fitness Band" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Fitness Band</h3>
+      <p class="price">₵99.00</p>
+      <p class="seller">by <a href="/seller/akosua-konadu">Akosua Konadu</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 16 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product16.jpg" alt="Kids’ Sneakers" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Kids’ Sneakers</h3>
+      <p class="price">₵65.00</p>
+      <p class="seller">by <a href="/seller/samuel-opoku">Samuel Opoku</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 17 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product17.jpg" alt="Gaming Mouse" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Gaming Mouse</h3>
+      <p class="price">₵85.00</p>
+      <p class="seller">by <a href="/seller/esther-darko">Esther Darko</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 18 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product18.jpg" alt="Water Bottle" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Insulated Water Bottle</h3>
+      <p class="price">₵55.00</p>
+      <p class="seller">by <a href="/seller/michael-yeboah">Michael Yeboah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 19 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product19.jpg" alt="Desk Lamp" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">LED Desk Lamp</h3>
+      <p class="price">₵99.00</p>
+      <p class="seller">by <a href="/seller/joy-adjei">Joy Adjei</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 20 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product20.jpg" alt="Wireless Charger" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Wireless Charger</h3>
+      <p class="price">₵69.00</p>
+      <p class="seller">by <a href="/seller/daniel-ofori">Daniel Ofori</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+        <!-- Products 21–50 (30 more distinct products) -->
+  <!-- Append these inside your <div class="products-grid"> after product20 -->
+  
+  <!-- Product 21 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product21.jpg" alt="Bluetooth Speaker" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Bluetooth Speaker</h3>
+      <p class="price">₵120.00</p>
+      <p class="seller">by <a href="/seller/nana-ama-adjei">Nana Ama Adjei</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 22 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product22.jpg" alt="Yoga Mat" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Eco Yoga Mat</h3>
+      <p class="price">₵80.00</p>
+      <p class="seller">by <a href="/seller/afua-sarpong">Afua Sarpong</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 23 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product23.jpg" alt="Desk Organizer" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Desk Organizer Set</h3>
+      <p class="price">₵45.00</p>
+      <p class="seller">by <a href="/seller/kwesi-danso">Kwesi Danso</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 24 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product24.jpg" alt="Stainless Steel Water Bottle" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Insulated Steel Bottle</h3>
+      <p class="price">₵65.00</p>
+      <p class="seller">by <a href="/seller/nana-kofi-boakye">Nana Kofi Boakye</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 25 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product25.jpg" alt="Silk Pillowcase" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Silk Pillowcase</h3>
+      <p class="price">₵110.00</p>
+      <p class="seller">by <a href="/seller/adjei-martins">Adjei Martins</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 26 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product26.jpg" alt="Portable Charger" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Power Bank 10000mAh</h3>
+      <p class="price">₵95.00</p>
+      <p class="seller">by <a href="/seller/selasie-nyarko">Selasie Nyarko</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 27 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product27.jpg" alt="Gardening Tools Kit" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Gardening Tools Kit</h3>
+      <p class="price">₵75.00</p>
+      <p class="seller">by <a href="/seller/ama-nyarko">Ama Nyarko</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 28 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product28.jpg" alt="Ceramic Planter" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Ceramic Planter</h3>
+      <p class="price">₵55.00</p>
+      <p class="seller">by <a href="/seller/kwabena-darko">Kwabena Darko</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 29 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product29.jpg" alt="Wireless Keyboard" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Ergonomic Keyboard</h3>
+      <p class="price">₵130.00</p>
+      <p class="seller">by <a href="/seller/akua-fosu">Akua Fosu</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 30 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product30.jpg" alt="LED Strip Lights" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">LED Strip Lights</h3>
+      <p class="price">₵49.00</p>
+      <p class="seller">by <a href="/seller/kwesi-nkrumah">Kwesi Nkrumah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 31 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product31.jpg" alt="Canvas Sneakers" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Canvas Sneakers</h3>
+      <p class="price">₵110.00</p>
+      <p class="seller">by <a href="/seller/maame-owusu">Maame Owusu</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 32 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product32.jpg" alt="Classic Fedora Hat" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Classic Fedora Hat</h3>
+      <p class="price">₵65.00</p>
+      <p class="seller">by <a href="/seller/efia-sarpong">Efia Sarpong</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 33 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product33.jpg" alt="Scented Candle Set" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Scented Candle Set</h3>
+      <p class="price">₵85.00</p>
+      <p class="seller">by <a href="/seller/kweku-amoah">Kweku Amoah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 34 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product34.jpg" alt="Memory Foam Pillow" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Memory Foam Pillow</h3>
+      <p class="price">₵140.00</p>
+      <p class="seller">by <a href="/seller/adjoa-frimpong">Adjoa Frimpong</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 35 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product35.jpg" alt="Travel Backpack" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Travel Backpack</h3>
+      <p class="price">₵180.00</p>
+      <p class="seller">by <a href="/seller/selina-ankrah">Selina Ankrah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 36 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product36.jpg" alt="Graphic Hoodie" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Graphic Hoodie</h3>
+      <p class="price">₵120.00</p>
+      <p class="seller">by <a href="/seller/john-kotey">John Kotey</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 37 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product37.jpg" alt="Portable Projector" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Portable Projector</h3>
+      <p class="price">₵450.00</p>
+      <p class="seller">by <a href="/seller/mercy-opoku">Mercy Opoku</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 38 -->
+  <div class="product-card">
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product38.jpg" alt="Electric Kettle" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Electric Kettle</h3>
+      <p class="price">₵95.00</p>
+      <p class="seller">by <a href="/seller/isaac-owusu">Isaac Owusu</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 39 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product39.jpg" alt="Bluetooth Headphones" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Bluetooth Headphones</h3>
+      <p class="price">₵160.00</p>
+      <p class="seller">by <a href="/seller/maame-ntow">Maame Ntow</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 40 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product40.jpg" alt="Smart Light Bulb" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Smart Light Bulb</h3>
+      <p class="price">₵55.00</p>
+      <p class="seller">by <a href="/seller/kwabena-duah">Kwabena Duah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 41 -->
+  <div class="product-card">
+    <div class="card-media">
+      <img src="product41.jpg" alt="Silicone Bakeware" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Silicone Bakeware Set</h3>
+      <p class="price">₵70.00</p>
+      <p class="seller">by <a href="/seller/african-crafts">African Crafts</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 42 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product42.jpg" alt="Digital Alarm Clock" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Digital Alarm Clock</h3>
+      <p class="price">₵65.00</p>
+      <p class="seller">by <a href="/seller/nana-gyamfi">Nana Gyamfi</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 43 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <img src="product43.jpg" alt="Gaming Headset" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Gaming Headset</h3>
+      <p class="price">₵220.00</p>
+      <p class="seller">by <a href="/seller/kofi-boateng">Kofi Boateng</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 44 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <img src="product44.jpg" alt="Stainless Cookware Set" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Cookware Set 10‑Piece</h3>
+      <p class="price">₵450.00</p>
+      <p class="seller">by <a href="/seller/maame-fosu">Maame Fosu</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 45 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <span class="badge trending">Trending</span>
+      <img src="product45.jpg" alt="Bluetooth Car Kit" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Bluetooth Car Kit</h3>
+      <p class="price">₵140.00</p>
+      <p class="seller">by <a href="/seller/samuel-boadu">Samuel Boadu</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 46 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <img src="product46.jpg" alt="Ceramic Dinnerware Set" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Dinnerware Set (16‑Piece)</h3>
+      <p class="price">₵380.00</p>
+      <p class="seller">by <a href="/seller/adwoa-ansah">Adwoa Ansah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 47 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <img src="product47.jpg" alt="Wireless Gaming Controller" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Wireless Game Controller</h3>
+      <p class="price">₵210.00</p>
+      <p class="seller">by <a href="/seller/kweku-dzifa">Kweku Dzifa</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 48 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <span class="badge new">New</span>
+      <img src="product48.jpg" alt="Silk Scarf" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Silk Scarf</h3>
+      <p class="price">₵55.00</p>
+      <p class="seller">by <a href="/seller/maame-dede">Maame Dede</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 49 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <img src="product49.jpg" alt="Digital Photo Frame" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Digital Photo Frame</h3>
+      <p class="price">₵155.00</p>
+      <p class="seller">by <a href="/seller/kwabena-ansah">Kwabena Ansah</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Product 50 -->
+  <div class="product-card">  
+    <div class="card-media">
+      <img src="product50.jpg" alt="Compact Air Fryer" loading="lazy">
+    </div>
+    <div class="card-body">
+      <h3 class="product-title">Compact Air Fryer</h3>
+      <p class="price">₵270.00</p>
+      <p class="seller">by <a href="/seller/efia-opoku">Efia Opoku</a></p>
+      <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+
+</div>
+
+
+    <!-- Load More -->
+    <div class="load-more-wrap">
+      <button class="btn-load-more">Load More Products</button>
+    </div>
+  </div>
+</section>
 
   <script>
     // Hamburger menu toggle
