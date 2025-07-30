@@ -136,6 +136,118 @@
         display: flex;
       }
     }
+
+      .hero-slider {
+    position: relative;
+    overflow: hidden;
+    height: 80vh;
+    min-height: 500px;
+  }
+  .slides-container {
+    display: flex;
+    width: 700%;
+    transition: transform 0.8s ease-in-out;
+  }
+  .slide {
+    position: relative;
+    flex: 1 0 100%;
+    background-size: cover;
+    background-position: center;
+  }
+  .slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+  }
+  .slide-content {
+    position: absolute;
+    bottom: 20%;
+    left: 5%;
+    color: #fff;
+    max-width: 40%;
+  }
+  .slide-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .slide-content p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .slide-content .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    background: #ff3860;
+    border-radius: 30px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .slider-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .slider-nav span {
+    pointer-events: all;
+    font-size: 2rem;
+    background: rgba(0,0,0,0.4);
+    padding: 0.5rem 0.7rem;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #fff;
+    margin: 0 1rem;
+  }
+  .slider-dots {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+  }
+  .slider-dots span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 5px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .slider-dots .active-dot {
+    background: #ff3860;
+  }
+  /* Promo clickable image styling */
+  .promo-link {
+    position: absolute;
+    top: 15%;
+    right: 5%;
+    display: block;
+    width: 25%;
+    border: 3px solid #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 2;
+  }
+  .promo-link img {
+    width: 100%;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .slide-content {
+      max-width: 80%;
+      bottom: 15%;
+    }
+    .slide-content h1 { font-size: 1.8rem; }
+    .slide-content p  { font-size: 1rem; }
+    .promo-link { width: 40%; top: 10%; }
+  }
   </style>
 </head>
 <body>
@@ -172,6 +284,90 @@
     </nav>
   </header>
 
+  <section class="hero-slider">
+
+  <!-- Slides Wrapper -->
+  <div class="slides-container">
+
+    <!-- Slide 1 -->
+    <div class="slide active" style="background-image:url('banner1.avif')">
+      <div class="slide-content">
+        <h1>Discover Endless Choices</h1>
+        <p>From books to gadgets – find it all here.</p>
+        <a href="#shop" class="btn">Shop Now <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <!-- Slide 2 (Promo Clickable) -->
+    <div class="slide" style="background-image:url('/banner2.jpg')">
+      <a href="/promo/special-offer" class="promo-link">
+        <img src="promo1.jpg" alt="Special Offer Promo">
+      </a>
+      <div class="slide-content">
+        <h1>Special 20% Off</h1>
+        <p>Use code <strong>PROMO20</strong> at checkout.</p>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide" style="background-image:url('banner3.jpeg')">
+      <div class="slide-content">
+        <h1>New Arrivals in Fashion</h1>
+        <p>Trendy styles you’ll love.</p>
+        <a href="/category/fashion" class="btn">Explore <i class="fas fa-shopping-bag"></i></a>
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide" style="background-image:url('banner4.avif')">
+      <div class="slide-content">
+        <h1>Upgrade Your Gadgets</h1>
+        <p>Latest electronics at unbeatable prices.</p>
+        <a href="/category/electronics" class="btn">Browse Now <i class="fas fa-laptop"></i></a>
+      </div>
+    </div>
+
+    <!-- Slide 5 (Promo Clickable) -->
+    <div class="slide" style="background-image:url('banner5.avif')">
+      <a href="/promo/clearance" class="promo-link">
+        <img src="promo2.jpg" alt="Clearance Sale Promo">
+      </a>
+      <div class="slide-content">
+        <h1>Clearance Sale</h1>
+        <p>Up to 70% off selected items.</p>
+      </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide" style="background-image:url('banner6.webp')">
+      <div class="slide-content">
+        <h1>Browse Handmade Crafts</h1>
+        <p>Unique items by local artisans.</p>
+        <a href="/category/crafts" class="btn">See Crafts <i class="fas fa-paint-brush"></i></a>
+      </div>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide" style="background-image:url('banner7.jpg')">
+      <div class="slide-content">
+        <h1>Hair & Braids Services</h1>
+        <p>Book your stylist today.</p>
+        <a href="/category/beauty" class="btn">Book Now <i class="fas fa-cut"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Navigation Arrows -->
+  <div class="slider-nav">
+    <span class="prev"><i class="fas fa-chevron-left"></i></span>
+    <span class="next"><i class="fas fa-chevron-right"></i></span>
+  </div>
+
+  <!-- Dots -->
+  <div class="slider-dots"></div>
+</section>
+  
   <script>
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('navMenu');
@@ -186,6 +382,58 @@
       }
     });
   </script>
+<script>
+  (function() {
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.querySelector('.slider-dots');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    let current = 0, timer;
 
+    // Create dots
+    slides.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.addEventListener('click', () => goToSlide(i));
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = dotsContainer.querySelectorAll('span');
+    dots[0].classList.add('active-dot');
+
+    function update() {
+      const offset = -current * 100;
+      document.querySelector('.slides-container').style.transform = `translateX(${offset}%)`;
+      dots.forEach(dot => dot.classList.remove('active-dot'));
+      dots[current].classList.add('active-dot');
+    }
+
+    function nextSlide() {
+      current = (current + 1) % slides.length;
+      update();
+    }
+
+    function prevSlide() {
+      current = (current - 1 + slides.length) % slides.length;
+      update();
+    }
+
+    function goToSlide(idx) {
+      current = idx;
+      update();
+      resetTimer();
+    }
+
+    nextBtn.addEventListener('click', () => { nextSlide(); resetTimer(); });
+    prevBtn.addEventListener('click', () => { prevSlide(); resetTimer(); });
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(nextSlide, 5000);
+    }
+
+    // Start autoplay
+    timer = setInterval(nextSlide, 5000);
+  })();
+</script>
 </body>
 </html>
