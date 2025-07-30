@@ -200,6 +200,114 @@ display: block;
       .promo-card { width:90px; }
       .promo-card img { height:60px; }
     }
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+.category-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  transition: transform .2s, box-shadow .2s;
+  text-align: center;
+  background:#fff;
+}
+.category-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+.category-card span {
+  display: block;
+  padding: 12px 0;
+  font-weight: 500;
+  color: #333;
+}
+.category-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.deals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.deal-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  transition: transform .2s, box-shadow .2s;
+}
+.deal-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.deal-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+.deal-info {
+  padding: 16px;
+  text-align: center;
+}
+.deal-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #111;
+}
+.deal-info .price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ff3860;
+  margin-bottom: 12px;
+}
+.btn-deal {
+  background: #ff3860;
+  border: none;
+  border-radius: 30px;
+  padding: 0.6rem 1.2rem;
+  color: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background .2s;
+}
+.btn-deal i {
+  margin-right: 0.4rem;
+}
+.btn-deal:hover {
+  background: #e02e56;
+}
+
+@media (max-width: 768px) {
+  .container { padding: 24px 16px; }
+  .section-title { font-size: 1.8rem; }
+  .category-card img { height: 100px; }
+  .deal-card img { height: 140px; }
+}
+
   </style>
 </head>
 
@@ -384,7 +492,80 @@ display: block;
     <div class="slider-dots"></div>
   </section>
 
-  <!-- ─── SCRIPTS ────────────────────────────────────────────────────────────── -->
+  <section class="featured-categories">
+    <div class="container">
+      <h2 class="section-title">Shop by Category</h2>
+      <div class="categories-grid">
+        <a href="/category/fashion" class="category-card">
+          <img src="fashion.webp" alt="Fashion" loading="lazy">
+          <span>Fashion</span>
+        </a>
+        <a href="/category/electronics" class="category-card">
+          <img src="electronics.jpg" alt="Electronics" loading="lazy">
+          <span>Electronics</span>
+        </a>
+        <a href="/category/beauty" class="category-card">
+          <img src="beauty.jpg" alt="Beauty" loading="lazy">
+          <span>Beauty</span>
+        </a>
+        <a href="/category/books" class="category-card">
+          <img src="books.avif" alt="Books" loading="lazy">
+          <span>Books</span>
+        </a>
+        <a href="/category/shoes" class="category-card">
+          <img src="shoes.avif" alt="Shoes" loading="lazy">
+          <span>Shoes</span>
+        </a>
+        <a href="/category/accessories" class="category-card">
+          <img src="accessories.jpg" alt="Accessories" loading="lazy">
+          <span>Accessories</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="top-deals">
+    <div class="container">
+      <h2 class="section-title">Top Deals This Week</h2>
+      <div class="deals-grid">
+        <!-- Example Product Card -->
+        <div class="deal-card">
+          <img src="deal1.jpg" alt="Product 1" loading="lazy">
+          <div class="deal-info">
+            <h3>Wireless Headphones</h3>
+            <p class="price">$59.00</p>
+            <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+          </div>
+        </div>
+        <!-- Duplicate the .deal-card 3–4 more times with your images/text -->
+        <div class="deal-card">
+          <img src="deal2.jpg" alt="Product 2" loading="lazy">
+          <div class="deal-info">
+            <h3>Classic Handbag</h3>
+            <p class="price">$45.00</p>
+            <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+          </div>
+        </div>
+        <div class="deal-card">
+          <img src="deal3.webp" alt="Product 3" loading="lazy">
+          <div class="deal-info">
+            <h3>Leather Boots</h3>
+            <p class="price">$75.00</p>
+            <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+          </div>
+        </div>
+        <div class="deal-card">
+          <img src="deal4.webp" alt="Product 4" loading="lazy">
+          <div class="deal-info">
+            <h3>Rolex Watch</h3>
+            <p class="price">$120.00</p>
+            <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script>
     // Hamburger menu toggle
     const ham = document.getElementById('hamburger'),
