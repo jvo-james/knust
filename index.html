@@ -14,284 +14,393 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 <style>
-    /* ─── RESET & BASE ───────────────────────────────────────────────────────── */
-    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
-    body { padding-top:80px; }
+     * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Poppins',sans-serif; }
+    body { padding-top:80px; background:#fafafa; color:#333; line-height:1.5; }
 
-    /* ─── HEADER ──────────────────────────────────────────────────────────────── */
+    a { color:inherit; text-decoration:none; }
+    button { font-family:inherit; }
+
     header {
-      position:fixed; top:0; width:100%;
-      background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.05);
+      position:fixed; top:0; left:0; width:100%;
+      background:#fff; box-shadow:0 2px 12px rgba(0,0,0,0.08);
       z-index:1000;
     }
-    .header-container {
-      max-width:1300px; margin:auto;
-      padding:10px 20px;
-      display:flex; justify-content:space-between; align-items:center;
+    .header-inner {
+      max-width:1300px; margin:0 auto;
+      padding:12px 24px;
+      display:flex; align-items:center; justify-content:space-between;
     }
-    .logo { font-size:1.8rem; font-weight:700; color:#111; }
-    .search-bar { flex:1; margin:0 20px; position:relative; }
+    .logo { font-size:1.9rem; font-weight:700; color:#ff3860; }
+    .search-bar {
+      flex:1; max-width:500px;
+      margin:0 20px; position:relative;
+    }
     .search-bar input {
-      width:100%; padding:10px 15px;
-      border:1px solid #ddd; border-radius:25px;
+      width:100%; padding:10px 16px;
+      border:1px solid #ddd; border-radius:30px;
+      font-size:0.95rem;
     }
     .search-bar .fa-search {
-      position:absolute; top:50%; right:15px;
+      position:absolute; top:50%; right:16px;
       transform:translateY(-50%); color:#aaa;
     }
-    .header-icons { display:flex; gap:20px; font-size:1.2rem; }
-    .header-icons i { cursor:pointer; color:#333; }
+    .header-icons {
+      display:flex; align-items:center; gap:20px; font-size:1.25rem;
+    }
+    .header-icons i { cursor:pointer; transition:color .2s; }
+    .header-icons i:hover { color:#ff3860; }
+
     nav {
-      background:#f8f8f8; padding:10px 20px;
-      display:flex; justify-content:center; flex-wrap:wrap;
-      border-top:1px solid #eee;
+      background:#f3f3f3; border-top:1px solid #eaeaea;
+      padding:8px 24px;
+      display:flex; justify-content:center; flex-wrap:wrap; gap:16px;
     }
     nav a {
-      margin:0 15px; text-decoration:none;
-      color:#444; font-weight:500; font-size:0.95rem;
+      font-weight:500; font-size:0.95rem; color:#555;
+      transition:color .2s;
     }
+    nav a:hover { color:#ff3860; }
+
     .hamburger {
       display:none; flex-direction:column; gap:4px; cursor:pointer;
     }
     .hamburger span {
-      width:25px; height:3px; background:#333;
+      width:25px; height:3px; background:#333; border-radius:2px;
     }
-    @media(max-width:768px){
+
+    @media (max-width: 768px) {
       .search-bar { display:none; }
-      nav { display:none; flex-direction:column;
-            position:absolute; top:60px; width:100%; left:0; }
+      nav { display:none; position:absolute; top:60px; left:0; width:100%; flex-direction:column; background:#fff; }
       nav.active { display:flex; }
       .hamburger { display:flex; }
     }
 
-    /* ─── HERO SLIDER ───────────────────────────────────────────────────────── */
-    .hero-slider { position:relative; overflow:hidden; }
-    .slides-container {
-      display:flex; transition:transform .8s ease-in-out;
+    .hero-slider {
+      position:relative; overflow:hidden; width:100%;
+      background:#000;
+    }
+    .slides-wrapper {
+      display:flex; transition:transform .7s ease-in-out;
       width:700%; /* 7 slides */
     }
-    .slide { min-width:100%; position:relative; }
+    .slide {
+      min-width:100%; position:relative;
+    }
     .slide img {
-      width:100%; height:80vh; object-fit:cover; display:block;
+      display:block; width:100%; height:80vh; object-fit:cover;
     }
-    .slide-content {
-      position:absolute; bottom:20%; left:5%; color:#fff;
-      max-width:40%; text-shadow:0 2px 6px rgba(0,0,0,0.5);
+
+    /* Caption */
+    .slide-caption {
+      position:absolute; top:20%; left:8%; color:#fff;
+      max-width:45%; text-shadow:0 2px 8px rgba(0,0,0,0.6);
     }
-    .slide-content h1 { font-size:2.5rem; margin-bottom:.5rem; }
-    .slide-content p  { font-size:1.1rem; margin-bottom:1rem; }
-    .slide-content .btn {
-      display:inline-flex; align-items:center;
-      padding:.8rem 1.5rem; background:#ff3860;
-      border-radius:30px; color:#fff; text-decoration:none;
-      font-weight:600;
+    .slide-caption h2 {
+      font-size:2rem; margin-bottom:.6rem; display:flex; align-items:center;
     }
-    .slider-nav {
-      position:absolute; top:50%; width:100%;
-      display:flex; justify-content:space-between;
-      transform:translateY(-50%); pointer-events:none;
+    .slide-caption h2 i { margin-right:.5rem; color:#ff3860; }
+    .slide-caption p { font-size:1.1rem; margin-bottom:1rem; }
+    .btn-hero {
+      background:#ff3860; border:none; border-radius:30px;
+      padding:.7rem 1.6rem; color:#fff; font-size:1rem; font-weight:600;
+      display:inline-flex; align-items:center; cursor:pointer;
+      transition:background .2s;
     }
-    .slider-nav span {
-      pointer-events:all; font-size:2rem;
-      background:rgba(0,0,0,0.4); padding:.5rem;
+    .btn-hero i { margin-right:.5rem; }
+    .btn-hero:hover { background:#e02e56; }
+    .badge-trends {
+      display:inline-block; background:#ffd700; color:#333;
+      padding:.3rem .6rem; border-radius:12px; font-size:.85rem;
+      margin:1rem 0 .5rem;
+    }
+    .slide-caption h1 {
+      display:flex; align-items:center; font-size:2.2rem;
+    }
+    .slide-caption h1 i { margin-left:.5rem; color:#ff3860; }
+
+    /* Promo Cards */
+    .promo-cards {
+      position:absolute; bottom:8%; right:8%;
+      display:flex; gap:1rem;
+    }
+    .promo-card {
+      background:#fff; border-radius:12px; overflow:hidden;
+      box-shadow:0 2px 12px rgba(0,0,0,0.1);
+      text-align:center; width:120px; transition:transform .2s;
+    }
+    .promo-card:hover { transform:translateY(-6px); }
+    .promo-card img {
+      width:100%; height:100px; object-fit:cover;
+    }
+    .promo-card .price {
+      display:block; padding:.6rem 0;
+      font-weight:600; color:#333; background:#f8f8f8;
+    }
+
+    /* Nav Buttons */
+    .slider-btn {
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:rgba(0,0,0,0.5); border:none; padding:.6rem;
       border-radius:50%; cursor:pointer; color:#fff;
-      margin:0 1rem;
+      font-size:1.5rem; z-index:10; transition:background .2s;
     }
+    .slider-btn:hover { background:rgba(0,0,0,0.7); }
+    .slider-btn.prev { left:12px; }
+    .slider-btn.next { right:12px; }
+
+    /* Dots */
     .slider-dots {
-      position:absolute; bottom:10px; width:100%; text-align:center;
+      position:absolute; bottom:15px; width:100%; text-align:center;
     }
     .slider-dots span {
       display:inline-block; width:12px; height:12px;
-      margin:0 5px; background:rgba(255,255,255,0.6);
-      border-radius:50%; cursor:pointer;
+      margin:0 6px; background:rgba(255,255,255,0.6);
+      border-radius:50%; cursor:pointer; transition:background .2s;
     }
-    .slider-dots .active-dot { background:#ff3860; }
-    /* Promo images */
-    .promo-link {
-      position:absolute; top:15%; right:5%; display:block;
-      width:25%; border:3px solid #fff; border-radius:8px;
-      overflow:hidden; z-index:2;
-    }
-    .promo-link img { width:100%; display:block; }
-    @media(max-width:768px){
-      .slide-content { max-width:80%; bottom:15%; }
-      .slide-content h1 { font-size:1.8rem; }
-      .slide-content p  { font-size:1rem; }
-      .promo-link { width:40%; top:10%; }
+    .slider-dots .active { background:#ff3860; }
+
+    @media (max-width: 768px) {
+      .slide-caption { max-width:80%; top:15%; left:5%; }
+      .slide-caption h2 { font-size:1.6rem; }
+      .slide-caption p  { font-size:1rem; }
+      .promo-cards {
+        bottom:5%; right:5%; gap:.6rem;
+      }
+      .promo-card { width:90px; }
+      .promo-card img { height:60px; }
     }
   </style>
 </head>
-  <body>
-    <header>
-  <div class="header-container">
-    <div class="logo">YourMarket</div>
 
-    <div class="search-bar">
-      <input type="text" placeholder="Search for books, gadgets…" />
-      <i class="fas fa-search"></i>
-    </div>
-
-    <div class="header-icons">
-      <i class="fas fa-user"></i>
-      <i class="fas fa-heart"></i>
-      <i class="fas fa-shopping-cart"></i>
-      <div class="hamburger" id="hamburger">
-        <span></span><span></span><span></span>
+<body>
+  <!-- ─── HEADER ─────────────────────────────────────────────────────────────── -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">YourMarket</div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search for books, gadgets, fashion…" />
+        <i class="fas fa-search"></i>
+      </div>
+      <div class="header-icons">
+        <i class="fas fa-user"></i>
+        <i class="fas fa-heart"></i>
+        <i class="fas fa-shopping-cart"></i>
+        <div class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </div>
       </div>
     </div>
-  </div>
+    <nav id="navMenu">
+      <a href="#">Fashion</a>
+      <a href="#">Beauty</a>
+      <a href="#">Books</a>
+      <a href="#">Electronics</a>
+      <a href="#">Hair & Braids</a>
+      <a href="#">Shoes</a>
+      <a href="#">Accessories</a>
+    </nav>
+  </header>
 
-  <nav id="navMenu">
-    <a href="#">Fashion</a>
-    <a href="#">Beauty</a>
-    <a href="#">Books</a>
-    <a href="#">Electronics</a>
-    <a href="#">Hair & Braids</a>
-    <a href="#">Shoes</a>
-    <a href="#">Accessories</a>
-  </nav>
-</header>
+  <!-- ─── HERO ───────────────────────────────────────────────────────────────── -->
+  <section class="hero-slider">
+    <div class="slides-wrapper">
+      <!-- Slide 1 -->
+      <div class="slide active">
+        <img src="banner1.avif" alt="Fast, free shipping" loading="lazy">
+        <div class="slide-caption">
+          <h2><i class="fas fa-shipping-fast"></i> Fast, Free Shipping</h2>
+          <p>Unlimited access to deals & more</p>
+          <button class="btn-hero"><i class="fas fa-gem"></i> Join Premium</button>
+          <span class="badge-trends">Trends</span>
+          <h1>#DelicaRomance <i class="fas fa-chevron-right"></i></h1>
+        </div>
+        <div class="promo-cards">
+          <div class="promo-card">
+            <img src="bag.avif" alt="Bag" loading="lazy">
+            <span class="price">$31.00</span>
+          </div>
+          <div class="promo-card">
+            <img src="sneakers.jpg" alt="Sneakers" loading="lazy">
+            <span class="price">$18.00</span>
+          </div>
+        </div>
+      </div>
 
-<section class="hero-slider">
-  <div class="slides-container">
-    <!-- Slide 1 -->
-    <div class="slide">
-      <img src="banner1.avif" alt="Slide 1">
-      <div class="slide-content">
-        <h1>Discover Endless Choices</h1>
-        <p>From books to gadgets – find it all here.</p>
-        <a href="#shop" class="btn">Shop Now <i class="fas fa-arrow-right"></i></a>
+      <!-- Slide 2 -->
+      <div class="slide">
+        <img src="banner2.webp" alt="20% Off Promo" loading="lazy">
+        <div class="slide-caption">
+          <h2><i class="fas fa-percent"></i> 20% Off Sitewide</h2>
+          <p>Use code <strong>PROMO20</strong></p>
+          <button class="btn-hero"><i class="fas fa-tag"></i> Shop Deals</button>
+        </div>
+        <div class="promo-cards">
+          <div class="promo-card">
+            <img src="dress.avif" alt="Dress" loading="lazy">
+            <span class="price">$45.00</span>
+          </div>
+          <div class="promo-card">
+            <img src="watch.jpg" alt="Watch" loading="lazy">
+            <span class="price">$120.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="slide">
+        <img src="banner3.jpeg" alt="New Arrivals" loading="lazy">
+        <div class="slide-caption">
+          <h2><i class="fas fa-tshirt"></i> New Arrivals</h2>
+          <p>Latest fashion trends for you</p>
+          <button class="btn-hero"><i class="fas fa-shopping-bag"></i> Explore</button>
+        </div>
+        <div class="promo-cards">
+          <div class="promo-card">
+            <img src="hat.avif" alt="Hat" loading="lazy">
+            <span class="price">$22.00</span>
+          </div>
+          <div class="promo-card">
+            <img src="jeans.jpg" alt="Jeans" loading="lazy">
+            <span class="price">$39.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="slide">
+        <img src="banner4.avif" alt="Electronics" loading="lazy">
+        <div class="slide-caption">
+          <h2><i class="fas fa-laptop"></i> Tech Upgrades</h2>
+          <p>Smartphones, laptops & more</p>
+          <button class="btn-hero"><i class="fas fa-bolt"></i> Shop Tech</button>
+        </div>
+        <div class="promo-cards">
+          <div class="promo-card">
+            <img src="phone.avif" alt="Phone" loading="lazy">
+            <span class="price">$299.00</span>
+          </div>
+          <div class="promo-card">
+            <img src="headphones.jpg" alt="Headphones" loading="lazy">
+            <span class="price">$75.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="slide">
+        <img src="banner5.avif" alt="Clearance Sale" loading="lazy">
+        <div class="slide-caption">
+          <h2><i class="fas fa-tags"></i> Clearance Sale</h2>
+          <p>Up to 70% off select items</p>
+          <button class="btn-hero"><i class="fas fa-bolt"></i> Shop Clearance</button>
+        </div>
+        <div class="promo-cards">
+          <div class="promo-card">
+            <img src="jacket.avif" alt="Jacket" loading="lazy">
+            <span class="price">$49.00</span>
+          </div>
+          <div class="promo-card">
+            <img src="sunglasses.jpg" alt="Sunglasses" loading="lazy">
+            <span class="price">$15.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6 -->
+      <div class="slide">
+        <img src="banner6.webp" alt="Handmade Crafts" loading="lazy">
+        <div class="slide-caption">
+          <h2><i class="fas fa-paint-brush"></i> Handmade Crafts</h2>
+          <p>Unique items by artisans</p>
+          <button class="btn-hero"><i class="fas fa-gift"></i> View Crafts</button>
+        </div>
+        <div class="promo-cards">
+          <div class="promo-card">
+            <img src="vase.avif" alt="Vase" loading="lazy">
+            <span class="price">$28.00</span>
+          </div>
+          <div class="promo-card">
+            <img src="sculpture.jpg" alt="Sculpture" loading="lazy">
+            <span class="price">$65.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 7 -->
+      <div class="slide">
+        <img src="banner7.jpg" alt="Beauty & Braids" loading="lazy">
+        <div class="slide-caption">
+          <h2><i class="fas fa-cut"></i> Beauty & Braids</h2>
+          <p>Book your stylist today</p>
+          <button class="btn-hero"><i class="fas fa-calendar-check"></i> Book Now</button>
+        </div>
+        <div class="promo-cards">
+          <div class="promo-card">
+            <img src="braids.avif" alt="Braids" loading="lazy">
+            <span class="price">$25.00</span>
+          </div>
+          <div class="promo-card">
+            <img src="makeup.jpg" alt="Makeup Kit" loading="lazy">
+            <span class="price">$40.00</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Slide 2 (Promo) -->
-    <div class="slide">
-      <img src="banner2.avif" alt="Slide 2">
-      <a href="/promo/special-offer" class="promo-link">
-        <img src="promo1.jpg" alt="20% Off Promo">
-      </a>
-      <div class="slide-content">
-        <h1>Special 20% Off</h1>
-        <p>Use code <strong>PROMO20</strong> at checkout.</p>
-      </div>
-    </div>
+    <!-- Slider Controls -->
+    <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+    <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+    <div class="slider-dots"></div>
+  </section>
 
-    <!-- Slide 3 -->
-    <div class="slide">
-      <img src="banner3.jpeg" alt="Slide 3">
-      <div class="slide-content">
-        <h1>New Arrivals in Fashion</h1>
-        <p>Trendy styles you’ll love.</p>
-        <a href="/category/fashion" class="btn">
-          Explore <i class="fas fa-shopping-bag"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- Slide 4 -->
-    <div class="slide">
-      <img src="banner4.avif" alt="Slide 4">
-      <div class="slide-content">
-        <h1>Upgrade Your Gadgets</h1>
-        <p>Latest electronics at unbeatable prices.</p>
-        <a href="/category/electronics" class="btn">
-          Browse <i class="fas fa-laptop"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- Slide 5 (Promo) -->
-    <div class="slide">
-      <img src="banner5.avif" alt="Slide 5">
-      <a href="/promo/clearance" class="promo-link">
-        <img src="promo2.jpg" alt="Clearance Promo">
-      </a>
-      <div class="slide-content">
-        <h1>Clearance Sale</h1>
-        <p>Up to 70% off selected items.</p>
-      </div>
-    </div>
-
-    <!-- Slide 6 -->
-    <div class="slide">
-      <img src="banner6.webp" alt="Slide 6">
-      <div class="slide-content">
-        <h1>Browse Handmade Crafts</h1>
-        <p>Unique items by local artisans.</p>
-        <a href="/category/crafts" class="btn">
-          See Crafts <i class="fas fa-paint-brush"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- Slide 7 -->
-    <div class="slide">
-      <img src="banner7.jpg" alt="Slide 7">
-      <div class="slide-content">
-        <h1>Hair & Braids Services</h1>
-        <p>Book your stylist today.</p>
-        <a href="/category/beauty" class="btn">
-          Book Now <i class="fas fa-cut"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <div class="slider-nav">
-    <span class="prev"><i class="fas fa-chevron-left"></i></span>
-    <span class="next"><i class="fas fa-chevron-right"></i></span>
-  </div>
-  <div class="slider-dots"></div>
-</section>
-
-</body>
+  <!-- ─── SCRIPTS ────────────────────────────────────────────────────────────── -->
   <script>
-  // Hamburger toggle
-  const ham = document.getElementById('hamburger'),
-        nav = document.getElementById('navMenu');
-  ham.addEventListener('click', ()=> nav.classList.toggle('active'));
-  window.addEventListener('click', e=>{
-    if(!ham.contains(e.target) && !nav.contains(e.target)) {
-      nav.classList.remove('active');
-    }
-  });
-
-  // Slider logic
-  (()=>{
-    const slides = document.querySelectorAll('.slide'),
-          dotsC  = document.querySelector('.slider-dots'),
-          prev   = document.querySelector('.prev'),
-          next   = document.querySelector('.next');
-    let idx = 0, timer;
-
-    // build dots
-    slides.forEach((_,i)=>{
-      let d = document.createElement('span');
-      d.addEventListener('click', ()=> goTo(i));
-      dotsC.appendChild(d);
+    // Hamburger menu toggle
+    const ham = document.getElementById('hamburger'),
+          nav = document.getElementById('navMenu');
+    ham.addEventListener('click', () => nav.classList.toggle('active'));
+    window.addEventListener('click', e => {
+      if(!ham.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+      }
     });
-    const dots = dotsC.querySelectorAll('span');
-    dots[0].classList.add('active-dot');
 
-    function update() {
-      document.querySelector('.slides-container')
-              .style.transform = `translateX(-${idx*100}%)`;
-      dots.forEach(d=>d.classList.remove('active-dot'));
-      dots[idx].classList.add('active-dot');
-    }
-    function nextSlide(){ idx=(idx+1)%slides.length; update(); }
-    function prevSlide(){ idx=(idx-1+slides.length)%slides.length; update(); }
-    function goTo(i){ idx=i; update(); reset(); }
+    // Hero slider
+    (function(){
+      const slides = document.querySelectorAll('.slide'),
+            wrapper = document.querySelector('.slides-wrapper'),
+            prevBtn = document.querySelector('.slider-btn.prev'),
+            nextBtn = document.querySelector('.slider-btn.next'),
+            dotsC = document.querySelector('.slider-dots');
+      let idx = 0, timer;
 
-    next.addEventListener('click', ()=>{ nextSlide(); reset(); });
-    prev.addEventListener('click', ()=>{ prevSlide(); reset(); });
+      // build dots
+      slides.forEach((_,i) => {
+        let d = document.createElement('span');
+        d.addEventListener('click', () => goTo(i));
+        dotsC.appendChild(d);
+      });
+      const dots = dotsC.querySelectorAll('span');
+      dots[0].classList.add('active');
 
-    function reset(){
-      clearInterval(timer);
-      timer = setInterval(nextSlide, 5000);
-    }
-    timer = setInterval(nextSlide, 5000);
-  })();
-</script>
+      function update() {
+        wrapper.style.transform = `translateX(-${idx*100}%)`;
+        dots.forEach(dot => dot.classList.remove('active'));
+        dots[idx].classList.add('active');
+      }
+      function next() { idx = (idx+1) % slides.length; update(); }
+      function prev() { idx = (idx-1+slides.length) % slides.length; update(); }
+      function goTo(i) { idx = i; update(); reset(); }
 
+      nextBtn.addEventListener('click', () => { next(); reset(); });
+      prevBtn.addEventListener('click', () => { prev(); reset(); });
+
+      function reset(){
+        clearInterval(timer);
+        timer = setInterval(next, 5000);
+      }
+      timer = setInterval(next, 5000);
+    })();
+  </script>
+</body>
 </html>
