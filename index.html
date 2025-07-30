@@ -13,284 +13,150 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<style>
+    /* ─── RESET & BASE ───────────────────────────────────────────────────────── */
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+    body { padding-top:80px; }
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-
-    body {
-      padding-top: 80px;
-    }
-
+    /* ─── HEADER ──────────────────────────────────────────────────────────────── */
     header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background-color: #ffffff;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      z-index: 999;
+      position:fixed; top:0; width:100%;
+      background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.05);
+      z-index:1000;
     }
-
     .header-container {
-      max-width: 1300px;
-      margin: auto;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      max-width:1300px; margin:auto;
+      padding:10px 20px;
+      display:flex; justify-content:space-between; align-items:center;
     }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #111;
-    }
-
-    .search-bar {
-      flex: 1;
-      margin: 0 20px;
-      position: relative;
-    }
-
+    .logo { font-size:1.8rem; font-weight:700; color:#111; }
+    .search-bar { flex:1; margin:0 20px; position:relative; }
     .search-bar input {
-      width: 100%;
-      padding: 10px 15px;
-      border: 1px solid #ddd;
-      border-radius: 25px;
+      width:100%; padding:10px 15px;
+      border:1px solid #ddd; border-radius:25px;
     }
-
-    .search-bar i {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #aaa;
+    .search-bar .fa-search {
+      position:absolute; top:50%; right:15px;
+      transform:translateY(-50%); color:#aaa;
     }
-
-    .header-icons {
-      display: flex;
-      gap: 20px;
-      font-size: 1.2rem;
-    }
-
-    .header-icons i {
-      cursor: pointer;
-      color: #333;
-    }
-
+    .header-icons { display:flex; gap:20px; font-size:1.2rem; }
+    .header-icons i { cursor:pointer; color:#333; }
     nav {
-      background: #f8f8f8;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      border-top: 1px solid #eee;
+      background:#f8f8f8; padding:10px 20px;
+      display:flex; justify-content:center; flex-wrap:wrap;
+      border-top:1px solid #eee;
     }
-
     nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #444;
-      font-size: 0.95rem;
-      font-weight: 500;
+      margin:0 15px; text-decoration:none;
+      color:#444; font-weight:500; font-size:0.95rem;
     }
-
     .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      cursor: pointer;
+      display:none; flex-direction:column; gap:4px; cursor:pointer;
     }
-
     .hamburger span {
-      width: 25px;
-      height: 3px;
-      background: #333;
+      width:25px; height:3px; background:#333;
+    }
+    @media(max-width:768px){
+      .search-bar { display:none; }
+      nav { display:none; flex-direction:column;
+            position:absolute; top:60px; width:100%; left:0; }
+      nav.active { display:flex; }
+      .hamburger { display:flex; }
     }
 
-    @media (max-width: 768px) {
-      .search-bar {
-        display: none;
-      }
-
-      nav {
-        display: none;
-        flex-direction: column;
-        background: #fff;
-        position: absolute;
-        top: 60px;
-        width: 100%;
-        left: 0;
-        padding: 10px 20px;
-      }
-
-      nav.active {
-        display: flex;
-      }
-
-      .hamburger {
-        display: flex;
-      }
+    /* ─── HERO SLIDER ───────────────────────────────────────────────────────── */
+    .hero-slider { position:relative; overflow:hidden; }
+    .slides-container {
+      display:flex; transition:transform .8s ease-in-out;
+      width:700%; /* 7 slides */
     }
-
-      .hero-slider {
-    position: relative;
-    overflow: hidden;
-    height: 80vh;
-    min-height: 500px;
-  }
-  .slides-container {
-    display: flex;
-    width: 700%;
-    transition: transform 0.8s ease-in-out;
-  }
-  .slide {
-    position: relative;
-    flex: 1 0 100%;
-    background-size: cover;
-    background-position: center;
-  }
-  .slide::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.3);
-  }
-  .slide-content {
-    position: absolute;
-    bottom: 20%;
-    left: 5%;
-    color: #fff;
-    max-width: 40%;
-  }
-  .slide-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
-  .slide-content p {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-  }
-  .slide-content .btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.8rem 1.5rem;
-    background: #ff3860;
-    border-radius: 30px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .slider-nav {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  .slider-nav span {
-    pointer-events: all;
-    font-size: 2rem;
-    background: rgba(0,0,0,0.4);
-    padding: 0.5rem 0.7rem;
-    border-radius: 50%;
-    cursor: pointer;
-    color: #fff;
-    margin: 0 1rem;
-  }
-  .slider-dots {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-  }
-  .slider-dots span {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin: 0 5px;
-    background: rgba(255,255,255,0.6);
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  .slider-dots .active-dot {
-    background: #ff3860;
-  }
-  /* Promo clickable image styling */
-  .promo-link {
-    position: absolute;
-    top: 15%;
-    right: 5%;
-    display: block;
-    width: 25%;
-    border: 3px solid #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    z-index: 2;
-  }
-  .promo-link img {
-    width: 100%;
-    display: block;
-  }
-
-  @media (max-width: 768px) {
+    .slide { min-width:100%; position:relative; }
+    .slide img {
+      width:100%; height:80vh; object-fit:cover; display:block;
+    }
     .slide-content {
-      max-width: 80%;
-      bottom: 15%;
+      position:absolute; bottom:20%; left:5%; color:#fff;
+      max-width:40%; text-shadow:0 2px 6px rgba(0,0,0,0.5);
     }
-    .slide-content h1 { font-size: 1.8rem; }
-    .slide-content p  { font-size: 1rem; }
-    .promo-link { width: 40%; top: 10%; }
-  }
+    .slide-content h1 { font-size:2.5rem; margin-bottom:.5rem; }
+    .slide-content p  { font-size:1.1rem; margin-bottom:1rem; }
+    .slide-content .btn {
+      display:inline-flex; align-items:center;
+      padding:.8rem 1.5rem; background:#ff3860;
+      border-radius:30px; color:#fff; text-decoration:none;
+      font-weight:600;
+    }
+    .slider-nav {
+      position:absolute; top:50%; width:100%;
+      display:flex; justify-content:space-between;
+      transform:translateY(-50%); pointer-events:none;
+    }
+    .slider-nav span {
+      pointer-events:all; font-size:2rem;
+      background:rgba(0,0,0,0.4); padding:.5rem;
+      border-radius:50%; cursor:pointer; color:#fff;
+      margin:0 1rem;
+    }
+    .slider-dots {
+      position:absolute; bottom:10px; width:100%; text-align:center;
+    }
+    .slider-dots span {
+      display:inline-block; width:12px; height:12px;
+      margin:0 5px; background:rgba(255,255,255,0.6);
+      border-radius:50%; cursor:pointer;
+    }
+    .slider-dots .active-dot { background:#ff3860; }
+    /* Promo images */
+    .promo-link {
+      position:absolute; top:15%; right:5%; display:block;
+      width:25%; border:3px solid #fff; border-radius:8px;
+      overflow:hidden; z-index:2;
+    }
+    .promo-link img { width:100%; display:block; }
+    @media(max-width:768px){
+      .slide-content { max-width:80%; bottom:15%; }
+      .slide-content h1 { font-size:1.8rem; }
+      .slide-content p  { font-size:1rem; }
+      .promo-link { width:40%; top:10%; }
+    }
   </style>
 </head>
-<body>
+  <body>
+    <header>
+  <div class="header-container">
+    <div class="logo">YourMarket</div>
 
-  <header>
-    <div class="header-container">
-      <div class="logo">YourMarket</div>
-
-      <div class="search-bar">
-        <input type="text" placeholder="Search for books, shoes, gadgets..." />
-        <i class="fas fa-search"></i>
-      </div>
-
-      <div class="header-icons">
-        <i class="fas fa-user"></i>
-        <i class="fas fa-heart"></i>
-        <i class="fas fa-shopping-cart"></i>
-        <div class="hamburger" id="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search for books, gadgets…" />
+      <i class="fas fa-search"></i>
     </div>
 
-    <nav id="navMenu">
-      <a href="#">Fashion</a>
-      <a href="#">Beauty</a>
-      <a href="#">Books</a>
-      <a href="#">Electronics</a>
-      <a href="#">Hair & Braids</a>
-      <a href="#">Shoes</a>
-      <a href="#">Accessories</a>
-    </nav>
-  </header>
+    <div class="header-icons">
+      <i class="fas fa-user"></i>
+      <i class="fas fa-heart"></i>
+      <i class="fas fa-shopping-cart"></i>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
 
-  <section class="hero-slider">
+  <nav id="navMenu">
+    <a href="#">Fashion</a>
+    <a href="#">Beauty</a>
+    <a href="#">Books</a>
+    <a href="#">Electronics</a>
+    <a href="#">Hair & Braids</a>
+    <a href="#">Shoes</a>
+    <a href="#">Accessories</a>
+  </nav>
+</header>
 
-  <!-- Slides Wrapper -->
+<section class="hero-slider">
   <div class="slides-container">
-
     <!-- Slide 1 -->
-    <div class="slide active" style="background-image:url('banner1.avif')">
+    <div class="slide">
+      <img src="banner1.avif" alt="Slide 1">
       <div class="slide-content">
         <h1>Discover Endless Choices</h1>
         <p>From books to gadgets – find it all here.</p>
@@ -298,10 +164,11 @@
       </div>
     </div>
 
-    <!-- Slide 2 (Promo Clickable) -->
-    <div class="slide" style="background-image:url('/banner2.jpg')">
+    <!-- Slide 2 (Promo) -->
+    <div class="slide">
+      <img src="banner2.avif" alt="Slide 2">
       <a href="/promo/special-offer" class="promo-link">
-        <img src="promo1.jpg" alt="Special Offer Promo">
+        <img src="promo1.jpg" alt="20% Off Promo">
       </a>
       <div class="slide-content">
         <h1>Special 20% Off</h1>
@@ -310,27 +177,34 @@
     </div>
 
     <!-- Slide 3 -->
-    <div class="slide" style="background-image:url('banner3.jpeg')">
+    <div class="slide">
+      <img src="banner3.jpeg" alt="Slide 3">
       <div class="slide-content">
         <h1>New Arrivals in Fashion</h1>
         <p>Trendy styles you’ll love.</p>
-        <a href="/category/fashion" class="btn">Explore <i class="fas fa-shopping-bag"></i></a>
+        <a href="/category/fashion" class="btn">
+          Explore <i class="fas fa-shopping-bag"></i>
+        </a>
       </div>
     </div>
 
     <!-- Slide 4 -->
-    <div class="slide" style="background-image:url('banner4.avif')">
+    <div class="slide">
+      <img src="banner4.avif" alt="Slide 4">
       <div class="slide-content">
         <h1>Upgrade Your Gadgets</h1>
         <p>Latest electronics at unbeatable prices.</p>
-        <a href="/category/electronics" class="btn">Browse Now <i class="fas fa-laptop"></i></a>
+        <a href="/category/electronics" class="btn">
+          Browse <i class="fas fa-laptop"></i>
+        </a>
       </div>
     </div>
 
-    <!-- Slide 5 (Promo Clickable) -->
-    <div class="slide" style="background-image:url('banner5.avif')">
+    <!-- Slide 5 (Promo) -->
+    <div class="slide">
+      <img src="banner5.avif" alt="Slide 5">
       <a href="/promo/clearance" class="promo-link">
-        <img src="promo2.jpg" alt="Clearance Sale Promo">
+        <img src="promo2.jpg" alt="Clearance Promo">
       </a>
       <div class="slide-content">
         <h1>Clearance Sale</h1>
@@ -339,101 +213,85 @@
     </div>
 
     <!-- Slide 6 -->
-    <div class="slide" style="background-image:url('banner6.webp')">
+    <div class="slide">
+      <img src="banner6.webp" alt="Slide 6">
       <div class="slide-content">
         <h1>Browse Handmade Crafts</h1>
         <p>Unique items by local artisans.</p>
-        <a href="/category/crafts" class="btn">See Crafts <i class="fas fa-paint-brush"></i></a>
+        <a href="/category/crafts" class="btn">
+          See Crafts <i class="fas fa-paint-brush"></i>
+        </a>
       </div>
     </div>
 
     <!-- Slide 7 -->
-    <div class="slide" style="background-image:url('banner7.jpg')">
+    <div class="slide">
+      <img src="banner7.jpg" alt="Slide 7">
       <div class="slide-content">
         <h1>Hair & Braids Services</h1>
         <p>Book your stylist today.</p>
-        <a href="/category/beauty" class="btn">Book Now <i class="fas fa-cut"></i></a>
+        <a href="/category/beauty" class="btn">
+          Book Now <i class="fas fa-cut"></i>
+        </a>
       </div>
     </div>
-
   </div>
 
-  <!-- Navigation Arrows -->
   <div class="slider-nav">
     <span class="prev"><i class="fas fa-chevron-left"></i></span>
     <span class="next"><i class="fas fa-chevron-right"></i></span>
   </div>
-
-  <!-- Dots -->
   <div class="slider-dots"></div>
 </section>
-  
+
+</body>
   <script>
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('navMenu');
+  // Hamburger toggle
+  const ham = document.getElementById('hamburger'),
+        nav = document.getElementById('navMenu');
+  ham.addEventListener('click', ()=> nav.classList.toggle('active'));
+  window.addEventListener('click', e=>{
+    if(!ham.contains(e.target) && !nav.contains(e.target)) {
+      nav.classList.remove('active');
+    }
+  });
 
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
+  // Slider logic
+  (()=>{
+    const slides = document.querySelectorAll('.slide'),
+          dotsC  = document.querySelector('.slider-dots'),
+          prev   = document.querySelector('.prev'),
+          next   = document.querySelector('.next');
+    let idx = 0, timer;
+
+    // build dots
+    slides.forEach((_,i)=>{
+      let d = document.createElement('span');
+      d.addEventListener('click', ()=> goTo(i));
+      dotsC.appendChild(d);
     });
-
-    window.addEventListener('click', (e) => {
-      if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
-        navMenu.classList.remove('active');
-      }
-    });
-  </script>
-<script>
-  (function() {
-    const slides = document.querySelectorAll('.slide');
-    const dotsContainer = document.querySelector('.slider-dots');
-    const prevBtn = document.querySelector('.prev');
-    const nextBtn = document.querySelector('.next');
-    let current = 0, timer;
-
-    // Create dots
-    slides.forEach((_, i) => {
-      const dot = document.createElement('span');
-      dot.addEventListener('click', () => goToSlide(i));
-      dotsContainer.appendChild(dot);
-    });
-
-    const dots = dotsContainer.querySelectorAll('span');
+    const dots = dotsC.querySelectorAll('span');
     dots[0].classList.add('active-dot');
 
     function update() {
-      const offset = -current * 100;
-      document.querySelector('.slides-container').style.transform = `translateX(${offset}%)`;
-      dots.forEach(dot => dot.classList.remove('active-dot'));
-      dots[current].classList.add('active-dot');
+      document.querySelector('.slides-container')
+              .style.transform = `translateX(-${idx*100}%)`;
+      dots.forEach(d=>d.classList.remove('active-dot'));
+      dots[idx].classList.add('active-dot');
     }
+    function nextSlide(){ idx=(idx+1)%slides.length; update(); }
+    function prevSlide(){ idx=(idx-1+slides.length)%slides.length; update(); }
+    function goTo(i){ idx=i; update(); reset(); }
 
-    function nextSlide() {
-      current = (current + 1) % slides.length;
-      update();
-    }
+    next.addEventListener('click', ()=>{ nextSlide(); reset(); });
+    prev.addEventListener('click', ()=>{ prevSlide(); reset(); });
 
-    function prevSlide() {
-      current = (current - 1 + slides.length) % slides.length;
-      update();
-    }
-
-    function goToSlide(idx) {
-      current = idx;
-      update();
-      resetTimer();
-    }
-
-    nextBtn.addEventListener('click', () => { nextSlide(); resetTimer(); });
-    prevBtn.addEventListener('click', () => { prevSlide(); resetTimer(); });
-
-    function resetTimer() {
+    function reset(){
       clearInterval(timer);
       timer = setInterval(nextSlide, 5000);
     }
-
-    // Start autoplay
     timer = setInterval(nextSlide, 5000);
   })();
 </script>
-</body>
+
 </html>
