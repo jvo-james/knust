@@ -75,132 +75,7 @@
       .hamburger { display:flex; }
     }
 
-    .hero-slider {
-      position:relative; overflow:hidden; width:100%;
-      background:#000;
-    }
-    .slides-wrapper {
-      display:flex; transition:transform .7s ease-in-out;
-      width:700%; /* 7 slides */
-    }
-    .slide {
-      min-width:100%; position:relative;
-    }
-    .slide img {
-display: block;
-  width: 100%;
-  max-height: 80vh;      
-  height: auto;           
-  object-fit: cover; 
-    }
-
-    /* Caption */
-    .slide-caption {
-      position:absolute; top:20%; left:8%; color:#fff;
-      max-width:45%; text-shadow:0 2px 8px rgba(0,0,0,0.6);
-    }
-    .slide-caption h2 {
-      font-size:2rem; margin-bottom:.6rem; display:flex; align-items:center;
-    }
-    .slide-caption h2 i { margin-right:.5rem; color:#ff3860; }
-    .slide-caption p { font-size:1.1rem; margin-bottom:1rem; }
-    .btn-hero {
-      background:#ff3860; border:none; border-radius:30px;
-      padding:.7rem 1.6rem; color:#fff; font-size:1rem; font-weight:600;
-      display:inline-flex; align-items:center; cursor:pointer;
-      transition:background .2s;
-    }
-    .btn-hero i { margin-right:.5rem; }
-    .btn-hero:hover { background:#e02e56; }
-    .badge-trends {
-      display:inline-block; background:#ffd700; color:#333;
-      padding:.3rem .6rem; border-radius:12px; font-size:.85rem;
-      margin:1rem 0 .5rem;
-    }
-    .slide-caption h1 {
-      display:flex; align-items:center; font-size:2.2rem;
-    }
-    .slide-caption h1 i { margin-left:.5rem; color:#ff3860; }
-
-   /* Tighter, wrapped promo cards */
-.promo-cards {
-  position: absolute;
-  bottom: 5%;
-  right: 5%;
-  display: flex;
-  flex-wrap: wrap;           /* allow cards to wrap onto new lines */
-  gap: 0.5rem;
-  max-width: 240px;          /* never wider than 240px total */
-  padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.4);   /* semi‑transparent dark behind cards */
-  border-radius: 8px;
-}
-
-/* Make each card flexibly sized */
-.promo-card {
-  flex: 1 1 45%;             /* two cards per row, roughly */
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  text-align: center;
-  transition: transform 0.2s;
-}
-
-.promo-card:hover {
-  transform: translateY(-4px);
-}
-
-/* Shrink images inside cards to fit */
-.promo-card img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
-/* Price label styling stays the same */
-.promo-card .price {
-  display: block;
-  padding: 0.4rem 0;
-  font-weight: 600;
-  color: #333;
-  background: #f8f8f8;
-}
-
-
-    /* Nav Buttons */
-    .slider-btn {
-      position:absolute; top:50%; transform:translateY(-50%);
-      background:rgba(0,0,0,0.5); border:none; padding:.6rem;
-      border-radius:50%; cursor:pointer; color:#fff;
-      font-size:1.5rem; z-index:10; transition:background .2s;
-    }
-    .slider-btn:hover { background:rgba(0,0,0,0.7); }
-    .slider-btn.prev { left:12px; }
-    .slider-btn.next { right:12px; }
-
-    /* Dots */
-    .slider-dots {
-      position:absolute; bottom:15px; width:100%; text-align:center;
-    }
-    .slider-dots span {
-      display:inline-block; width:12px; height:12px;
-      margin:0 6px; background:rgba(255,255,255,0.6);
-      border-radius:50%; cursor:pointer; transition:background .2s;
-    }
-    .slider-dots .active { background:#ff3860; }
-
-    @media (max-width: 768px) {
-      .slide-caption { max-width:80%; top:15%; left:5%; }
-      .slide-caption h2 { font-size:1.6rem; }
-      .slide-caption p  { font-size:1rem; }
-      .promo-cards {
-        bottom:5%; right:5%; gap:.6rem;
-      }
-      .promo-card { width:90px; }
-      .promo-card img { height:60px; }
-    }
-
+ 
 .container {
   max-width: 1300px;
   margin: 0 auto;
@@ -308,7 +183,117 @@ display: block;
   .deal-card img { height: 140px; }
 }
 
-  /* ─── MAIN MARKET STYLES ─────────────────────────────────────────────────── */
+.hero-slider {
+  position: relative;
+  overflow: hidden;
+}
+.hero-slider .slide {
+  position: absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  opacity:0; transition: opacity 0.6s ease;
+}
+.hero-slider .slide.active {
+  position: relative;
+  opacity:1;
+}
+
+.hero-slider img {
+  display: block;
+  width: 100%;
+  height: 70vh;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+
+/* Caption block */
+.hero-slider .caption {
+  position: absolute;
+  bottom: 8%; left: 5%;
+  max-width: 45%;
+  background: rgba(0,0,0,0.4);
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  color: #fff;
+}
+.caption h2 {
+  font-size: 1.8rem;
+  display: flex; align-items: center;
+  margin-bottom: .5rem;
+}
+.caption h2 i { margin-right: .5rem; color:#ffdd57; }
+.caption p { margin-bottom: .8rem; }
+.btn-hero {
+  display: inline-flex; align-items: center;
+  background: #ff3860; color:#fff;
+  padding: .6rem 1.2rem; border-radius:30px;
+  font-weight:600; text-decoration:none;
+  transition: background .2s;
+}
+.btn-hero i { margin-left:.5rem; }
+.btn-hero:hover { background:#e02e56; }
+
+/* Promo cards container */
+.caption .promo-cards {
+  display: flex;
+  gap: .6rem;
+  margin-top: .8rem;
+}
+.promo-card {
+  background:#fff;
+  border-radius:6px;
+  overflow:hidden;
+  width: 80px; /* fixed small width */
+  flex-shrink:0;
+  text-align:center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.promo-card img {
+  width:100%; height:60px;
+  object-fit: cover;
+}
+.promo-card .price {
+  display:block;
+  padding:.3rem 0;
+  font-size:.85rem;
+  color:#333;
+  background:#f8f8f8;
+}
+
+/* Nav buttons */
+.slider-nav {
+  position:absolute;
+  top:50%; transform:translateY(-50%);
+  background:rgba(0,0,0,0.5);
+  border:none; color:#fff; padding:.6rem;
+  cursor:pointer; font-size:1.4rem;
+  border-radius:50%; z-index:10;
+}
+.slider-nav.prev { left:10px; }
+.slider-nav.next { right:10px; }
+
+/* Dots */
+.slider-dots {
+  position:absolute; bottom:10px; width:100%;
+  text-align:center;
+}
+.slider-dots span {
+  display:inline-block; width:10px; height:10px;
+  margin:0 4px; background:rgba(255,255,255,0.6);
+  border-radius:50%; cursor:pointer;
+  transition: background .3s;
+}
+.slider-dots span.active { background:#ff3860; }
+
+/* Responsive */
+@media (max-width:768px) {
+  .hero-slider img { height:50vh; }
+  .caption { max-width:80%; bottom:5%; left:4%; padding:.8rem; }
+  .caption h2 { font-size:1.4rem; }
+  .btn-hero { padding:.5rem 1rem; font-size:.9rem; }
+  .promo-card { width:60px; }
+  .promo-card img { height:45px; }
+}
 
 /* Section base */
 .main-market {
@@ -482,6 +467,285 @@ display: block;
     padding: 12px;
   }
 }
+/* Modal backdrop */
+#product-modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s, visibility .3s;
+  z-index: 2000;
+}
+
+/* Modal panel */
+#product-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0.8);
+  width: 90%; max-width: 800px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s, transform .3s, visibility .3s;
+  z-index: 2001;
+  display: flex; flex-direction: column;
+}
+
+/* Open state */
+#product-modal-backdrop.active {
+  opacity:1; visibility: visible;
+}
+#product-modal.active {
+  opacity:1; visibility: visible;
+  transform: translate(-50%,-50%) scale(1);
+}
+
+/* Close button */
+#modal-close {
+  position: absolute; top:12px; right:12px;
+  background:none; border:none; font-size:1.2rem;
+  cursor:pointer; color:#555;
+}
+
+/* Content layout */
+.modal-content {
+  display: flex; flex-wrap: wrap;
+  margin-top: 40px; /* space for close btn */
+}
+.modal-media {
+  flex: 1 1 40%;
+  padding: 1rem;
+}
+.modal-media img {
+  width:100%; border-radius:8px; object-fit:cover;
+}
+.modal-info {
+  flex: 1 1 60%;
+  padding: 1rem;
+  display: flex; flex-direction: column;
+  gap: 0.8rem;
+}
+.modal-info h2 {
+  font-size:1.6rem; color:#222;
+}
+.modal-seller, .modal-price, .modal-stock {
+  font-size:0.95rem; color:#555;
+}
+.modal-price { font-size:1.2rem; font-weight:600; color:#ff3860; }
+.modal-rating {
+  display:flex; gap:4px;
+}
+.modal-rating i {
+  color:#ffd700; font-size:1rem;
+}
+.modal-description h3 {
+  margin-bottom:0.4rem; font-size:1.1rem;
+}
+.modal-description p {
+  font-size:0.9rem; color:#444;
+}
+.modal-features {
+  list-style: disc inside; font-size:0.9rem; color:#444;
+  margin:0; padding-left:1rem;
+}
+.modal-qty {
+  display:flex; align-items:center; gap:0.5rem;
+}
+.modal-qty button {
+  width:28px; height:28px; border:1px solid #ccc;
+  background:#f9f9f9; cursor:pointer; border-radius:4px;
+}
+.modal-qty input {
+  width:50px; text-align:center; border:1px solid #ccc;
+  border-radius:4px;
+}
+#modal-add-cart {
+  margin-top:auto;
+  background:#ff3860; color:#fff; border:none;
+  padding:0.8rem; border-radius:30px;
+  font-size:1rem; cursor:pointer;
+  display:inline-flex; align-items:center;
+  justify-content:center; gap:0.5rem;
+}
+#modal-add-cart:hover { background:#e02e56; }
+
+/* Responsive */
+@media(max-width:600px){
+  .modal-content { flex-direction:column; }
+  .modal-media, .modal-info { flex:1 1 100%; }
+}
+
+
+/* Cart count in header */
+#cart-sidebar .cart-header h2 {
+  font-size:1.3rem;
+}
+#cart-sidebar .cart-header h2 span { color:#ff3860; }
+
+/* Cart items */
+.cart-item {
+  display:flex; gap:12px; margin-bottom:16px; align-items:flex-start;
+}
+.cart-item img {
+  width:60px; height:60px; object-fit:cover; border-radius:6px;
+}
+.cart-item .item-details {
+  flex:1;
+}
+.cart-item .item-details h3 {
+  font-size:1rem; margin-bottom:4px; color:#222;
+}
+.cart-item .item-details .seller {
+  font-size:0.8rem; color:#777; margin-bottom:6px;
+}
+.cart-item .item-details .price {
+  font-size:0.95rem; font-weight:600; color:#ff3860; margin-bottom:6px;
+}
+.cart-item .qty-control {
+  display:flex; gap:6px; align-items:center; margin-bottom:6px;
+}
+.cart-item .qty-control button {
+  width:24px; height:24px; border:1px solid #ccc; background:#f9f9f9; cursor:pointer;
+}
+.cart-item .qty-control input {
+  width:40px; text-align:center; border:1px solid #ccc; border-radius:4px;
+}
+.cart-item .actions {
+  font-size:0.8rem; color:#888;
+}
+.cart-item .actions a {
+  color:#888; text-decoration:none; margin-right:8px;
+}
+.cart-item .actions a:hover { color:#555; }
+
+/* Clear cart button bottom moved into summary */
+#clear-cart { margin:12px 0; }
+
+/* Make checkout full-width */
+#checkout { width:100%; margin-bottom:12px; }
+
+/* Responsive narrower cart */
+@media(max-width:500px){
+  #cart-sidebar { width:100%; }
+}
+
+  .filter-link.active {
+  color: #ff3860;
+  font-weight: 600;
+}
+
+.site-footer {
+  background: #222;
+  color: #ddd;
+  padding: 40px 20px 20px;
+  font-size: 0.95rem;
+}
+.footer-container {
+  max-width: 1300px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 24px;
+}
+
+/* About */
+.footer-section.about .footer-logo {
+  font-size: 1.8rem;
+  color: #ff3860;
+  margin-bottom: 12px;
+}
+.footer-section.about p {
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.social-icons a {
+  color: #ddd;
+  font-size: 1.2rem;
+  margin-right: 12px;
+  transition: color .2s;
+}
+.social-icons a:hover { color: #ff3860; }
+
+/* Links */
+.footer-section.links h4 {
+  margin-bottom: 12px;
+  color: #fff;
+}
+.footer-section.links ul {
+  list-style: none;
+}
+.footer-section.links ul li {
+  margin-bottom: 8px;
+}
+.footer-section.links ul li a {
+  color: #ddd;
+  text-decoration: none;
+  transition: color .2s;
+}
+.footer-section.links ul li a:hover { color: #ff3860; }
+
+/* Newsletter */
+.footer-section.newsletter h4 {
+  margin-bottom: 12px;
+  color: #fff;
+}
+#footer-newsletter-form {
+  display: flex;
+  margin-bottom: 16px;
+}
+#footer-newsletter-form input {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+}
+#footer-newsletter-form button {
+  background: #ff3860;
+  border: none;
+  padding: 0 16px;
+  border-radius: 0 4px 4px 0;
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s;
+}
+#footer-newsletter-form button:hover { background: #e02e56; }
+
+/* Payment icons */
+.payments i {
+  font-size: 1.5rem;
+  margin-right: 12px;
+  color: #ddd;
+}
+.payments i:last-child { margin-right: 0; }
+
+/* Footer bottom */
+.footer-bottom {
+  border-top: 1px solid #444;
+  margin-top: 24px;
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-bottom p { margin: 0; }
+
+/* Back to top */
+#back-to-top {
+  background: #444;
+  border: none;
+  color: #ddd;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background .2s;
+}
+#back-to-top:hover { background: #555; }
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
 
   </style>
 </head>
@@ -498,174 +762,172 @@ display: block;
       <div class="header-icons">
         <i class="fas fa-user"></i>
         <i class="fas fa-heart"></i>
-        <i class="fas fa-shopping-cart"></i>
+        <i class="fas fa-shopping-cart" id="cart-icon"></i>
         <div class="hamburger" id="hamburger">
           <span></span><span></span><span></span>
         </div>
       </div>
     </div>
     <nav id="navMenu">
-      <a href="#">Fashion</a>
-      <a href="#">Beauty</a>
-      <a href="#">Books</a>
-      <a href="#">Electronics</a>
-      <a href="#">Hair & Braids</a>
-      <a href="#">Shoes</a>
-      <a href="#">Accessories</a>
-    </nav>
+  <a href="#" class="filter-link" data-cat="all">All</a>
+  <a href="#" class="filter-link" data-cat="fashion">Fashion</a>
+  <a href="#" class="filter-link" data-cat="beauty">Beauty</a>
+  <a href="#" class="filter-link" data-cat="books">Books</a>
+  <a href="#" class="filter-link" data-cat="electronics">Electronics</a>
+  <a href="#" class="filter-link" data-cat="hair">Hair & Braids</a>
+  <a href="#" class="filter-link" data-cat="shoes">Shoes</a>
+  <a href="#" class="filter-link" data-cat="accessories">Accessories</a>
+</nav>
+
   </header>
 
-  <!-- ─── HERO ───────────────────────────────────────────────────────────────── -->
-  <section class="hero-slider">
-    <div class="slides-wrapper">
-      <!-- Slide 1 -->
-      <div class="slide active">
-        <img src="banner1.avif" alt="Fast, free shipping" loading="lazy">
-        <div class="slide-caption">
-          <h2><i class="fas fa-shipping-fast"></i> Fast, Free Shipping</h2>
-          <p>Unlimited access to deals & more</p>
-          <button class="btn-hero"><i class="fas fa-gem"></i> Join Premium</button>
-          <span class="badge-trends">Trends</span>
-          <h1>#DelicaRomance <i class="fas fa-chevron-right"></i></h1>
-        </div>
-        <div class="promo-cards">
-          <div class="promo-card">
-            <img src="bag.avif" alt="Bag" loading="lazy">
-            <span class="price">$31.00</span>
-          </div>
-          <div class="promo-card">
-            <img src="sneakers.jpg" alt="Sneakers" loading="lazy">
-            <span class="price">$18.00</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- Slide 2 -->
-      <div class="slide">
-        <img src="banner2.webp" alt="20% Off Promo" loading="lazy">
-        <div class="slide-caption">
-          <h2><i class="fas fa-percent"></i> 20% Off Sitewide</h2>
-          <p>Use code <strong>PROMO20</strong></p>
-          <button class="btn-hero"><i class="fas fa-tag"></i> Shop Deals</button>
+<section class="hero-slider">
+  <!-- Slide 1 -->
+  <div class="slide active" data-index="0">
+    <img src="banner1.avif" alt="Discover Endless Choices" loading="lazy">
+    <div class="caption">
+      <h2><i class="fas fa-compass"></i> Discover Endless Choices</h2>
+      <p>From books to gadgets—find it all here.</p>
+      <a href="#shop" class="btn-hero">Shop Now <i class="fas fa-arrow-right"></i></a>
+      <div class="promo-cards">
+        <div class="promo-card">
+          <img src="promo1.jpg" alt="Stylish Bag" loading="lazy">
+          <span class="price">₵31.00</span>
         </div>
-        <div class="promo-cards">
-          <div class="promo-card">
-            <img src="dress.avif" alt="Dress" loading="lazy">
-            <span class="price">$45.00</span>
-          </div>
-          <div class="promo-card">
-            <img src="watch.jpg" alt="Watch" loading="lazy">
-            <span class="price">$120.00</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 3 -->
-      <div class="slide">
-        <img src="banner3.jpeg" alt="New Arrivals" loading="lazy">
-        <div class="slide-caption">
-          <h2><i class="fas fa-tshirt"></i> New Arrivals</h2>
-          <p>Latest fashion trends for you</p>
-          <button class="btn-hero"><i class="fas fa-shopping-bag"></i> Explore</button>
-        </div>
-        <div class="promo-cards">
-          <div class="promo-card">
-            <img src="hat.avif" alt="Hat" loading="lazy">
-            <span class="price">$22.00</span>
-          </div>
-          <div class="promo-card">
-            <img src="jeans.jpg" alt="Jeans" loading="lazy">
-            <span class="price">$39.00</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 4 -->
-      <div class="slide">
-        <img src="banner4.avif" alt="Electronics" loading="lazy">
-        <div class="slide-caption">
-          <h2><i class="fas fa-laptop"></i> Tech Upgrades</h2>
-          <p>Smartphones, laptops & more</p>
-          <button class="btn-hero"><i class="fas fa-bolt"></i> Shop Tech</button>
-        </div>
-        <div class="promo-cards">
-          <div class="promo-card">
-            <img src="phone.avif" alt="Phone" loading="lazy">
-            <span class="price">$299.00</span>
-          </div>
-          <div class="promo-card">
-            <img src="headphones.jpg" alt="Headphones" loading="lazy">
-            <span class="price">$75.00</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 5 -->
-      <div class="slide">
-        <img src="banner5.avif" alt="Clearance Sale" loading="lazy">
-        <div class="slide-caption">
-          <h2><i class="fas fa-tags"></i> Clearance Sale</h2>
-          <p>Up to 70% off select items</p>
-          <button class="btn-hero"><i class="fas fa-bolt"></i> Shop Clearance</button>
-        </div>
-        <div class="promo-cards">
-          <div class="promo-card">
-            <img src="jacket.avif" alt="Jacket" loading="lazy">
-            <span class="price">$49.00</span>
-          </div>
-          <div class="promo-card">
-            <img src="sunglasses.jpg" alt="Sunglasses" loading="lazy">
-            <span class="price">$15.00</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 6 -->
-      <div class="slide">
-        <img src="banner6.webp" alt="Handmade Crafts" loading="lazy">
-        <div class="slide-caption">
-          <h2><i class="fas fa-paint-brush"></i> Handmade Crafts</h2>
-          <p>Unique items by artisans</p>
-          <button class="btn-hero"><i class="fas fa-gift"></i> View Crafts</button>
-        </div>
-        <div class="promo-cards">
-          <div class="promo-card">
-            <img src="vase.avif" alt="Vase" loading="lazy">
-            <span class="price">$28.00</span>
-          </div>
-          <div class="promo-card">
-            <img src="sculpture.jpg" alt="Sculpture" loading="lazy">
-            <span class="price">$65.00</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 7 -->
-      <div class="slide">
-        <img src="banner7.jpg" alt="Beauty & Braids" loading="lazy">
-        <div class="slide-caption">
-          <h2><i class="fas fa-cut"></i> Beauty & Braids</h2>
-          <p>Book your stylist today</p>
-          <button class="btn-hero"><i class="fas fa-calendar-check"></i> Book Now</button>
-        </div>
-        <div class="promo-cards">
-          <div class="promo-card">
-            <img src="braids.avif" alt="Braids" loading="lazy">
-            <span class="price">$25.00</span>
-          </div>
-          <div class="promo-card">
-            <img src="makeup.jpg" alt="Makeup Kit" loading="lazy">
-            <span class="price">$40.00</span>
-          </div>
+        <div class="promo-card">
+          <img src="promo2.jpg" alt="Trending Sneakers" loading="lazy">
+          <span class="price">₵18.00</span>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Slider Controls -->
-    <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
-    <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
-    <div class="slider-dots"></div>
-  </section>
+  <!-- Slide 2 -->
+  <div class="slide" data-index="1">
+    <img src="banner2.webp" alt="20% Off Sitewide" loading="lazy">
+    <div class="caption">
+      <h2><i class="fas fa-percent"></i> 20% Off Sitewide</h2>
+      <p>Use code <strong>PROMO20</strong> at checkout.</p>
+      <a href="#deals" class="btn-hero">Shop Deals <i class="fas fa-tag"></i></a>
+      <div class="promo-cards">
+        <div class="promo-card">
+          <img src="dress.avif" alt="Dress Promo" loading="lazy">
+          <span class="price">₵45.00</span>
+        </div>
+        <div class="promo-card">
+          <img src="watch.jpg" alt="Watch Promo" loading="lazy">
+          <span class="price">₵120.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3 -->
+  <div class="slide" data-index="2">
+    <img src="banner3.jpeg" alt="New Arrivals" loading="lazy">
+    <div class="caption">
+      <h2><i class="fas fa-tshirt"></i> New Arrivals</h2>
+      <p>Latest fashion trends for you.</p>
+      <a href="#fashion" class="btn-hero">Explore <i class="fas fa-shopping-bag"></i></a>
+      <div class="promo-cards">
+        <div class="promo-card">
+          <img src="hat.avif" alt="Hat Promo" loading="lazy">
+          <span class="price">₵22.00</span>
+        </div>
+        <div class="promo-card">
+          <img src="jeans.jpg" alt="Jeans Promo" loading="lazy">
+          <span class="price">₵39.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4 -->
+  <div class="slide" data-index="3">
+    <img src="banner4.avif" alt="Tech Upgrades" loading="lazy">
+    <div class="caption">
+      <h2><i class="fas fa-laptop"></i> Tech Upgrades</h2>
+      <p>Smartphones, laptops & more.</p>
+      <a href="#electronics" class="btn-hero">Shop Tech <i class="fas fa-bolt"></i></a>
+      <div class="promo-cards">
+        <div class="promo-card">
+          <img src="phone.avif" alt="Phone Promo" loading="lazy">
+          <span class="price">₵299.00</span>
+        </div>
+        <div class="promo-card">
+          <img src="headphones.jpg" alt="Headphones Promo" loading="lazy">
+          <span class="price">₵75.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5 -->
+  <div class="slide" data-index="4">
+    <img src="banner5.avif" alt="Clearance Sale" loading="lazy">
+    <div class="caption">
+      <h2><i class="fas fa-tags"></i> Clearance Sale</h2>
+      <p>Up to 70% off select items.</p>
+      <a href="#clearance" class="btn-hero">Shop Clearance <i class="fas fa-bolt"></i></a>
+      <div class="promo-cards">
+        <div class="promo-card">
+          <img src="jacket.avif" alt="Jacket Promo" loading="lazy">
+          <span class="price">₵49.00</span>
+        </div>
+        <div class="promo-card">
+          <img src="sunglasses.jpg" alt="Sunglasses Promo" loading="lazy">
+          <span class="price">₵15.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6 -->
+  <div class="slide" data-index="5">
+    <img src="banner6.webp" alt="Handmade Crafts" loading="lazy">
+    <div class="caption">
+      <h2><i class="fas fa-paint-brush"></i> Handmade Crafts</h2>
+      <p>Unique items by artisans.</p>
+      <a href="#crafts" class="btn-hero">View Crafts <i class="fas fa-gift"></i></a>
+      <div class="promo-cards">
+        <div class="promo-card">
+          <img src="vase.avif" alt="Vase Promo" loading="lazy">
+          <span class="price">₵28.00</span>
+        </div>
+        <div class="promo-card">
+          <img src="sculpture.jpg" alt="Sculpture Promo" loading="lazy">
+          <span class="price">₵65.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7 -->
+  <div class="slide" data-index="6">
+    <img src="banner7.jpg" alt="Beauty & Braids" loading="lazy">
+    <div class="caption">
+      <h2><i class="fas fa-cut"></i> Beauty & Braids</h2>
+      <p>Book your stylist today.</p>
+      <a href="#beauty" class="btn-hero">Book Now <i class="fas fa-calendar-check"></i></a>
+      <div class="promo-cards">
+        <div class="promo-card">
+          <img src="braids.avif" alt="Braids Promo" loading="lazy">
+          <span class="price">₵25.00</span>
+        </div>
+        <div class="promo-card">
+          <img src="makeup.jpg" alt="Makeup Kit Promo" loading="lazy">
+          <span class="price">₵40.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <button class="slider-nav prev"><i class="fas fa-chevron-left"></i></button>
+  <button class="slider-nav next"><i class="fas fa-chevron-right"></i></button>
+  <div class="slider-dots"></div>
+</section>
 
   <section class="featured-categories">
     <div class="container">
@@ -684,7 +946,7 @@ display: block;
           <span>Beauty</span>
         </a>
         <a href="/category/books" class="category-card">
-          <img src="books.avif" alt="Books" loading="lazy">
+          <img src="books.jpg" alt="Books" loading="lazy">
           <span>Books</span>
         </a>
         <a href="/category/shoes" class="category-card">
@@ -704,7 +966,7 @@ display: block;
       <h2 class="section-title">Top Deals This Week</h2>
       <div class="deals-grid">
         <!-- Example Product Card -->
-        <div class="deal-card">
+        <div class="deal-card" data-category="electronics">
           <img src="deal1.jpg" alt="Product 1" loading="lazy">
           <div class="deal-info">
             <h3>Wireless Headphones</h3>
@@ -712,8 +974,8 @@ display: block;
             <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
           </div>
         </div>
-        <!-- Duplicate the .deal-card 3–4 more times with your images/text -->
-        <div class="deal-card">
+
+                <div class="deal-card" data-category="fashion">
           <img src="deal2.jpg" alt="Product 2" loading="lazy">
           <div class="deal-info">
             <h3>Classic Handbag</h3>
@@ -721,7 +983,7 @@ display: block;
             <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
           </div>
         </div>
-        <div class="deal-card">
+        <div class="deal-card" data-category="shoes">
           <img src="deal3.webp" alt="Product 3" loading="lazy">
           <div class="deal-info">
             <h3>Leather Boots</h3>
@@ -729,7 +991,7 @@ display: block;
             <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
           </div>
         </div>
-        <div class="deal-card">
+        <div class="deal-card" data-category="electronics">
           <img src="deal4.webp" alt="Product 4" loading="lazy">
           <div class="deal-info">
             <h3>Rolex Watch</h3>
@@ -771,7 +1033,7 @@ display: block;
 
     <div class="products-grid">
   <!-- Product 1 -->
-  <div class="product-card">
+  <div class="product-card" data-category="fashion">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product1.jpg" alt="Stylish Handbag" loading="lazy">
@@ -785,7 +1047,7 @@ display: block;
   </div>
 
   <!-- Product 2 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product2.webp" alt="Wireless Earbuds" loading="lazy">
@@ -799,7 +1061,7 @@ display: block;
   </div>
 
   <!-- Product 3 -->
-  <div class="product-card">
+  <div class="product-card" data-category="fashion">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product3.jpg" alt="Cotton T‑Shirt" loading="lazy">
@@ -813,7 +1075,7 @@ display: block;
   </div>
 
   <!-- Product 4 -->
-  <div class="product-card">
+  <div class="product-card" data-category="fashion">
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product4.webp" alt="Leather Wallet" loading="lazy">
@@ -827,7 +1089,7 @@ display: block;
   </div>
 
   <!-- Product 5 -->
-  <div class="product-card">
+  <div class="product-card" data-category="shoes">
     <div class="card-media">
       <img src="product5.webp" alt="Running Shoes" loading="lazy">
     </div>
@@ -840,7 +1102,7 @@ display: block;
   </div>
 
   <!-- Product 6 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product6.jpg" alt="Smartwatch" loading="lazy">
@@ -854,7 +1116,7 @@ display: block;
   </div>
 
   <!-- Product 7 -->
-  <div class="product-card">
+  <div class="product-card" data-category="books">
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product7.webp" alt="Hardcover Novel" loading="lazy">
@@ -868,7 +1130,7 @@ display: block;
   </div>
 
   <!-- Product 8 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product8.jpg" alt="Phone Case" loading="lazy">
     </div>
@@ -881,7 +1143,7 @@ display: block;
   </div>
 
   <!-- Product 9 -->
-  <div class="product-card">
+  <div class="product-card" data-category="fashion">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product9.webp" alt="Sunglasses" loading="lazy">
@@ -895,7 +1157,7 @@ display: block;
   </div>
 
   <!-- Product 10 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <img src="product10.jpg" alt="Ceramic Mug" loading="lazy">
     </div>
@@ -908,7 +1170,7 @@ display: block;
   </div>
 
   <!-- Product 11 -->
-  <div class="product-card">
+  <div class="product-card" data-category="fashion">
     <div class="card-media">
       <img src="product11.jpg" alt="Backpack" loading="lazy">
     </div>
@@ -921,7 +1183,7 @@ display: block;
   </div>
 
   <!-- Product 12 -->
-  <div class="product-card">
+  <div class="product-card" data-category="beauty">
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product12.jpg" alt="Matte Lipstick" loading="lazy">
@@ -935,7 +1197,7 @@ display: block;
   </div>
 
   <!-- Product 13 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product13.jpg" alt="Over‑Ear Headphones" loading="lazy">
@@ -949,7 +1211,7 @@ display: block;
   </div>
 
   <!-- Product 14 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product14.webp" alt="Laptop Sleeve" loading="lazy">
     </div>
@@ -962,7 +1224,7 @@ display: block;
   </div>
 
   <!-- Product 15 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product15.jpg" alt="Fitness Band" loading="lazy">
     </div>
@@ -975,7 +1237,7 @@ display: block;
   </div>
 
   <!-- Product 16 -->
-  <div class="product-card">
+  <div class="product-card" data-category="shoes">
     <div class="card-media">
       <img src="product16.webp" alt="Kids’ Sneakers" loading="lazy">
     </div>
@@ -988,7 +1250,7 @@ display: block;
   </div>
 
   <!-- Product 17 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product17.jpg" alt="Gaming Mouse" loading="lazy">
     </div>
@@ -1001,7 +1263,7 @@ display: block;
   </div>
 
   <!-- Product 18 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <img src="product18.jpg" alt="Water Bottle" loading="lazy">
     </div>
@@ -1014,7 +1276,7 @@ display: block;
   </div>
 
   <!-- Product 19 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product19.jpg" alt="Desk Lamp" loading="lazy">
     </div>
@@ -1027,7 +1289,7 @@ display: block;
   </div>
 
   <!-- Product 20 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product20.jpg" alt="Wireless Charger" loading="lazy">
@@ -1041,7 +1303,7 @@ display: block;
   </div>
   
   <!-- Product 21 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product21.jpg" alt="Bluetooth Speaker" loading="lazy">
     </div>
@@ -1054,7 +1316,7 @@ display: block;
   </div>
 
   <!-- Product 22 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product22.webp" alt="Yoga Mat" loading="lazy">
@@ -1068,7 +1330,7 @@ display: block;
   </div>
 
   <!-- Product 23 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <img src="product23.jpg" alt="Desk Organizer" loading="lazy">
     </div>
@@ -1081,7 +1343,7 @@ display: block;
   </div>
 
   <!-- Product 24 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product24.webp" alt="Stainless Steel Water Bottle" loading="lazy">
@@ -1095,7 +1357,7 @@ display: block;
   </div>
 
   <!-- Product 25 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <img src="product25.jpg" alt="Silk Pillowcase" loading="lazy">
     </div>
@@ -1108,7 +1370,7 @@ display: block;
   </div>
 
   <!-- Product 26 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product26.webp" alt="Portable Charger" loading="lazy">
@@ -1122,7 +1384,7 @@ display: block;
   </div>
 
   <!-- Product 27 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <img src="product27.jpg" alt="Gardening Tools Kit" loading="lazy">
     </div>
@@ -1135,7 +1397,7 @@ display: block;
   </div>
 
   <!-- Product 28 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product28.jpg" alt="Ceramic Planter" loading="lazy">
@@ -1149,7 +1411,7 @@ display: block;
   </div>
 
   <!-- Product 29 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product29.jpg" alt="Wireless Keyboard" loading="lazy">
     </div>
@@ -1162,7 +1424,7 @@ display: block;
   </div>
 
   <!-- Product 30 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product30.avif" alt="LED Strip Lights" loading="lazy">
@@ -1176,7 +1438,7 @@ display: block;
   </div>
 
   <!-- Product 31 -->
-  <div class="product-card">
+  <div class="product-card" data-category="shoes">
     <div class="card-media">
       <img src="product31.avif" alt="Canvas Sneakers" loading="lazy">
     </div>
@@ -1189,7 +1451,7 @@ display: block;
   </div>
 
   <!-- Product 32 -->
-  <div class="product-card">
+  <div class="product-card" data-category="fashion">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product32.webp" alt="Classic Fedora Hat" loading="lazy">
@@ -1203,7 +1465,7 @@ display: block;
   </div>
 
   <!-- Product 33 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <img src="product33.webp" alt="Scented Candle Set" loading="lazy">
     </div>
@@ -1216,7 +1478,7 @@ display: block;
   </div>
 
   <!-- Product 34 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <img src="product34.webp" alt="Memory Foam Pillow" loading="lazy">
     </div>
@@ -1229,7 +1491,7 @@ display: block;
   </div>
 
   <!-- Product 35 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product35.webp" alt="Travel Backpack" loading="lazy">
@@ -1243,7 +1505,7 @@ display: block;
   </div>
 
   <!-- Product 36 -->
-  <div class="product-card">
+  <div class="product-card" data-category="fashion">
     <div class="card-media">
       <img src="product36.jpg" alt="Graphic Hoodie" loading="lazy">
     </div>
@@ -1256,7 +1518,7 @@ display: block;
   </div>
 
   <!-- Product 37 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product37.jpg" alt="Portable Projector" loading="lazy">
     </div>
@@ -1269,7 +1531,7 @@ display: block;
   </div>
 
   <!-- Product 38 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product38.jpg" alt="Electric Kettle" loading="lazy">
@@ -1283,7 +1545,7 @@ display: block;
   </div>
 
   <!-- Product 39 -->
-  <div class="product-card">
+  <div class="product-card" data-category="electronics">
     <div class="card-media">
       <img src="product39.webp" alt="Bluetooth Headphones" loading="lazy">
     </div>
@@ -1296,7 +1558,7 @@ display: block;
   </div>
 
   <!-- Product 40 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="electronics">  
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product40.webp" alt="Smart Light Bulb" loading="lazy">
@@ -1310,7 +1572,7 @@ display: block;
   </div>
 
   <!-- Product 41 -->
-  <div class="product-card">
+  <div class="product-card" data-category="accessories">
     <div class="card-media">
       <img src="product41.jpg" alt="Silicone Bakeware" loading="lazy">
     </div>
@@ -1323,7 +1585,7 @@ display: block;
   </div>
 
   <!-- Product 42 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="electronics">  
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product42.jpg" alt="Digital Alarm Clock" loading="lazy">
@@ -1337,7 +1599,7 @@ display: block;
   </div>
 
   <!-- Product 43 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="electronics">  
     <div class="card-media">
       <img src="product43.jpg" alt="Gaming Headset" loading="lazy">
     </div>
@@ -1350,7 +1612,7 @@ display: block;
   </div>
 
   <!-- Product 44 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="accessories">  
     <div class="card-media">
       <img src="product44.webp" alt="Stainless Cookware Set" loading="lazy">
     </div>
@@ -1363,7 +1625,7 @@ display: block;
   </div>
 
   <!-- Product 45 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="electronics">  
     <div class="card-media">
       <span class="badge trending">Trending</span>
       <img src="product45.webp" alt="Bluetooth Car Kit" loading="lazy">
@@ -1377,7 +1639,7 @@ display: block;
   </div>
 
   <!-- Product 46 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="accessories">  
     <div class="card-media">
       <img src="product46.jpg" alt="Ceramic Dinnerware Set" loading="lazy">
     </div>
@@ -1390,7 +1652,7 @@ display: block;
   </div>
 
   <!-- Product 47 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="electronics">  
     <div class="card-media">
       <img src="product47.webp" alt="Wireless Gaming Controller" loading="lazy">
     </div>
@@ -1403,7 +1665,7 @@ display: block;
   </div>
 
   <!-- Product 48 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="fashion">  
     <div class="card-media">
       <span class="badge new">New</span>
       <img src="product48.jpg" alt="Silk Scarf" loading="lazy">
@@ -1417,7 +1679,7 @@ display: block;
   </div>
 
   <!-- Product 49 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="electronics">  
     <div class="card-media">
       <img src="product49.webp" alt="Digital Photo Frame" loading="lazy">
     </div>
@@ -1430,7 +1692,7 @@ display: block;
   </div>
 
   <!-- Product 50 -->
-  <div class="product-card">  
+  <div class="product-card" data-category="electronics">  
     <div class="card-media">
       <img src="product50.png" alt="Compact Air Fryer" loading="lazy">
     </div>
@@ -1443,14 +1705,184 @@ display: block;
   </div>
 
 </div>
-
-
     <!-- Load More -->
     <div class="load-more-wrap">
       <button class="btn-load-more">Load More Products</button>
     </div>
   </div>
 </section>
+
+  <!-- PRODUCT DETAILS MODAL -->
+<div id="product-modal-backdrop"></div>
+<div id="product-modal">
+  <button id="modal-close"><i class="fas fa-times"></i></button>
+  <div class="modal-content">
+    <div class="modal-media">
+      <img id="modal-img" src="" alt="">
+    </div>
+    <div class="modal-info">
+      <h2 id="modal-title">Product Title</h2>
+      <p class="modal-seller">by <span id="modal-seller">Seller Name</span></p>
+      <p class="modal-price" id="modal-price">₵0.00</p>
+      <div class="modal-rating" id="modal-rating">
+        <!-- stars will go here -->
+      </div>
+      <p class="modal-stock" id="modal-stock">In Stock</p>
+      <div class="modal-description" id="modal-description">
+        <h3>Description</h3>
+        <p>A detailed description of the product goes here. Highlight features, materials, dimensions, and care instructions.</p>
+      </div>
+      <ul class="modal-features" id="modal-features">
+        <!-- feature list -->
+        <li>Feature 1</li>
+        <li>Feature 2</li>
+        <li>Feature 3</li>
+      </ul>
+      <div class="modal-qty">
+        <label>Quantity:</label>
+        <button id="qty-decrease">–</button>
+        <input type="number" id="qty-input" value="1" min="1">
+        <button id="qty-increase">+</button>
+      </div>
+      <button id="modal-add-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    </div>
+  </div>
+</div>
+<!-- CART SIDEBAR & BACKDROP -->
+<div id="cart-backdrop"></div>
+<aside id="cart-sidebar">
+  <div class="cart-header">
+    <h2>Your Cart (<span id="cart-count">0</span>)</h2>
+    <button id="cart-close"><i class="fas fa-times"></i></button>
+  </div>
+
+  <div class="cart-content">
+    <div id="cart-items"><!-- items injected here --></div>
+
+    <!-- Coupon -->
+    <div class="cart-coupon">
+      <input type="text" id="coupon-code" placeholder="Coupon code">
+      <button id="apply-coupon">Apply</button>
+    </div>
+  </div>
+
+  <div class="cart-summary">
+    <div class="summary-row"><span>Subtotal</span><span id="subtotal">₵0.00</span></div>
+    <div class="summary-row"><span>Tax (5%)</span><span id="tax">₵0.00</span></div>
+    <div class="summary-row total"><span>Total</span><span id="total">₵0.00</span></div>
+    <button id="clear-cart">Clear Cart</button>
+    <button id="checkout">Proceed to Checkout</button>
+  </div>
+</aside>
+
+  <footer class="site-footer">
+  <div class="footer-container">
+    <!-- Logo & About -->
+    <div class="footer-section about">
+      <h3 class="footer-logo">YourMarket</h3>
+      <p>YourMarket is your one‑stop online marketplace—shop thousands of products across categories, from fashion and beauty to electronics and home decor.</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-section links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#shop">Shop All</a></li>
+        <li><a href="#deals">Top Deals</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#support">Support</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Customer Care -->
+    <div class="footer-section links">
+      <h4>Customer Care</h4>
+      <ul>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#shipping">Shipping & Returns</a></li>
+        <li><a href="#privacy">Privacy Policy</a></li>
+        <li><a href="#terms">Terms of Service</a></li>
+        <li><a href="#track">Order Tracking</a></li>
+      </ul>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="footer-section newsletter">
+      <h4>Join Our Newsletter</h4>
+      <p>Get 10% off your first order and exclusive updates.</p>
+      <form id="footer-newsletter-form">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+      </form>
+      <div class="payments">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-amex"></i>
+        <i class="fab fa-cc-paypal"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 YourMarket. All rights reserved.</p>
+    <button id="back-to-top" title="Back to top"><i class="fas fa-chevron-up"></i></button>
+  </div>
+</footer>
+
+<script>
+;(function(){
+  const slides = [...document.querySelectorAll('.hero-slider .slide')];
+  const dotsContainer = document.querySelector('.slider-dots');
+  let current = 0, timer;
+
+  // create dots
+  slides.forEach((_,i)=>{
+    let d = document.createElement('span');
+    d.addEventListener('click', ()=> goTo(i));
+    dotsContainer.appendChild(d);
+  });
+  const dots = [...dotsContainer.children];
+  dots[0].classList.add('active');
+
+  function show(idx){
+    slides.forEach(s=>s.classList.remove('active'));
+    dots.forEach(d=>d.classList.remove('active'));
+    slides[idx].classList.add('active');
+    dots[idx].classList.add('active');
+  }
+
+  function next(){
+    current = (current+1) % slides.length;
+    show(current);
+  }
+  function prev(){
+    current = (current-1 + slides.length) % slides.length;
+    show(current);
+  }
+  function goTo(i){
+    current = i; show(current); reset();
+  }
+
+  document.querySelector('.slider-nav.next').addEventListener('click', ()=>{ next(); reset(); });
+  document.querySelector('.slider-nav.prev').addEventListener('click', ()=>{ prev(); reset(); });
+
+  function reset(){
+    clearInterval(timer);
+    timer = setInterval(next, 5000);
+  }
+  timer = setInterval(next, 5000);
+
+  // initialize
+  show(0);
+})();
+</script>
 
   <script>
     // Hamburger menu toggle
@@ -1463,42 +1895,342 @@ display: block;
       }
     });
 
-    // Hero slider
-    (function(){
-      const slides = document.querySelectorAll('.slide'),
-            wrapper = document.querySelector('.slides-wrapper'),
-            prevBtn = document.querySelector('.slider-btn.prev'),
-            nextBtn = document.querySelector('.slider-btn.next'),
-            dotsC = document.querySelector('.slider-dots');
-      let idx = 0, timer;
-
-      // build dots
-      slides.forEach((_,i) => {
-        let d = document.createElement('span');
-        d.addEventListener('click', () => goTo(i));
-        dotsC.appendChild(d);
-      });
-      const dots = dotsC.querySelectorAll('span');
-      dots[0].classList.add('active');
-
-      function update() {
-        wrapper.style.transform = `translateX(-${idx*100}%)`;
-        dots.forEach(dot => dot.classList.remove('active'));
-        dots[idx].classList.add('active');
-      }
-      function next() { idx = (idx+1) % slides.length; update(); }
-      function prev() { idx = (idx-1+slides.length) % slides.length; update(); }
-      function goTo(i) { idx = i; update(); reset(); }
-
-      nextBtn.addEventListener('click', () => { next(); reset(); });
-      prevBtn.addEventListener('click', () => { prev(); reset(); });
-
-      function reset(){
-        clearInterval(timer);
-        timer = setInterval(next, 5000);
-      }
-      timer = setInterval(next, 5000);
-    })();
+   
   </script>
+
+  <script>
+  // elements
+  const modal = document.getElementById('product-modal'),
+        backdrop = document.getElementById('product-modal-backdrop'),
+        closeBtn = document.getElementById('modal-close'),
+        imgEl = document.getElementById('modal-img'),
+        titleEl = document.getElementById('modal-title'),
+        sellerEl = document.getElementById('modal-seller'),
+        priceEl = document.getElementById('modal-price'),
+        ratingEl = document.getElementById('modal-rating'),
+        stockEl = document.getElementById('modal-stock'),
+        descEl = document.getElementById('modal-description').querySelector('p'),
+        featuresEl = document.getElementById('modal-features'),
+        qtyInput = document.getElementById('qty-input'),
+        decBtn = document.getElementById('qty-decrease'),
+        incBtn = document.getElementById('qty-increase');
+
+  // open/close functions
+  function openModal(data){
+    imgEl.src = data.img;
+    imgEl.alt = data.title;
+    titleEl.textContent = data.title;
+    sellerEl.textContent = data.seller;
+    priceEl.textContent = data.price;
+    stockEl.textContent = data.stock;
+    descEl.textContent = data.description;
+    // rating stars
+    ratingEl.innerHTML = '';
+    for(let i=0;i<5;i++){
+      let star = document.createElement('i');
+      star.className = i < data.rating ? 'fas fa-star' : 'far fa-star';
+      ratingEl.appendChild(star);
+    }
+    // features list
+    featuresEl.innerHTML = '';
+    data.features.forEach(f=>{
+      let li = document.createElement('li');
+      li.textContent = f;
+      featuresEl.appendChild(li);
+    });
+    qtyInput.value = 1;
+    modal.classList.add('active');
+    backdrop.classList.add('active');
+  }
+  function closeModal(){
+    modal.classList.remove('active');
+    backdrop.classList.remove('active');
+  }
+
+  // attach to all product & deal cards
+  document.querySelectorAll('.product-card, .deal-card').forEach(card=>{
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', ()=>{
+      // collect data from card
+      const img = card.querySelector('img').src;
+      const title = card.querySelector('.product-title, .deal-info h3').innerText;
+      const price = card.querySelector('.price').innerText;
+      const sellerLink = card.querySelector('.seller a');
+      const seller = sellerLink ? sellerLink.innerText : 'Marketplace';
+      // dummy data for others
+      const data = {
+        img, title, price, seller,
+        stock: 'In Stock',
+        rating: Math.floor(Math.random()*2)+4, // 4–5 stars
+        description: 'This is a detailed description of "'+title+'". It covers features, usage, and specifications to help the customer make an informed decision.',
+        features: ['High quality material', 'One-year warranty', 'Free shipping', '30-day returns']
+      };
+      openModal(data);
+    });
+  });
+
+  // close handlers
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+
+  // qty controls
+  decBtn.addEventListener('click', ()=> {
+    if(+qtyInput.value > 1) qtyInput.value = +qtyInput.value - 1;
+  });
+  incBtn.addEventListener('click', ()=> {
+    qtyInput.value = +qtyInput.value + 1;
+  });
+</script>
+<script>
+  // Elements
+  const cartIcon = document.getElementById('cart-icon'),
+        cartBackdrop = document.getElementById('cart-backdrop'),
+        cartSidebar = document.getElementById('cart-sidebar'),
+        cartClose = document.getElementById('cart-close'),
+        cartItemsContainer = document.getElementById('cart-items'),
+        cartCountEl = document.getElementById('cart-count'),
+        subtotalEl = document.getElementById('subtotal'),
+        taxEl = document.getElementById('tax'),
+        totalEl = document.getElementById('total'),
+        clearCartBtn = document.getElementById('clear-cart'),
+        applyCouponBtn = document.getElementById('apply-coupon'),
+        couponCodeInput = document.getElementById('coupon-code');
+
+  let cart = [];
+
+  // Open/close cart
+  cartIcon.addEventListener('click', ()=>{ cartSidebar.classList.add('active'); cartBackdrop.classList.add('active'); });
+  cartClose.addEventListener('click', closeCart);
+  cartBackdrop.addEventListener('click', closeCart);
+  function closeCart(){
+    cartSidebar.classList.remove('active');
+    cartBackdrop.classList.remove('active');
+  }
+
+  // Format currency
+  const fmt = v => '₵'+v.toFixed(2);
+
+  // Update summary
+  function updateSummary(){
+    let subtotal = cart.reduce((sum,i)=> sum + i.price * i.qty, 0);
+    let tax = subtotal * 0.05;
+    let total = subtotal + tax;
+    subtotalEl.textContent = fmt(subtotal);
+    taxEl.textContent = fmt(tax);
+    totalEl.textContent = fmt(total);
+    cartCountEl.textContent = cart.reduce((sum,i)=> sum + i.qty, 0);
+  }
+
+  // Render cart items
+  function renderCart(){
+    cartItemsContainer.innerHTML = '';
+    cart.forEach((item, idx)=>{
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <img src="${item.img}" alt="${item.title}">
+        <div class="item-details">
+          <h3>${item.title}</h3>
+          <p class="seller">${item.seller}</p>
+          <p class="price">${fmt(item.price)}</p>
+          <div class="qty-control">
+            <button class="dec">–</button>
+            <input type="number" value="${item.qty}" min="1">
+            <button class="inc">+</button>
+          </div>
+          <div class="actions">
+            <a href="#" class="save-later">Save for later</a>
+            <a href="#" class="remove">Remove</a>
+          </div>
+        </div>`;
+      // qty handlers
+      const dec = div.querySelector('.dec'),
+            inc = div.querySelector('.inc'),
+            inp = div.querySelector('input');
+      dec.addEventListener('click', ()=>{
+        if(item.qty>1) item.qty--, inp.value=item.qty, updateSummary();
+      });
+      inc.addEventListener('click', ()=>{
+        item.qty++, inp.value=item.qty, updateSummary();
+      });
+      inp.addEventListener('change', ()=>{
+        item.qty = Math.max(1, parseInt(inp.value)||1);
+        inp.value = item.qty; updateSummary();
+      });
+      // remove handler
+      div.querySelector('.remove').addEventListener('click', e=>{
+        e.preventDefault();
+        cart.splice(idx,1);
+        syncButtons();
+        renderCart();
+        updateSummary();
+      });
+
+      cartItemsContainer.appendChild(div);
+    });
+  }
+
+  // Sync cart buttons in product cards & modal
+  function syncButtons(){
+    document.querySelectorAll('.btn-cart').forEach(btn=>{
+      const img = btn.dataset.img,
+            title = btn.dataset.title;
+      const inCart = cart.find(i=> i.title===title);
+      if(inCart) {
+        btn.innerHTML = '<i class="fas fa-trash"></i> Remove';
+        btn.classList.add('in-cart');
+      } else {
+        btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        btn.classList.remove('in-cart');
+      }
+    });
+  }
+
+  // Add/remove from cart
+  function toggleCartItem(data, btn){
+    const idx = cart.findIndex(i=> i.title===data.title);
+    if(idx > -1){
+      cart.splice(idx,1);
+    } else {
+      cart.push({...data, qty:1});
+    }
+    renderCart();
+    updateSummary();
+    syncButtons();
+  }
+
+  // Attach to product & modal buttons
+  document.querySelectorAll('.btn-cart').forEach(btn=>{
+    // store data on button for easy retrieval
+    const card = btn.closest('.product-card, .deal-card');
+    btn.dataset.img = card.querySelector('img').src;
+    btn.dataset.title = (card.querySelector('.product-title')||card.querySelector('h3')).innerText;
+    btn.dataset.price = parseFloat((card.querySelector('.price').innerText.replace('₵','')||0));
+    btn.dataset.seller = (card.querySelector('.seller a')||{innerText:'Marketplace'}).innerText;
+
+    btn.addEventListener('click', ()=>{
+      const data = {
+        img: btn.dataset.img,
+        title: btn.dataset.title,
+        price: +btn.dataset.price,
+        seller: btn.dataset.seller
+      };
+      toggleCartItem(data, btn);
+    });
+  });
+
+  // Apply coupon (demo)
+  applyCouponBtn.addEventListener('click', ()=>{
+    alert('Coupon "'+couponCodeInput.value+'" applied!');
+  });
+
+  // Clear cart
+  clearCartBtn.addEventListener('click', ()=>{
+    cart = [];
+    renderCart();
+    updateSummary();
+    syncButtons();
+  });
+
+  // Initialize
+  renderCart();
+  updateSummary();
+  syncButtons();
+</script>
+
+  <script>
+  // Grab all filter links and cards
+  const filterLinks = document.querySelectorAll('.filter-link');
+  const allCards = [...document.querySelectorAll('.product-card'), ...document.querySelectorAll('.deal-card')];
+
+  filterLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const cat = link.dataset.cat;       // e.g. 'fashion' or 'all'
+
+      // Highlight active link
+      filterLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+
+      // Show/hide cards
+      allCards.forEach(card => {
+        if (cat === 'all' || card.dataset.category === cat) {
+          card.style.display = '';       // show
+        } else {
+          card.style.display = 'none';   // hide
+        }
+      });
+    });
+  });
+
+  // Optional: trigger “All” on load
+  document.querySelector('.filter-link[data-cat="all"]').click();
+</script>
+
+  <script>
+  // 1) SEARCH FILTER
+  const searchInput = document.querySelector('.search-bar input');
+  const allCards = [...document.querySelectorAll('.product-card'), ...document.querySelectorAll('.deal-card')];
+
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    allCards.forEach(card => {
+      const titleEl = card.querySelector('.product-title, .deal-info h3');
+      const title = titleEl ? titleEl.innerText.toLowerCase() : '';
+      card.style.display = title.includes(query) ? '' : 'none';
+    });
+  });
+
+  // 2) CLOSE MOBILE NAV on link click
+  const filterLinks = document.querySelectorAll('.filter-link');
+  filterLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const nav = document.getElementById('navMenu');
+      if (nav.classList.contains('active')) nav.classList.remove('active');
+    });
+  });
+
+  // 3) LOAD MORE PRODUCTS
+  const loadMoreBtn = document.querySelector('.btn-load-more');
+  loadMoreBtn.addEventListener('click', () => {
+    // Reveal next 20 hidden products
+    const hidden = Array.from(document.querySelectorAll('.product-card'))
+                         .filter(c => c.style.display === 'none' || c.classList.contains('hidden'));
+    hidden.slice(0, 20).forEach(card => {
+      card.style.display = '';
+      card.classList.remove('hidden');
+    });
+    // If no more hidden, hide the Load More button
+    if (!Array.from(document.querySelectorAll('.product-card')).some(c => c.classList.contains('hidden'))) {
+      loadMoreBtn.style.display = 'none';
+    }
+  });
+
+  // INITIAL SETUP for Load More: hide all beyond first 20
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = Array.from(document.querySelectorAll('.product-card'));
+    cards.slice(20).forEach(card => {
+      card.classList.add('hidden');
+      card.style.display = 'none';
+    });
+    if (cards.length <= 20) loadMoreBtn.style.display = 'none';
+  });
+</script>
+
+  <script>
+  // Back to top button
+  document.getElementById('back-to-top')
+    .addEventListener('click', ()=> window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Newsletter form submission (demo)
+  document.getElementById('footer-newsletter-form')
+    .addEventListener('submit', e => {
+      e.preventDefault();
+      const email = e.target.querySelector('input').value;
+      alert(`Thanks for subscribing with ${email}!`);
+      e.target.reset();
+    });
+</script>
+
 </body>
 </html>
