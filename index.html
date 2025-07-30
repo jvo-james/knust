@@ -87,7 +87,11 @@
       min-width:100%; position:relative;
     }
     .slide img {
-      display:block; width:100%; height:80vh; object-fit:cover;
+display: block;
+  width: 100%;
+  max-height: 80vh;      
+  height: auto;           
+  object-fit: cover; 
     }
 
     /* Caption */
@@ -118,24 +122,51 @@
     }
     .slide-caption h1 i { margin-left:.5rem; color:#ff3860; }
 
-    /* Promo Cards */
-    .promo-cards {
-      position:absolute; bottom:8%; right:8%;
-      display:flex; gap:1rem;
-    }
-    .promo-card {
-      background:#fff; border-radius:12px; overflow:hidden;
-      box-shadow:0 2px 12px rgba(0,0,0,0.1);
-      text-align:center; width:120px; transition:transform .2s;
-    }
-    .promo-card:hover { transform:translateY(-6px); }
-    .promo-card img {
-      width:100%; height:100px; object-fit:cover;
-    }
-    .promo-card .price {
-      display:block; padding:.6rem 0;
-      font-weight:600; color:#333; background:#f8f8f8;
-    }
+   /* Tighter, wrapped promo cards */
+.promo-cards {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  display: flex;
+  flex-wrap: wrap;           /* allow cards to wrap onto new lines */
+  gap: 0.5rem;
+  max-width: 240px;          /* never wider than 240px total */
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.4);   /* semi‑transparent dark behind cards */
+  border-radius: 8px;
+}
+
+/* Make each card flexibly sized */
+.promo-card {
+  flex: 1 1 45%;             /* two cards per row, roughly */
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.promo-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Shrink images inside cards to fit */
+.promo-card img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Price label styling stays the same */
+.promo-card .price {
+  display: block;
+  padding: 0.4rem 0;
+  font-weight: 600;
+  color: #333;
+  background: #f8f8f8;
+}
+
 
     /* Nav Buttons */
     .slider-btn {
