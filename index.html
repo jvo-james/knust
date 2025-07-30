@@ -13,8 +13,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-<script src="https://js.paystack.co/v1/inline.js"></script>
-  <style>
+<style>
      * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Poppins',sans-serif; }
     body { padding-top:80px; background:#fafafa; color:#333; line-height:1.5; }
 
@@ -2354,42 +2353,14 @@ const modalAddBtn = document.getElementById('modal-add-cart');
   });
 
   // Clear cart
- clearCartBtn.addEventListener('click', ()=>{
+  clearCartBtn.addEventListener('click', ()=>{
     cart = [];
     renderCart();
     updateSummary();
     syncButtons();
   });
 
-  // ── PROCEED TO CHECKOUT (Paystack) ────────────────────────
-  document.getElementById('checkout').addEventListener('click', function(e){
-    e.preventDefault();
-    // Gather total amount in kobo (₵ → 100 kobo)
-    const amount₵ = parseFloat(totalEl.textContent.replace('₵','')) || 0;
-    const handler = PaystackPop.setup({
-      key: 'pk_test_297586e51710e83dc159bfe71ff14c7e23411fa',      
-      email:    'customer@example.com',      
-      amount:   Math.round(amount₵ * 100),    
-      currency: 'GHS',
-      callback: function(response){
-        // Payment was successful
-        alert('Payment complete! Reference: ' + response.reference);
-        // Clear the cart:
-        cart = [];
-        renderCart();
-        updateSummary();
-        syncButtons();
-        // Close sidebar:
-        cartSidebar.classList.remove('active');
-        cartBackdrop.classList.remove('active');
-      },
-      onClose: function(){
-        alert('Payment popup closed.');
-      }
-    });
-    handler.openIframe();
-  });
- // Initialize
+  // Initialize
   renderCart();
   updateSummary();
   syncButtons();
