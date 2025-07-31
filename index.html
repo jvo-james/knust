@@ -1461,19 +1461,20 @@ html {
         grid.appendChild(c);
       });
     }
-
-    // seed & render on load
-    document.addEventListener("DOMContentLoaded",()=>{
-      seedProducts();
-      renderProducts();
-     initHeroSlider();
-      initUI();
-    });
-
-    window.addEventListener("storage",e=>{
+  window.addEventListener("storage",e=>{
       if(e.key==="products") renderProducts();
     });
-  })();
+    // seed & render on load
+     document.addEventListener("DOMContentLoaded",()=>{
+    seedProducts();
+    renderProducts();
+    initHeroSlider();
+    initUI();
+  });
+
+})(); 
+
+  
 
    // ─── 2) HERO SLIDER ───────────────────────────────────────────────────
   function initHeroSlider() {
