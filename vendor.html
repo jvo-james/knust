@@ -293,6 +293,13 @@ img { display: block; max-width: 100%; }
           <div class="card-body">
             <h3 class="card-title mb-4 text-center"><i class="fas fa-user-plus text-danger"></i> Create Account</h3>
             <form id="signup-form">
+                <div class="mb-3 input-group">
+               <span class="input-group-text"><i class="fas fa-user"></i></span>
+               <input
+                 type="text" id="signup-name" name="signup-name"
+                 class="form-control" placeholder="Full Name" required
+               >
+             </div>
               <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                 <input type="email" id="signup-email" name="signup-email"
@@ -351,6 +358,7 @@ img { display: block; max-width: 100%; }
 
     <!-- VENDOR DASHBOARD & PRODUCT FORM -->
     <div id="vendor-portal" class="d-none">
+      <h2>Welcome, <span id="vendor-name" class="text-primary"></span></h2>
 
       <!-- DASHBOARD STATS -->
       <div class="row g-4 mb-5">
@@ -386,7 +394,7 @@ img { display: block; max-width: 100%; }
           </button>
         </div>
         <div class="card-body">
-          <form id="product-form" class="row g-3">
+        <form id="product-form" class="row g-3" onsubmit="event.preventDefault()">
             <input type="hidden" id="prod-id">
             <div class="col-md-6">
               <label class="form-label"><i class="fas fa-tag"></i> Title</label>
@@ -464,12 +472,10 @@ img { display: block; max-width: 100%; }
 </body>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // ── Utilities ─────────────────────────────────────────────────────────
   const load = key => JSON.parse(localStorage.getItem(key) || '[]');
   const save = (key, val) => localStorage.setItem(key, JSON.stringify(val));
   const hash = str => btoa(str);
 
-  // ── Session & State ──────────────────────────────────────────────────
   const vendorsKey = 'vendors';
   const productsKey = 'products';
 
@@ -497,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return v;
   }
 
-  // ── UI Elements ───────────────────────────────────────────────────────
   const signupCard    = document.getElementById('signup-card');
   const signinCard    = document.getElementById('signin-card');
   const authSection   = document.getElementById('auth-section');
@@ -536,6 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentVendor) {
       authSection.classList.add('d-none');
       portalSection.classList.remove('d-none');
+      document.getElementById('vendor-name').textContent = currentVendor.fullName;
       renderStats();
       renderGallery();
       loadVendorPaymentMethods();
@@ -549,6 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Sign Up ───────────────────────────────────────────────────────────
   signupForm.addEventListener('submit', e => {
     e.preventDefault();
+    const name  = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const pass  = document.getElementById('signup-pass').value;
     const phone = document.getElementById('signup-phone').value.trim();
@@ -558,6 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const newVendor = {
       id: Date.now(),
+      fullName: name,
       email,
       passwordHash: hash(pass),
       phone,
