@@ -1421,6 +1421,7 @@ html {
   // seed into localStorage on first load
   if (!localStorage.getItem("products")) {
     localStorage.setItem("products", JSON.stringify(initialProducts));
+ renderProducts(); 
   }
 </script>
   <script>
@@ -1431,8 +1432,8 @@ html {
       grid.innerHTML = "";
       products.forEach(p => {
         const card = document.createElement("div");
-        card.className = "product-card";
-        card.dataset.category = p.category ||;
+         card.className = "product-card";
+       card.dataset.category = p.category;
         card.innerHTML = `
           <div class="card-media">
             ${p.isNew ? '<span class="badge new">New</span>' : ""}
@@ -1452,8 +1453,9 @@ html {
     // Initial render
     renderProducts();
 
-    // Expose so vendor page can call `window.renderProducts()` after adding/removing:
-    window.renderProducts = renderProducts;
+     window.addEventListener("storage", e => {
+     if (e.key === "products") renderProducts();
+   });
   </script>
 
 
