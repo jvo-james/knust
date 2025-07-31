@@ -955,6 +955,70 @@ html {
   color: #555;
   margin-bottom: 0.3rem;
 }
+
+  /* vendor modal backdrop */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  opacity: 0; visibility: hidden; transition: opacity .3s;
+  z-index: 3000;
+}
+.modal-backdrop.active { opacity:1; visibility: visible; }
+
+/* vendor modal container */
+.vendor-modal {
+  position: fixed; top:50%; left:50%;
+  transform: translate(-50%,-50%) scale(0.8);
+  width: 90%; max-width:900px;
+  background: #fff; border-radius:12px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.2);
+  opacity:0; visibility:hidden; transition: all .3s;
+  z-index:3001; overflow:hidden;
+}
+.vendor-modal.active {
+  opacity:1; visibility:visible;
+  transform: translate(-50%,-50%) scale(1);
+}
+
+/* close button */
+.modal-close {
+  position:absolute; top:12px; right:12px;
+  background:none; border:none; font-size:1.4rem; cursor:pointer;
+  color:#555;
+}
+
+/* layout */
+.vendor-modal-content {
+  display: flex; flex-wrap:wrap; gap:24px; padding: 48px 24px 24px;
+}
+.vendor-info {
+  flex:1 1 250px; text-align:center;
+}
+.vendor-avatar {
+  width:120px; height:120px; border-radius:50%;
+  object-fit:cover; margin-bottom:12px; border:3px solid #ff3860;
+}
+.vendor-contact { color:#666; margin:4px 0; }
+.vendor-payment button {
+  display:inline-block; margin:8px 4px; padding:8px 16px;
+  background:#ff3860; color:#fff; border:none; border-radius:30px;
+  cursor:pointer; transition:background .2s;
+}
+.vendor-payment button:hover { background:#e02e56; }
+
+.vendor-products {
+  flex:2 1 400px;
+}
+.vendor-products h3 {
+  margin-bottom:12px; color:#222; font-size:1.4rem;
+}
+#vendor-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
+  gap:16px;
+}
+#vendor-products-grid .product-card .seller { display:none; }
+.product-card:hover { cursor: pointer; }
+
   </style>
 </head>
 
@@ -1282,8 +1346,29 @@ html {
     </div>
   </div>
 </div>
-<!-- CART SIDEBAR & BACKDROP -->
-<!-- CART SIDEBAR & BACKDROP -->
+
+  <!-- VENDOR DETAIL MODAL -->
+<div id="vendor-modal-backdrop" class="modal-backdrop"></div>
+<div id="vendor-modal" class="vendor-modal">
+  <button id="vendor-modal-close" class="modal-close"><i class="fas fa-times"></i></button>
+  <div class="vendor-modal-content">
+    <div class="vendor-info">
+      <img id="vendor-avatar" src="" alt="Vendor Photo" class="vendor-avatar">
+      <h2 id="vendor-name"></h2>
+      <p id="vendor-email" class="vendor-contact"></p>
+      <p id="vendor-phone" class="vendor-contact"></p>
+      <div id="vendor-payment-methods" class="vendor-payment">
+        <!-- will inject: "Pay via Paystack", "Momo: …", "Bank: …" -->
+      </div>
+    </div>
+    <div class="vendor-products">
+      <h3>Products by <span id="vendor-name-2"></span></h3>
+      <div id="vendor-products-grid" class="products-grid"></div>
+    </div>
+  </div>
+</div>
+
+  <!-- CART SIDEBAR & BACKDROP -->
 <div id="cart-backdrop"></div>
 <aside id="cart-sidebar">
   <div class="cart-header">
@@ -1757,6 +1842,81 @@ html {
     initHeroSlider();
     initUI();
   });
+document
+  .getElementById('products-grid')
+  .addEventListener('click', e => {
+    // if user clicked on vendor name link
+    if (e.target.closest('.seller a')) {
+      const vendName = e.target.innerText;
+      openVendorModalByName(vendName);
+    }
+  });
+
+  function openVendorModalByName(vendorDisplayName) {
+  // load your vendors list
+  const vendors = JSON.parse(localStorage.getItem('vendors') || '[]');
+  const vendor  = vendors.find(v => v.fullName === vendorDisplayName);
+  if (!vendor) return alert('Vendor not found.');
+
+  // avatar or fallback icon
+  const avatarUrl = vendor.profilePic || 'https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/svg/person-circle-outline.svg';
+  document.getElementById('vendor-avatar').src    = avatarUrl;
+  document.getElementById('vendor-name').textContent  = vendor.fullName;
+  document.getElementById('vendor-name-2').textContent= vendor.fullName;
+  document.getElementById('vendor-email').textContent = vendor.email;
+  document.getElementById('vendor-phone').textContent = vendor.phone;
+
+  // payment buttons
+  const payDiv = document.getElementById('vendor-payment-methods');
+  payDiv.innerHTML = '';
+  // Paystack
+  payDiv.innerHTML += `<button id="paystack-btn">Pay via Paystack</button>`;
+  // Momo & Bank
+  if (vendor.paymentMethods.momo) {
+    payDiv.innerHTML += `<button class="momo-btn">Momo: ${vendor.paymentMethods.momo}</button>`;
+  }
+  if (vendor.paymentMethods.bank) {
+    payDiv.innerHTML += `<button class="bank-btn">Bank: ${vendor.paymentMethods.bank}</button>`;
+  }
+
+  // inject this vendor's products into the grid
+  const allProds = JSON.parse(localStorage.getItem('products')||'[]');
+  const mine     = allProds.filter(p => p.vendorName === vendor.email);
+  const grid     = document.getElementById('vendor-products-grid');
+  grid.innerHTML = '';
+  mine.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    const priceNum = typeof p.price==='string' ? parseFloat(p.price):p.price;
+    card.innerHTML = `
+      <div class="card-media">
+        <img src="${p.imageUrl}" alt="${p.title}">
+      </div>
+      <div class="card-body">
+        <h4 class="product-title">${p.title}</h4>
+        <p class="price">₵${priceNum.toFixed(2)}</p>
+        <button class="btn-cart" data-title="${p.title}">
+          <i class="fas fa-shopping-cart"></i> Add to Cart
+        </button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // show the modal
+  document.getElementById('vendor-modal-backdrop').classList.add('active');
+  document.getElementById('vendor-modal').classList.add('active');
+}
+
+// close button
+document.getElementById('vendor-modal-close').onclick = () => {
+  document.getElementById('vendor-modal-backdrop').classList.remove('active');
+  document.getElementById('vendor-modal').classList.remove('active');
+};
+document.getElementById('vendor-modal-backdrop').onclick = () => {
+  document.getElementById('vendor-modal-backdrop').classList.remove('active');
+  document.getElementById('vendor-modal').classList.remove('active');
+};
 
 })();
 </script>
