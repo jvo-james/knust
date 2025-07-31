@@ -216,13 +216,15 @@
       const category = e.target['prod-category'].value;
       const file = e.target['prod-image'].files[0];
       const reader = new FileReader();
-      reader.onload = () => {
-        const products = load('products');
-        products.push({
-          id: Date.now(),
-          vendorId: currentVendor.id,
-          title, price, category, imageBase64: reader.result
-        });
+       const products = load('products');
+      products.push({
+        id:      Date.now(),
+        title:   title,
+        price:   price,
+        category:category,
+        imageUrl:    reader.result,
+        vendorName:  currentVendor.email
+      });
         save('products', products);
         e.target.reset();
         renderGallery();
