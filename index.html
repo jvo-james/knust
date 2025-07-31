@@ -1366,94 +1366,105 @@ html {
 </footer>
 
 <script>
-  // ─── 1) PRODUCTS: seed, render, storage sync ────────────────────────
-  const initialProducts = [
-    { id:1,  title:"Stylish Handbag",            price:149.00, imageUrl:"product1.jpg",  vendorName:"Ama Mensah",       category:"fashion"     },
-    { id:2,  title:"Wireless Earbuds",           price:199.00, imageUrl:"product2.webp", vendorName:"Kwame Asante",     category:"electronics" },
-    { id:3,  title:"Cotton T-Shirt",             price: 59.00, imageUrl:"product3.jpg",  vendorName:"Adwoa Boateng",    category:"fashion"     },
-    { id:4,  title:"Leather Wallet",             price: 89.00, imageUrl:"product4.webp", vendorName:"Kojo Owusu",       category:"fashion"     },
-    { id:5,  title:"Running Shoes",              price:249.00, imageUrl:"product5.webp", vendorName:"Yaa Adusei",       category:"shoes"       },
-    { id:6,  title:"Smartwatch",                 price:299.00, imageUrl:"product6.jpg",  vendorName:"Kofi Amankwah",    category:"electronics" },
-    { id:7,  title:"Hardcover Novel",            price: 79.00, imageUrl:"product7.webp", vendorName:"Efua Owusu",       category:"books"       },
-    { id:8,  title:"Phone Case",                 price: 25.00, imageUrl:"product8.jpg",  vendorName:"Nana Osei",        category:"electronics" },
-    { id:9,  title:"Sunglasses",                 price: 65.00, imageUrl:"product9.webp", vendorName:"Abena Acheampong", category:"fashion"     },
-    { id:10, title:"Ceramic Mug",                price: 35.00, imageUrl:"product10.jpg",vendorName:"Yaw Koranteng",    category:"accessories" },
-    { id:11, title:"Backpack",                   price:129.00, imageUrl:"product11.jpg",vendorName:"Esi Boateng",      category:"fashion"     },
-    { id:12, title:"Matte Lipstick",             price: 45.00, imageUrl:"product12.jpg",vendorName:"Kwabena Agyeman",  category:"beauty"      },
-    { id:13, title:"Over-Ear Headphones",        price:189.00, imageUrl:"product13.jpg",vendorName:"Maame Agyapong",   category:"electronics" },
-    { id:14, title:"Laptop Sleeve",              price: 75.00, imageUrl:"product14.webp",vendorName:"Kwaku Mensah",     category:"electronics" },
-    { id:15, title:"Fitness Band",               price: 99.00, imageUrl:"product15.jpg",vendorName:"Akosua Konadu",    category:"electronics" },
-    { id:16, title:"Kids’ Sneakers",             price: 65.00, imageUrl:"product16.webp",vendorName:"Samuel Opoku",     category:"shoes"       },
-    { id:17, title:"Gaming Mouse",               price: 85.00, imageUrl:"product17.jpg",vendorName:"Esther Darko",     category:"electronics" },
-    { id:18, title:"Insulated Water Bottle",     price: 55.00, imageUrl:"product18.jpg",vendorName:"Michael Yeboah",   category:"accessories" },
-    { id:19, title:"LED Desk Lamp",              price: 99.00, imageUrl:"product19.jpg",vendorName:"Joy Adjei",        category:"electronics" },
-    { id:20, title:"Wireless Charger",           price: 69.00, imageUrl:"product20.jpg",vendorName:"Daniel Ofori",     category:"electronics" },
-    { id:21, title:"Bluetooth Speaker",          price:120.00, imageUrl:"product21.jpg",vendorName:"Nana Ama Adjei",   category:"electronics" },
-    { id:22, title:"Eco Yoga Mat",               price: 80.00, imageUrl:"product22.webp",vendorName:"Afua Sarpong",     category:"accessories" },
-    { id:23, title:"Desk Organizer Set",         price: 45.00, imageUrl:"product23.jpg",vendorName:"Kwesi Danso",      category:"accessories" },
-    { id:24, title:"Insulated Steel Bottle",     price: 65.00, imageUrl:"product24.webp",vendorName:"Nana Kofi Boakye", category:"accessories" },
-    { id:25, title:"Silk Pillowcase",            price:110.00, imageUrl:"product25.jpg",vendorName:"Adjei Martins",    category:"accessories" },
-    { id:26, title:"Power Bank 10000mAh",        price: 95.00, imageUrl:"product26.webp",vendorName:"Selasie Nyarko",   category:"electronics" },
-    { id:27, title:"Gardening Tools Kit",        price: 75.00, imageUrl:"product27.jpg",vendorName:"Ama Nyarko",       category:"accessories" },
-    { id:28, title:"Ceramic Planter",            price: 55.00, imageUrl:"product28.jpg",vendorName:"Kwabena Darko",    category:"accessories" },
-    { id:29, title:"Ergonomic Keyboard",         price:130.00, imageUrl:"product29.jpg",vendorName:"Akua Fosu",        category:"electronics" },
-    { id:30, title:"LED Strip Lights",           price: 49.00, imageUrl:"product30.avif",vendorName:"Kwesi Nkrumah",    category:"electronics" },
-    { id:31, title:"Canvas Sneakers",            price:110.00, imageUrl:"product31.avif",vendorName:"Maame Owusu",      category:"shoes"       },
-    { id:32, title:"Classic Fedora Hat",         price: 65.00, imageUrl:"product32.webp",vendorName:"Efia Sarpong",     category:"fashion"     },
-    { id:33, title:"Scented Candle Set",         price: 85.00, imageUrl:"product33.webp",vendorName:"Kweku Amoah",      category:"accessories" },
-    { id:34, title:"Memory Foam Pillow",         price:140.00, imageUrl:"product34.webp",vendorName:"Adjoa Frimpong",   category:"accessories" },
-    { id:35, title:"Travel Backpack",            price:180.00, imageUrl:"product35.webp",vendorName:"Selina Ankrah",    category:"accessories" },
-    { id:36, title:"Graphic Hoodie",             price:120.00, imageUrl:"product36.jpg",vendorName:"John Kotey",       category:"fashion"     },
-    { id:37, title:"Portable Projector",         price:450.00, imageUrl:"product37.jpg",vendorName:"Mercy Opoku",      category:"electronics" },
-    { id:38, title:"Electric Kettle",            price: 95.00, imageUrl:"product38.jpg",vendorName:"Isaac Owusu",      category:"electronics" },
-    { id:39, title:"Bluetooth Headphones",       price:160.00, imageUrl:"product39.webp",vendorName:"Maame Ntow",       category:"electronics" },
-    { id:40, title:"Smart Light Bulb",           price: 55.00, imageUrl:"product40.webp",vendorName:"Kwabena Duah",     category:"electronics" },
-    { id:41, title:"Silicone Bakeware Set",      price: 70.00, imageUrl:"product41.jpg",vendorName:"African Crafts",   category:"accessories" },
-    { id:42, title:"Digital Alarm Clock",        price: 65.00, imageUrl:"product42.jpg",vendorName:"Nana Gyamfi",      category:"electronics" },
-    { id:43, title:"Gaming Headset",             price:220.00, imageUrl:"product43.jpg",vendorName:"Kofi Boateng",     category:"electronics" },
-    { id:44, title:"Cookware Set 10-Piece",      price:450.00, imageUrl:"product44.webp",vendorName:"Maame Fosu",       category:"accessories" },
-    { id:45, title:"Bluetooth Car Kit",          price:140.00, imageUrl:"product45.webp",vendorName:"Samuel Boadu",     category:"electronics" },
-    { id:46, title:"Dinnerware Set (16-Piece)",  price:380.00, imageUrl:"product46.jpg",vendorName:"Adwoa Ansah",      category:"accessories" },
-    { id:47, title:"Wireless Game Controller",   price:210.00, imageUrl:"product47.webp",vendorName:"Kweku Dzifa",      category:"electronics" },
-    { id:48, title:"Silk Scarf",                 price: 55.00, imageUrl:"product48.jpg",vendorName:"Maame Dede",       category:"fashion"     },
-    { id:49, title:"Digital Photo Frame",        price:155.00, imageUrl:"product49.webp",vendorName:"Kwabena Ansah",    category:"electronics" },
-    { id:50, title:"Compact Air Fryer",          price:270.00, imageUrl:"product50.png",vendorName:"Efia Opoku",       category:"electronics" }
-  ];
+  (function(){
+    const initialProducts = [ 
+      {id:1,title:"Stylish Handbag",price:149.00,imageUrl:"product1.jpg",vendorName:"Ama Mensah",category:"fashion"},
+      {id:2,title:"Wireless Earbuds",price:199.00,imageUrl:"product2.webp",vendorName:"Kwame Asante",category:"electronics"},
+      {id:3,title:"Cotton T-Shirt",price:59.00,imageUrl:"product3.jpg",vendorName:"Adwoa Boateng",category:"fashion"},
+      {id:4,title:"Leather Wallet",price:89.00,imageUrl:"product4.webp",vendorName:"Kojo Owusu",category:"fashion"},
+      {id:5,title:"Running Shoes",price:249.00,imageUrl:"product5.webp",vendorName:"Yaa Adusei",category:"shoes"},
+      {id:6,title:"Smartwatch",price:299.00,imageUrl:"product6.jpg",vendorName:"Kofi Amankwah",category:"electronics"},
+      {id:7,title:"Hardcover Novel",price:79.00,imageUrl:"product7.webp",vendorName:"Efua Owusu",category:"books"},
+      {id:8,title:"Phone Case",price:25.00,imageUrl:"product8.jpg",vendorName:"Nana Osei",category:"electronics"},
+      {id:9,title:"Sunglasses",price:65.00,imageUrl:"product9.webp",vendorName:"Abena Acheampong",category:"fashion"},
+      {id:10,title:"Ceramic Mug",price:35.00,imageUrl:"product10.jpg",vendorName:"Yaw Koranteng",category:"accessories"},
+      {id:11,title:"Backpack",price:129.00,imageUrl:"product11.jpg",vendorName:"Esi Boateng",category:"fashion"},
+      {id:12,title:"Matte Lipstick",price:45.00,imageUrl:"product12.jpg",vendorName:"Kwabena Agyeman",category:"beauty"},
+      {id:13,title:"Over-Ear Headphones",price:189.00,imageUrl:"product13.jpg",vendorName:"Maame Agyapong",category:"electronics"},
+      {id:14,title:"Laptop Sleeve",price:75.00,imageUrl:"product14.webp",vendorName:"Kwaku Mensah",category:"electronics"},
+      {id:15,title:"Fitness Band",price:99.00,imageUrl:"product15.jpg",vendorName:"Akosua Konadu",category:"electronics"},
+      {id:16,title:"Kids’ Sneakers",price:65.00,imageUrl:"product16.webp",vendorName:"Samuel Opoku",category:"shoes"},
+      {id:17,title:"Gaming Mouse",price:85.00,imageUrl:"product17.jpg",vendorName:"Esther Darko",category:"electronics"},
+      {id:18,title:"Insulated Water Bottle",price:55.00,imageUrl:"product18.jpg",vendorName:"Michael Yeboah",category:"accessories"},
+      {id:19,title:"LED Desk Lamp",price:99.00,imageUrl:"product19.jpg",vendorName:"Joy Adjei",category:"electronics"},
+      {id:20,title:"Wireless Charger",price:69.00,imageUrl:"product20.jpg",vendorName:"Daniel Ofori",category:"electronics"},
+      {id:21,title:"Bluetooth Speaker",price:120.00,imageUrl:"product21.jpg",vendorName:"Nana Ama Adjei",category:"electronics"},
+      {id:22,title:"Eco Yoga Mat",price:80.00,imageUrl:"product22.webp",vendorName:"Afua Sarpong",category:"accessories"},
+      {id:23,title:"Desk Organizer Set",price:45.00,imageUrl:"product23.jpg",vendorName:"Kwesi Danso",category:"accessories"},
+      {id:24,title:"Insulated Steel Bottle",price:65.00,imageUrl:"product24.webp",vendorName:"Nana Kofi Boakye",category:"accessories"},
+      {id:25,title:"Silk Pillowcase",price:110.00,imageUrl:"product25.jpg",vendorName:"Adjei Martins",category:"accessories"},
+      {id:26,title:"Power Bank 10000mAh",price:95.00,imageUrl:"product26.webp",vendorName:"Selasie Nyarko",category:"electronics"},
+      {id:27,title:"Gardening Tools Kit",price:75.00,imageUrl:"product27.jpg",vendorName:"Ama Nyarko",category:"accessories"},
+      {id:28,title:"Ceramic Planter",price:55.00,imageUrl:"product28.jpg",vendorName:"Kwabena Darko",category:"accessories"},
+      {id:29,title:"Ergonomic Keyboard",price:130.00,imageUrl:"product29.jpg",vendorName:"Akua Fosu",category:"electronics"},
+      {id:30,title:"LED Strip Lights",price:49.00,imageUrl:"product30.avif",vendorName:"Kwesi Nkrumah",category:"electronics"},
+      {id:31,title:"Canvas Sneakers",price:110.00,imageUrl:"product31.avif",vendorName:"Maame Owusu",category:"shoes"},
+      {id:32,title:"Classic Fedora Hat",price:65.00,imageUrl:"product32.webp",vendorName:"Efia Sarpong",category:"fashion"},
+      {id:33,title:"Scented Candle Set",price:85.00,imageUrl:"product33.webp",vendorName:"Kweku Amoah",category:"accessories"},
+      {id:34,title:"Memory Foam Pillow",price:140.00,imageUrl:"product34.webp",vendorName:"Adjoa Frimpong",category:"accessories"},
+      {id:35,title:"Travel Backpack",price:180.00,imageUrl:"product35.webp",vendorName:"Selina Ankrah",category:"accessories"},
+      {id:36,title:"Graphic Hoodie",price:120.00,imageUrl:"product36.jpg",vendorName:"John Kotey",category:"fashion"},
+      {id:37,title:"Portable Projector",price:450.00,imageUrl:"product37.jpg",vendorName:"Mercy Opoku",category:"electronics"},
+      {id:38,title:"Electric Kettle",price:95.00,imageUrl:"product38.jpg",vendorName:"Isaac Owusu",category:"electronics"},
+      {id:39,title:"Bluetooth Headphones",price:160.00,imageUrl:"product39.webp",vendorName:"Maame Ntow",category:"electronics"},
+      {id:40,title:"Smart Light Bulb",price:55.00,imageUrl:"product40.webp",vendorName:"Kwabena Duah",category:"electronics"},
+      {id:41,title:"Silicone Bakeware Set",price:70.00,imageUrl:"product41.jpg",vendorName:"African Crafts",category:"accessories"},
+      {id:42,title:"Digital Alarm Clock",price:65.00,imageUrl:"product42.jpg",vendorName:"Nana Gyamfi",category:"electronics"},
+      {id:43,title:"Gaming Headset",price:220.00,imageUrl:"product43.jpg",vendorName:"Kofi Boateng",category:"electronics"},
+      {id:44,title:"Cookware Set 10-Piece",price:450.00,imageUrl:"product44.webp",vendorName:"Maame Fosu",category:"accessories"},
+      {id:45,title:"Bluetooth Car Kit",price:140.00,imageUrl:"product45.webp",vendorName:"Samuel Boadu",category:"electronics"},
+      {id:46,title:"Dinnerware Set (16-Piece)",price:380.00,imageUrl:"product46.jpg",vendorName:"Adwoa Ansah",category:"accessories"},
+      {id:47,title:"Wireless Game Controller",price:210.00,imageUrl:"product47.webp",vendorName:"Kweku Dzifa",category:"electronics"},
+      {id:48,title:"Silk Scarf",price:55.00,imageUrl:"product48.jpg",vendorName:"Maame Dede",category:"fashion"},
+      {id:49,title:"Digital Photo Frame",price:155.00,imageUrl:"product49.webp",vendorName:"Kwabena Ansah",category:"electronics"},
+      {id:50,title:"Compact Air Fryer",price:270.00,imageUrl:"product50.png",vendorName:"Efia Opoku",category:"electronics"}
+    ];
 
-  function renderProducts() {
-    const prods = JSON.parse(localStorage.getItem("products") || "[]");
-    const grid  = document.getElementById("products-grid");
-    grid.innerHTML = "";
-    prods.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.dataset.category = p.category;
-      card.innerHTML = `
-        <div class="card-media">
-          <img src="${p.imageUrl}" alt="${p.title}">
-        </div>
-        <div class="card-body">
-          <h3 class="product-title">${p.title}</h3>
-          <p class="price">₵${Number(p.price).toFixed(2)}</p>
-          <p class="seller">by <a href="#">${p.vendorName}</a></p>
-          <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-        </div>`;
-      grid.appendChild(card);
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    if (!localStorage.getItem("products")) {
-      localStorage.setItem("products", JSON.stringify(initialProducts));
+    function seedProducts(){
+      try {
+        const stored = JSON.parse(localStorage.getItem("products")||"[]");
+        if (!Array.isArray(stored) || stored.length < initialProducts.length) {
+          localStorage.setItem("products", JSON.stringify(initialProducts));
+        }
+      } catch {
+        localStorage.setItem("products", JSON.stringify(initialProducts));
+      }
     }
-    renderProducts();
-    initHeroSlider();
-    initUI();
-  });
 
-  window.addEventListener("storage", e => {
-    if (e.key === "products") renderProducts();
-  });
+    function renderProducts() {
+      const prods = JSON.parse(localStorage.getItem("products")||"[]");
+      const grid = document.getElementById("products-grid");
+      grid.innerHTML = "";
+      prods.forEach(p=>{
+        const c = document.createElement("div");
+        c.className="product-card"; c.dataset.category=p.category;
+        c.innerHTML=`
+          <div class="card-media"><img src="${p.imageUrl}" alt="${p.title}"></div>
+          <div class="card-body">
+            <h3 class="product-title">${p.title}</h3>
+            <p class="price">₵${p.price.toFixed(2)}</p>
+            <p class="seller">by <a href="#">${p.vendorName}</a></p>
+            <button class="btn-cart" data-title="${p.title}"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+          </div>`;
+        grid.appendChild(c);
+      });
+    }
+
+    // seed & render on load
+    document.addEventListener("DOMContentLoaded",()=>{
+      seedProducts();
+      renderProducts();
+      initHeroSlider();
+      initUI();
+    });
+
+    window.addEventListener("storage",e=>{
+      if(e.key==="products") renderProducts();
+    });
+  })();
+
+  
+
 
 
   // ─── 2) HERO SLIDER ───────────────────────────────────────────────────
