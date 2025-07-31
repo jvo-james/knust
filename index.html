@@ -1441,17 +1441,23 @@ html {
       prods.forEach(p=>{
         const c = document.createElement("div");
         c.className="product-card"; c.dataset.category=p.category;
-        c.innerHTML=`
-          <div class="card-media"><img src="${p.imageUrl}" alt="${p.title}"></div>
-          <div class="card-body">
-            <h3 class="product-title">${p.title}</h3>
-            <p class="price">₵${p.price.toFixed(2)}</p>
-            <p class="seller">by <a href="#">${p.vendorName}</a></p>
-            <button class="btn-cart" data-title="${p.title}"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-          </div>`;
-         if (p.description)  c.dataset.description = p.description;
-      if (p.stock !== undefined) c.dataset.stock = p.stock;
-      if (p.sku)          c.dataset.sku = p.sku;
+        c.innerHTML = `
+        <div class="card-media">
+          <img src="${p.imageUrl}" alt="${p.title}">
+       </div>
+        <div class="card-body">
+          <h3 class="product-title">${p.title}</h3>
+          <p class="price">₵${p.price.toFixed(2)}</p>
+          <p class="seller">by <a href="#">${p.vendorName}</a></p>
+          <button class="btn-cart" data-title="${p.title}">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+        </div>
+      `;
+      // ── vendor-only fields
+      if (p.description)         c.dataset.description = p.description;
+      if (p.stock  !== undefined) c.dataset.stock       = p.stock;
+      if (p.sku)                  c.dataset.sku         = p.sku;
         grid.appendChild(c);
       });
     }
@@ -1460,7 +1466,7 @@ html {
     document.addEventListener("DOMContentLoaded",()=>{
       seedProducts();
       renderProducts();
-      initHeroSlider();
+     initHeroSlider();
       initUI();
     });
 
@@ -1577,40 +1583,35 @@ html {
     decBtn.onclick = ()=> { if(+qtyInput.value>1) qtyInput.value--; };
     incBtn.onclick = ()=> { qtyInput.value++; };
 
-    document.getElementById('products-grid').addEventListener('click', e => {
-   // ignore clicks on cart buttons
-   if (e.target.closest('.btn-cart')) return;
-   // find the clicked product card
-   const card = e.target.closest('.product-card');
-   if (!card) return;
-   // gather shared fields
-   const img    = card.querySelector('img').src;
-   const title  = card.querySelector('.product-title').innerText;
-   const price  = card.querySelector('.price').innerText;
-   const seller = card.querySelector('.seller a')?.innerText || 'Marketplace';
-   // vendor-only fields (if present)
-   const description = card.dataset.description || 
-     `Detailed description for "${title}".`;
-   const stock = card.dataset.stock 
-     ? `${card.dataset.stock} available` 
-     : 'In Stock';
-   const sku = card.dataset.sku 
-     ? `SKU: ${card.dataset.sku}` 
-     : null;
-   // build features array
-   const features = [];
-   if (sku) features.push(sku);
-   features.push(`Category: ${card.dataset.category}`);
-   features.push('Free shipping');
-   // open the modal with full data
-   openModal({
-     img, title, price, seller,
-     stock,
-     rating: Math.floor(Math.random()*2)+4,
-     description,
-     features
-   });
- });
+  document.getElementById('products-grid').addEventListener('click', e => {
+      if (e.target.closest('.btn-cart')) return;  // skip "add to cart"
+      const card = e.target.closest('.product-card');
+      if (!card) return;
+      const img         = card.querySelector('img').src;
+      const title       = card.querySelector('.product-title').innerText;
+      const price       = card.querySelector('.price').innerText;
+      const seller      = card.querySelector('.seller a')?.innerText || 'Marketplace';
+      const description = card.dataset.description 
+                          || `Detailed description for "${title}".`;
+      const stock       = card.dataset.stock 
+                          ? `${card.dataset.stock} available` 
+                          : 'In Stock';
+      const sku         = card.dataset.sku 
+                          ? `SKU: ${card.dataset.sku}` 
+                          : null;
+      const features = [];
+      if (sku)           features.push(sku);
+      features.push(`Category: ${card.dataset.category}`);
+      features.push('Free shipping');
+
+      openModal({
+        img, title, price, seller,
+        stock,
+        rating: Math.floor(Math.random()*2)+4,
+        description,
+        features
+      });
+    });
 
     // 3.3) CART SIDEBAR
     const cartIcon     = document.getElementById('cart-icon'),
