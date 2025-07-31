@@ -1419,43 +1419,41 @@ html {
   ];
 
  
-    function renderProducts() {
-      const products = JSON.parse(localStorage.getItem("products") || "[]");
-      const grid = document.getElementById("products-grid");
-      grid.innerHTML = "";
-      products.forEach(p => {
-        const card = document.createElement("div");
-         card.className = "product-card";
-       card.dataset.category = p.category;
-        card.innerHTML = `
-          <div class="card-media">
-            ${p.isNew ? '<span class="badge new">New</span>' : ""}
-            ${p.isTrending ? '<span class="badge trending">Trending</span>' : ""}
-            <img src="${p.imageUrl}" alt="${p.title}">
-          </div>
-          <div class="card-body">
-            <h3 class="product-title">${p.title}</h3>
-            <p class="price">₵${p.price.toFixed(2)}</p>
-            <p class="seller">by <a href="#">${p.vendorName||"Marketplace"}</a></p>
-            <button class="btn-cart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-          </div>`;
-        grid.appendChild(card);
-      });
+     function renderProducts() {
+    console.log('renderProducts ➞', initialProducts.length, 'items'); 
+    const prods = JSON.parse(localStorage.getItem('products') || '[]');
+    const grid = document.getElementById('products-grid');
+    grid.innerHTML = '';
+    prods.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.dataset.category = p.category;
+      card.innerHTML = `
+        <div class="card-media">
+          <img src="${p.imageUrl}" alt="${p.title}">
+        </div>
+        <div class="card-body">
+          <h3 class="product-title">${p.title}</h3>
+          <p class="price">₵${p.price.toFixed(2)}</p>
+          <p class="seller">by <a href="#">${p.vendorName}</a></p>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('products')) {
+      localStorage.setItem('products', JSON.stringify(initialProducts));
+      console.log('☞ seeded localStorage.products');
     }
+    renderProducts();
+  });
 
-  document.addEventListener("DOMContentLoaded", ()=> {
-      if (!localStorage.getItem("products")) {
-        localStorage.setItem("products", JSON.stringify(initialProducts));
-      }
-      renderProducts();
-    });
-
-    window.addEventListener("storage", e => {
-      if (e.key === "products") renderProducts();
-    });
-
-    window.renderProducts = renderProducts;
-  </script>
+  // if you update from vendor.html in another tab
+  window.addEventListener('storage', e => {
+    if (e.key === 'products') renderProducts();
+  });
+</script>
 
 
 <script>
