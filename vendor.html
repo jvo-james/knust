@@ -175,8 +175,8 @@
     // Sign Up
     document.getElementById('signup-form').onsubmit = e => {
       e.preventDefault();
-      const email = e.target['signup-email'].value;
-      const pass = e.target['signup-pass'].value;
+      const email = document.getElementById('signup-email').value;
+    const pass  = document.getElementById('signup-pass').value;
       const plan = e.target['signup-plan'].value;
       const expiresMap = { monthly:30, semiannual:180, annual:365 };
       const expiresAt = Date.now() + expiresMap[plan]*24*60*60*1000;
@@ -191,8 +191,8 @@
     // Log In
     document.getElementById('login-form').onsubmit = e => {
       e.preventDefault();
-      const email = e.target['login-email'].value;
-      const pass = e.target['login-pass'].value;
+       const email = document.getElementById('login-email').value;
+    const pass  = document.getElementById('login-pass').value;
       const vendors = load('vendors');
       const vendor = vendors.find(v=>v.email===email && v.passwordHash===hash(pass));
       if (!vendor) return alert('Invalid credentials.');
