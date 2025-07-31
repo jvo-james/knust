@@ -1368,9 +1368,11 @@ html {
   </div>
 </footer>
 
+
 <script>
-  (function(){
-    const initialProducts = [ 
+(function(){
+  // ─── 1) INITIAL PRODUCTS & LOCALSTORAGE SEEDING ───────────────────────
+   const initialProducts = [ 
       {id:1,title:"Stylish Handbag",price:149.00,imageUrl:"product1.jpg",vendorName:"Ama Mensah",category:"fashion"},
       {id:2,title:"Wireless Earbuds",price:199.00,imageUrl:"product2.webp",vendorName:"Kwame Asante",category:"electronics"},
       {id:3,title:"Cotton T-Shirt",price:59.00,imageUrl:"product3.jpg",vendorName:"Adwoa Boateng",category:"fashion"},
@@ -1423,66 +1425,54 @@ html {
       {id:50,title:"Compact Air Fryer",price:270.00,imageUrl:"product50.png",vendorName:"Efia Opoku",category:"electronics"}
     ];
 
-    function seedProducts(){
-      try {
-        const stored = JSON.parse(localStorage.getItem("products")||"[]");
-        if (!Array.isArray(stored) || stored.length < initialProducts.length) {
-          localStorage.setItem("products", JSON.stringify(initialProducts));
-        }
-      } catch {
+  function seedProducts(){
+    try {
+      const stored = JSON.parse(localStorage.getItem("products") || "[]");
+      if (!Array.isArray(stored) || stored.length < initialProducts.length) {
         localStorage.setItem("products", JSON.stringify(initialProducts));
       }
+    } catch {
+      localStorage.setItem("products", JSON.stringify(initialProducts));
     }
+  }
 
-    function renderProducts() {
-      const prods = JSON.parse(localStorage.getItem("products")||"[]");
-      const grid = document.getElementById("products-grid");
-      grid.innerHTML = "";
-      prods.forEach(p=>{
-        const c = document.createElement("div");
-        c.className="product-card"; c.dataset.category=p.category;
-        c.innerHTML = `
+  // ─── 2) RENDER PRODUCTS GRID ───────────────────────────────────────────
+  function renderProducts() {
+    const prods = JSON.parse(localStorage.getItem("products") || "[]");
+    const grid  = document.getElementById("products-grid");
+    grid.innerHTML = "";
+    prods.forEach(p => {
+      // normalize price in case it's a string
+      const priceNum = typeof p.price === "string" ? parseFloat(p.price) : p.price;
+      const c = document.createElement("div");
+      c.className = "product-card";
+      c.dataset.category = p.category;
+      c.innerHTML = `
         <div class="card-media">
           <img src="${p.imageUrl}" alt="${p.title}">
-       </div>
+        </div>
         <div class="card-body">
           <h3 class="product-title">${p.title}</h3>
-          <p class="price">₵${p.price.toFixed(2)}</p>
+          <p class="price">₵${priceNum.toFixed(2)}</p>
           <p class="seller">by <a href="#">${p.vendorName}</a></p>
           <button class="btn-cart" data-title="${p.title}">
             <i class="fas fa-shopping-cart"></i> Add to Cart
           </button>
         </div>
       `;
-      // ── vendor-only fields
-      if (p.description)         c.dataset.description = p.description;
-      if (p.stock  !== undefined) c.dataset.stock       = p.stock;
-      if (p.sku)                  c.dataset.sku         = p.sku;
-        grid.appendChild(c);
-      });
-    }
-  window.addEventListener("storage",e=>{
-      if(e.key==="products") renderProducts();
+      if (p.description)  c.dataset.description = p.description;
+      if (p.stock !== undefined) c.dataset.stock = p.stock;
+      if (p.sku) c.dataset.sku = p.sku;
+      grid.appendChild(c);
     });
-    // seed & render on load
-     document.addEventListener("DOMContentLoaded",()=>{
-    seedProducts();
-    renderProducts();
-    initHeroSlider();
-    initUI();
-  });
+  }
 
-})(); 
-
-  
-
-   // ─── 2) HERO SLIDER ───────────────────────────────────────────────────
+  // ─── 3) HERO SLIDER ────────────────────────────────────────────────────
   function initHeroSlider() {
     const slides = [...document.querySelectorAll('.hero-slider .slide')];
     const dotsContainer = document.querySelector('.slider-dots');
     let current = 0, timer;
 
-    // build dots
     slides.forEach((_,i) => {
       const d = document.createElement('span');
       d.addEventListener('click', () => goTo(i));
@@ -1498,12 +1488,10 @@ html {
       dots[idx].classList.add('active');
     }
     function next(){
-      current = (current+1)%slides.length;
-      show(current);
+      current = (current+1)%slides.length; show(current);
     }
     function prev(){
-      current = (current-1+slides.length)%slides.length;
-      show(current);
+      current = (current-1+slides.length)%slides.length; show(current);
     }
     function goTo(i){
       current = i; show(i); reset();
@@ -1520,10 +1508,9 @@ html {
     show(0);
   }
 
-
-  // ─── 3) UI INITIALIZATION ────────────────────────────────────────────
+  // ─── 4) UI: MODAL, CART, FILTERS, SEARCH, LOAD MORE, ETC. ────────────
   function initUI() {
-    // 3.1) Hamburger & smooth scroll
+    // 4.1) Hamburger & smooth scroll
     const ham = document.getElementById('hamburger'),
           nav = document.getElementById('navMenu');
     ham.addEventListener('click', ()=> nav.classList.toggle('active'));
@@ -1534,7 +1521,7 @@ html {
     });
     document.getElementById('main-market').scrollIntoView({behavior:'smooth'});
 
-    // 3.2) PRODUCT/DEAL MODAL
+    // 4.2) PRODUCT MODAL
     const modal      = document.getElementById('product-modal'),
           backModal  = document.getElementById('product-modal-backdrop'),
           imgEl      = document.getElementById('modal-img'),
@@ -1551,8 +1538,8 @@ html {
           modalClose = document.getElementById('modal-close');
 
     function openModal(data){
-      imgEl.src         = data.img;
-      imgEl.alt         = data.title;
+      imgEl.src            = data.img;
+      imgEl.alt            = data.title;
       titleEl.textContent  = data.title;
       sellerEl.textContent = data.seller;
       priceEl.textContent  = data.price;
@@ -1578,32 +1565,25 @@ html {
       modal.classList.remove('active');
       backModal.classList.remove('active');
     }
-
     modalClose.onclick = closeModal;
     backModal.onclick = closeModal;
     decBtn.onclick = ()=> { if(+qtyInput.value>1) qtyInput.value--; };
     incBtn.onclick = ()=> { qtyInput.value++; };
 
-  document.getElementById('products-grid').addEventListener('click', e => {
-      if (e.target.closest('.btn-cart')) return;  // skip "add to cart"
+    document.getElementById('products-grid').addEventListener('click', e => {
+      if (e.target.closest('.btn-cart')) return;
       const card = e.target.closest('.product-card');
       if (!card) return;
       const img         = card.querySelector('img').src;
       const title       = card.querySelector('.product-title').innerText;
       const price       = card.querySelector('.price').innerText;
       const seller      = card.querySelector('.seller a')?.innerText || 'Marketplace';
-      const description = card.dataset.description 
-                          || `Detailed description for "${title}".`;
-      const stock       = card.dataset.stock 
-                          ? `${card.dataset.stock} available` 
-                          : 'In Stock';
-      const sku         = card.dataset.sku 
-                          ? `SKU: ${card.dataset.sku}` 
-                          : null;
-      const features = [];
-      if (sku)           features.push(sku);
-      features.push(`Category: ${card.dataset.category}`);
-      features.push('Free shipping');
+      const description = card.dataset.description || `Detailed description for "${title}".`;
+      const stock       = card.dataset.stock ? `${card.dataset.stock} available` : 'In Stock';
+      const sku         = card.dataset.sku ? `SKU: ${card.dataset.sku}` : null;
+      const features    = [];
+      if (sku) features.push(sku);
+      features.push(`Category: ${card.dataset.category}`, 'Free shipping');
 
       openModal({
         img, title, price, seller,
@@ -1614,7 +1594,7 @@ html {
       });
     });
 
-    // 3.3) CART SIDEBAR
+    // 4.3) CART SIDEBAR
     const cartIcon     = document.getElementById('cart-icon'),
           cartBackdrop = document.getElementById('cart-backdrop'),
           cartSidebar  = document.getElementById('cart-sidebar'),
@@ -1633,9 +1613,9 @@ html {
 
     function openCart(){ cartSidebar.classList.add('active'); cartBackdrop.classList.add('active'); }
     function closeCart(){ cartSidebar.classList.remove('active'); cartBackdrop.classList.remove('active'); }
-    cartIcon.onclick = openCart;
+    cartIcon.onclick     = openCart;
     cartCloseBtn.onclick = closeCart;
-    cartBackdrop.onclick  = closeCart;
+    cartBackdrop.onclick = closeCart;
 
     function updateSummary(){
       const subtotal = cart.reduce((s,i)=> s + i.price*i.qty, 0),
@@ -1667,24 +1647,22 @@ html {
               <a href="#" class="remove">Remove</a>
             </div>
           </div>`;
-        div.querySelector('.dec').onclick = ()=>{ if(item.qty>1) item.qty--, syncCart(); };
-        div.querySelector('.inc').onclick = ()=>{ item.qty++, syncCart(); };
+        div.querySelector('.dec').onclick    = ()=>{ if(item.qty>1) item.qty--, syncCart(); };
+        div.querySelector('.inc').onclick    = ()=>{ item.qty++, syncCart(); };
         div.querySelector('.remove').onclick = e=>{ e.preventDefault(); cart.splice(idx,1); syncCart(); };
-        div.querySelector('input').onchange = e=>{
-          item.qty = Math.max(1, parseInt(e.target.value)||1);
-          syncCart();
-        };
+        div.querySelector('input').onchange  = e=>{ item.qty = Math.max(1,parseInt(e.target.value)||1); syncCart(); };
         cartItems.appendChild(div);
       });
     }
 
     function syncCart(){
-      renderCart();
-      updateSummary();
+      renderCart(); updateSummary();
       document.querySelectorAll('.btn-cart').forEach(btn=>{
         const title = btn.dataset.title;
         const inCart = cart.some(i=>i.title===title);
-        btn.innerHTML = inCart ? '<i class="fas fa-trash"></i> Remove' : '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        btn.innerHTML = inCart 
+          ? '<i class="fas fa-trash"></i> Remove' 
+          : '<i class="fas fa-shopping-cart"></i> Add to Cart';
         btn.classList.toggle('in-cart', inCart);
       });
     }
@@ -1714,8 +1692,7 @@ html {
     applyBtn.onclick = ()=>{ alert(`Coupon "${couponInput.value}" applied!`); };
     syncCart();
 
-
-    // 3.4) CATEGORY FILTER
+    // 4.4) CATEGORY FILTER
     document.querySelectorAll('.filter-link').forEach(link=>{
       link.addEventListener('click', e=>{
         e.preventDefault();
@@ -1727,11 +1704,9 @@ html {
         });
       });
     });
-    // activate “All”
     document.querySelector('.filter-link[data-cat="all"]').click();
 
-
-    // 3.5) SEARCH FILTER
+    // 4.5) SEARCH FILTER
     document.querySelector('.search-bar input').addEventListener('input', e=>{
       const q = e.target.value.trim().toLowerCase();
       document.querySelectorAll('.product-card, .deal-card').forEach(c=>{
@@ -1740,37 +1715,30 @@ html {
       });
     });
 
-
-    // 3.6) LOAD MORE
+    // 4.6) LOAD MORE PRODUCTS
     const loadMoreBtn = document.querySelector('.btn-load-more');
     loadMoreBtn.addEventListener('click', ()=>{
       document.querySelectorAll('.product-card.hidden').forEach((c,i)=>{
         if (i<20){
           c.classList.remove('hidden');
-          c.style.display='';
+          c.style.display = '';
         }
       });
       if (!document.querySelector('.product-card.hidden')) loadMoreBtn.style.display='none';
     });
-    // initial hide beyond 20
     document.querySelectorAll('.product-card').forEach((c,i)=>{
-      if (i>=20){
-        c.classList.add('hidden');
-        c.style.display='none';
-      }
+      if (i>=20){ c.classList.add('hidden'); c.style.display='none'; }
     });
     if (document.querySelectorAll('.product-card').length <= 20){
       loadMoreBtn.style.display='none';
     }
 
-
-    // 3.7) BACK TO TOP
+    // 4.7) BACK TO TOP BUTTON
     document.getElementById('back-to-top').addEventListener('click', ()=>{
       window.scrollTo({top:0,behavior:'smooth'});
     });
 
-
-    // 3.8) NEWSLETTER FORM
+    // 4.8) NEWSLETTER FORM
     document.getElementById('footer-newsletter-form').addEventListener('submit', e=>{
       e.preventDefault();
       const email = e.target.querySelector('input').value;
@@ -1778,6 +1746,19 @@ html {
       e.target.reset();
     });
   }
+
+  // ─── 5) INITIALIZE ON LOAD & STORAGE EVENTS ─────────────────────────
+  window.addEventListener("storage", e => {
+    if (e.key === "products") renderProducts();
+  });
+  document.addEventListener("DOMContentLoaded", () => {
+    seedProducts();
+    renderProducts();
+    initHeroSlider();
+    initUI();
+  });
+
+})();
 </script>
 
 
