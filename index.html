@@ -69,13 +69,43 @@
     }
 
     @media (max-width: 768px) {
-      .search-bar { display:none; }
+     
       nav { display:none; position:absolute; top:60px; left:0; width:100%; flex-direction:column; background:#fff; }
       nav.active { display:flex; }
       .hamburger { display:flex; }
     }
 
- 
+ @media (max-width: 768px) {
+  .header-inner {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .logo, .search-bar, .header-icons {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+  .search-bar {
+    display: block;
+    order: 2;
+    max-width: none;
+    margin: 0 auto;
+  }
+  .header-icons { order: 3; justify-content: center; }
+  nav { top: 100px;  }
+   .logo span { display: none; }
+}
+
+  @media (max-width: 600px) {
+  .products-grid,
+  .deals-grid,
+  #vendor-products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .deal-card, .product-card {
+    cursor: pointer;
+  }
+}
+
 .container {
   max-width: 1300px;
   margin: 0 auto;
@@ -1019,13 +1049,32 @@ html {
 #vendor-products-grid .product-card .seller { display:none; }
 .product-card:hover { cursor: pointer; }
 
+  .logo {
+  display: flex;
+  align-items: center;
+}
+.logo-img {
+  width: 36px;
+  height: 36px;
+  margin-right: 8px;
+  object-fit: contain;
+}
+.logo span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff3860;
+}
+
   </style>
 </head>
 
 <body>
   <header>
     <div class="header-inner">
-      <div class="logo">YourMarket</div>
+     <div class="logo">
+  <img src="YOUR_LOGO_URL.png" alt="YourMarket logo" class="logo-img">
+  <span>KNUST E-Mart</span>
+</div>
       <div class="search-bar">
         <input type="text" placeholder="Search for books, gadgets, fashion…" />
         <i class="fas fa-search"></i>
@@ -1838,6 +1887,7 @@ html {
   });
   document.addEventListener("DOMContentLoaded", () => {
     seedProducts();
+    seedVendors();
     renderProducts();
     initHeroSlider();
     initUI();
@@ -1851,6 +1901,40 @@ document
       openVendorModalByName(vendName);
     }
   });
+
+  // treat deal-cards the same as product-cards
+document.querySelectorAll('.deal-card').forEach(card => {
+  card.addEventListener('click', e => {
+    if (e.target.closest('.btn-deal')) return; // let button handle cart
+    const img    = card.querySelector('img').src;
+    const title  = card.querySelector('h3').innerText;
+    const price  = card.querySelector('.price').innerText.replace('$','₵');
+    openModal({
+      img,
+      title,
+      seller: 'Marketplace',
+      price,
+      stock: 'In Stock',
+      rating: Math.floor(Math.random()*2)+4,
+      description: `Details for ${title}.`,
+      features: [`Category: ${card.dataset.category}`, 'Free shipping']
+    });
+  });
+});
+
+// deal-card “Add to Cart”
+document.body.addEventListener('click', e => {
+  const btn = e.target.closest('.btn-deal');
+  if (!btn) return;
+  const card = btn.closest('.deal-card');
+  const data = {
+    img:    card.querySelector('img').src,
+    title:  card.querySelector('h3').innerText,
+    price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
+    seller: 'Marketplace'
+  };
+  toggleCartItem(data);
+});
 
   function openVendorModalByName(vendorDisplayName) {
   // load your vendors list
@@ -1918,6 +2002,73 @@ document.getElementById('vendor-modal-backdrop').onclick = () => {
   document.getElementById('vendor-modal').classList.remove('active');
 };
 
+  const initialVendors = [
+  { fullName: "Ama Mensah",       email: "ama.mensah@yourmarket.com",        phone: "+233500000001", profilePic: "", paymentMethods: { momo: "+233500000001", bank: "GTBank • 0000000001" } },
+  { fullName: "Kwame Asante",     email: "kwame.asante@yourmarket.com",      phone: "+233500000002", profilePic: "", paymentMethods: { momo: "+233500000002", bank: "Zenith • 0000000002" } },
+  { fullName: "Adwoa Boateng",    email: "adwoa.boateng@yourmarket.com",     phone: "+233500000003", profilePic: "", paymentMethods: { momo: "+233500000003", bank: "Ecobank • 0000000003" } },
+  { fullName: "Kojo Owusu",       email: "kojo.owusu@yourmarket.com",        phone: "+233500000004", profilePic: "", paymentMethods: { momo: "+233500000004", bank: "Stanbic • 0000000004" } },
+  { fullName: "Yaa Adusei",       email: "yaa.adusei@yourmarket.com",        phone: "+233500000005", profilePic: "", paymentMethods: { momo: "+233500000005", bank: "UBA • 0000000005" } },
+  { fullName: "Kofi Amankwah",    email: "kofi.amankwah@yourmarket.com",     phone: "+233500000006", profilePic: "", paymentMethods: { momo: "+233500000006", bank: "GTBank • 0000000006" } },
+  { fullName: "Efua Owusu",       email: "efua.owusu@yourmarket.com",        phone: "+233500000007", profilePic: "", paymentMethods: { momo: "+233500000007", bank: "Zenith • 0000000007" } },
+  { fullName: "Nana Osei",        email: "nana.osei@yourmarket.com",         phone: "+233500000008", profilePic: "", paymentMethods: { momo: "+233500000008", bank: "Ecobank • 0000000008" } },
+  { fullName: "Abena Acheampong", email: "abena.acheampong@yourmarket.com",  phone: "+233500000009", profilePic: "", paymentMethods: { momo: "+233500000009", bank: "Stanbic • 0000000009" } },
+  { fullName: "Yaw Koranteng",    email: "yaw.koranteng@yourmarket.com",     phone: "+233500000010", profilePic: "", paymentMethods: { momo: "+233500000010", bank: "UBA • 0000000010" } },
+  
+  { fullName: "Esi Boateng",      email: "esi.boateng@yourmarket.com",       phone: "+233500000011", profilePic: "", paymentMethods: { momo: "+233500000011", bank: "GTBank • 0000000011" } },
+  { fullName: "Kwabena Agyeman",  email: "kwabena.agyeman@yourmarket.com",   phone: "+233500000012", profilePic: "", paymentMethods: { momo: "+233500000012", bank: "Zenith • 0000000012" } },
+  { fullName: "Maame Agyapong",   email: "maame.agyapong@yourmarket.com",    phone: "+233500000013", profilePic: "", paymentMethods: { momo: "+233500000013", bank: "Ecobank • 0000000013" } },
+  { fullName: "Kwaku Mensah",     email: "kwaku.mensah@yourmarket.com",      phone: "+233500000014", profilePic: "", paymentMethods: { momo: "+233500000014", bank: "Stanbic • 0000000014" } },
+  { fullName: "Akosua Konadu",    email: "akosua.konadu@yourmarket.com",     phone: "+233500000015", profilePic: "", paymentMethods: { momo: "+233500000015", bank: "UBA • 0000000015" } },
+  { fullName: "Samuel Opoku",     email: "samuel.opoku@yourmarket.com",      phone: "+233500000016", profilePic: "", paymentMethods: { momo: "+233500000016", bank: "GTBank • 0000000016" } },
+  { fullName: "Esther Darko",     email: "esther.darko@yourmarket.com",      phone: "+233500000017", profilePic: "", paymentMethods: { momo: "+233500000017", bank: "Zenith • 0000000017" } },
+  { fullName: "Michael Yeboah",   email: "michael.yeboah@yourmarket.com",    phone: "+233500000018", profilePic: "", paymentMethods: { momo: "+233500000018", bank: "Ecobank • 0000000018" } },
+  { fullName: "Joy Adjei",        email: "joy.adjei@yourmarket.com",         phone: "+233500000019", profilePic: "", paymentMethods: { momo: "+233500000019", bank: "Stanbic • 0000000019" } },
+  { fullName: "Daniel Ofori",     email: "daniel.ofori@yourmarket.com",      phone: "+233500000020", profilePic: "", paymentMethods: { momo: "+233500000020", bank: "UBA • 0000000020" } },
+  
+  { fullName: "Nana Ama Adjei",   email: "nanaama.adjei@yourmarket.com",     phone: "+233500000021", profilePic: "", paymentMethods: { momo: "+233500000021", bank: "GTBank • 0000000021" } },
+  { fullName: "Afua Sarpong",     email: "afua.sarpong@yourmarket.com",      phone: "+233500000022", profilePic: "", paymentMethods: { momo: "+233500000022", bank: "Zenith • 0000000022" } },
+  { fullName: "Kwesi Danso",      email: "kwesi.danso@yourmarket.com",       phone: "+233500000023", profilePic: "", paymentMethods: { momo: "+233500000023", bank: "Ecobank • 0000000023" } },
+  { fullName: "Nana Kofi Boakye", email: "nanakofi.boakye@yourmarket.com",   phone: "+233500000024", profilePic: "", paymentMethods: { momo: "+233500000024", bank: "Stanbic • 0000000024" } },
+  { fullName: "Adjei Martins",    email: "adjei.martins@yourmarket.com",      phone: "+233500000025", profilePic: "", paymentMethods: { momo: "+233500000025", bank: "UBA • 0000000025" } },
+  { fullName: "Selasie Nyarko",   email: "selasie.nyarko@yourmarket.com",    phone: "+233500000026", profilePic: "", paymentMethods: { momo: "+233500000026", bank: "GTBank • 0000000026" } },
+  { fullName: "Ama Nyarko",       email: "ama.nyarko@yourmarket.com",        phone: "+233500000027", profilePic: "", paymentMethods: { momo: "+233500000027", bank: "Zenith • 0000000027" } },
+  { fullName: "Kwabena Darko",    email: "kwabena.darko@yourmarket.com",     phone: "+233500000028", profilePic: "", paymentMethods: { momo: "+233500000028", bank: "Ecobank • 0000000028" } },
+  { fullName: "Akua Fosu",        email: "akua.fosu@yourmarket.com",         phone: "+233500000029", profilePic: "", paymentMethods: { momo: "+233500000029", bank: "Stanbic • 0000000029" } },
+  { fullName: "Kwesi Nkrumah",    email: "kwesi.nkrumah@yourmarket.com",     phone: "+233500000030", profilePic: "", paymentMethods: { momo: "+233500000030", bank: "UBA • 0000000030" } },
+  
+  { fullName: "Maame Owusu",      email: "maame.owusu@yourmarket.com",       phone: "+233500000031", profilePic: "", paymentMethods: { momo: "+233500000031", bank: "GTBank • 0000000031" } },
+  { fullName: "Efia Sarpong",     email: "efia.sarpong@yourmarket.com",      phone: "+233500000032", profilePic: "", paymentMethods: { momo: "+233500000032", bank: "Zenith • 0000000032" } },
+  { fullName: "Kweku Amoah",      email: "kweku.amoah@yourmarket.com",       phone: "+233500000033", profilePic: "", paymentMethods: { momo: "+233500000033", bank: "Ecobank • 0000000033" } },
+  { fullName: "Adjoa Frimpong",   email: "adjoa.frimpong@yourmarket.com",    phone: "+233500000034", profilePic: "", paymentMethods: { momo: "+233500000034", bank: "Stanbic • 0000000034" } },
+  { fullName: "Selina Ankrah",    email: "selina.ankrah@yourmarket.com",     phone: "+233500000035", profilePic: "", paymentMethods: { momo: "+233500000035", bank: "UBA • 0000000035" } },
+  { fullName: "John Kotey",       email: "john.kotey@yourmarket.com",        phone: "+233500000036", profilePic: "", paymentMethods: { momo: "+233500000036", bank: "GTBank • 0000000036" } },
+  { fullName: "Mercy Opoku",      email: "mercy.opoku@yourmarket.com",       phone: "+233500000037", profilePic: "", paymentMethods: { momo: "+233500000037", bank: "Zenith • 0000000037" } },
+  { fullName: "Isaac Owusu",      email: "isaac.owusu@yourmarket.com",       phone: "+233500000038", profilePic: "", paymentMethods: { momo: "+233500000038", bank: "Ecobank • 0000000038" } },
+  { fullName: "Maame Ntow",       email: "maame.ntow@yourmarket.com",        phone: "+233500000039", profilePic: "", paymentMethods: { momo: "+233500000039", bank: "Stanbic • 0000000039" } },
+  { fullName: "Kwabena Duah",     email: "kwabena.duah@yourmarket.com",      phone: "+233500000040", profilePic: "", paymentMethods: { momo: "+233500000040", bank: "UBA • 0000000040" } },
+  
+  { fullName: "African Crafts",   email: "african.crafts@yourmarket.com",    phone: "+233500000041", profilePic: "", paymentMethods: { momo: "+233500000041", bank: "GTBank • 0000000041" } },
+  { fullName: "Nana Gyamfi",      email: "nana.gyamfi@yourmarket.com",       phone: "+233500000042", profilePic: "", paymentMethods: { momo: "+233500000042", bank: "Zenith • 0000000042" } },
+  { fullName: "Kofi Boateng",     email: "kofi.boateng@yourmarket.com",      phone: "+233500000043", profilePic: "", paymentMethods: { momo: "+233500000043", bank: "Ecobank • 0000000043" } },
+  { fullName: "Maame Fosu",       email: "maame.fosu@yourmarket.com",        phone: "+233500000044", profilePic: "", paymentMethods: { momo: "+233500000044", bank: "Stanbic • 0000000044" } },
+  { fullName: "Samuel Boadu",     email: "samuel.boadu@yourmarket.com",      phone: "+233500000045", profilePic: "", paymentMethods: { momo: "+233500000045", bank: "UBA • 0000000045" } },
+  { fullName: "Adwoa Ansah",      email: "adwoa.ansah@yourmarket.com",       phone: "+233500000046", profilePic: "", paymentMethods: { momo: "+233500000046", bank: "GTBank • 0000000046" } },
+  { fullName: "Kweku Dzifa",      email: "kweku.dzifa@yourmarket.com",       phone: "+233500000047", profilePic: "", paymentMethods: { momo: "+233500000047", bank: "Zenith • 0000000047" } },
+  { fullName: "Maame Dede",       email: "maame.dede@yourmarket.com",        phone: "+233500000048", profilePic: "", paymentMethods: { momo: "+233500000048", bank: "Ecobank • 0000000048" } },
+  { fullName: "Kwabena Ansah",    email: "kwabena.ansah@yourmarket.com",     phone: "+233500000049", profilePic: "", paymentMethods: { momo: "+233500000049", bank: "Stanbic • 0000000049" } },
+  { fullName: "Efia Opoku",       email: "efia.opoku@yourmarket.com",        phone: "+233500000050", profilePic: "", paymentMethods: { momo: "+233500000050", bank: "UBA • 0000000050" } }
+];
+
+  function seedVendors(){
+  try {
+    const stored = JSON.parse(localStorage.getItem("vendors")||"[]");
+    if (!Array.isArray(stored) || stored.length < initialVendors.length) {
+      localStorage.setItem("vendors", JSON.stringify(initialVendors));
+    }
+  } catch {
+    localStorage.setItem("vendors", JSON.stringify(initialVendors));
+  }
+}
 })();
 </script>
 
