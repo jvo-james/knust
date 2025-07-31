@@ -278,6 +278,7 @@ img { display: block; max-width: 100%; }
           <li class="nav-item">
             <a href="#" id="show-signin" class="nav-link"><i class="fas fa-sign-in-alt"></i> Sign In</a>
           </li>
+          <li> <button id="logout-btn" class="btn btn-link">Log Out</button></li>
         </ul>
       </div>
     </div>
@@ -394,7 +395,7 @@ img { display: block; max-width: 100%; }
           </button>
         </div>
         <div class="card-body">
-        <form id="product-form" class="row g-3" onsubmit="event.preventDefault()">
+        <form id="product-form" class="row g-3">
             <input type="hidden" id="prod-id">
             <div class="col-md-6">
               <label class="form-label"><i class="fas fa-tag"></i> Title</label>
