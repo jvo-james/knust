@@ -950,12 +950,15 @@ html {
 #checkout:hover {
   background: #e02e56;
 }
-
+.sku, .stock {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.3rem;
+}
   </style>
 </head>
 
 <body>
-  <!-- ─── HEADER ─────────────────────────────────────────────────────────────── -->
   <header>
     <div class="header-inner">
       <div class="logo">YourMarket</div>
@@ -1446,6 +1449,9 @@ html {
             <p class="seller">by <a href="#">${p.vendorName}</a></p>
             <button class="btn-cart" data-title="${p.title}"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
           </div>`;
+         if (p.description)  c.dataset.description = p.description;
+      if (p.stock !== undefined) c.dataset.stock = p.stock;
+      if (p.sku)          c.dataset.sku = p.sku;
         grid.appendChild(c);
       });
     }
@@ -1463,11 +1469,7 @@ html {
     });
   })();
 
-  
-
-
-
-  // ─── 2) HERO SLIDER ───────────────────────────────────────────────────
+   // ─── 2) HERO SLIDER ───────────────────────────────────────────────────
   function initHeroSlider() {
     const slides = [...document.querySelectorAll('.hero-slider .slide')];
     const dotsContainer = document.querySelector('.slider-dots');
@@ -1575,23 +1577,40 @@ html {
     decBtn.onclick = ()=> { if(+qtyInput.value>1) qtyInput.value--; };
     incBtn.onclick = ()=> { qtyInput.value++; };
 
-    document.querySelectorAll('.product-card, .deal-card').forEach(card=>{
-      card.style.cursor='pointer';
-      card.addEventListener('click', e=>{
-        if (e.target.closest('.btn-cart, .btn-deal, #modal-add-cart')) return;
-        const img    = card.querySelector('img').src,
-              title  = (card.querySelector('.product-title, .deal-info h3')||{}).innerText,
-              price  = (card.querySelector('.price')||{}).innerText,
-              seller = ((card.querySelector('.seller a')||{}).innerText) || 'Marketplace';
-        openModal({
-          img, title, price, seller,
-          stock:'In Stock',
-          rating: Math.floor(Math.random()*2)+4,
-          description:`Detailed description for "${title}".`,
-          features:['High quality','Warranty','Free shipping']
-        });
-      });
-    });
+    document.getElementById('products-grid').addEventListener('click', e => {
+   // ignore clicks on cart buttons
+   if (e.target.closest('.btn-cart')) return;
+   // find the clicked product card
+   const card = e.target.closest('.product-card');
+   if (!card) return;
+   // gather shared fields
+   const img    = card.querySelector('img').src;
+   const title  = card.querySelector('.product-title').innerText;
+   const price  = card.querySelector('.price').innerText;
+   const seller = card.querySelector('.seller a')?.innerText || 'Marketplace';
+   // vendor-only fields (if present)
+   const description = card.dataset.description || 
+     `Detailed description for "${title}".`;
+   const stock = card.dataset.stock 
+     ? `${card.dataset.stock} available` 
+     : 'In Stock';
+   const sku = card.dataset.sku 
+     ? `SKU: ${card.dataset.sku}` 
+     : null;
+   // build features array
+   const features = [];
+   if (sku) features.push(sku);
+   features.push(`Category: ${card.dataset.category}`);
+   features.push('Free shipping');
+   // open the modal with full data
+   openModal({
+     img, title, price, seller,
+     stock,
+     rating: Math.floor(Math.random()*2)+4,
+     description,
+     features
+   });
+ });
 
     // 3.3) CART SIDEBAR
     const cartIcon     = document.getElementById('cart-icon'),
