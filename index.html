@@ -1368,56 +1368,56 @@ html {
 <script>
   // ─── 1) PRODUCTS: seed, render, storage sync ────────────────────────
   const initialProducts = [
-    { id:  1, title: "Stylish Handbag",          price: 149.00, imageUrl: "product1.jpg",    vendorId:0, vendorName:"Ama Mensah",         category:"fashion"     },
-    { id:  2, title: "Wireless Earbuds",         price: 199.00, imageUrl: "product2.webp",   vendorId:0, vendorName:"Kwame Asante",      category:"electronics" },
-    { id:  3, title: "Cotton T-Shirt",            price:  59.00, imageUrl: "product3.jpg",    vendorId:0, vendorName:"Adwoa Boateng",     category:"fashion"     },
-    { id:  4, title: "Leather Wallet",           price:  89.00, imageUrl: "product4.webp",   vendorId:0, vendorName:"Kojo Owusu",        category:"fashion"     },
-    { id:  5, title: "Running Shoes",            price: 249.00, imageUrl: "product5.webp",   vendorId:0, vendorName:"Yaa Adusei",        category:"shoes"       },
-    { id:  6, title: "Smartwatch",               price: 299.00, imageUrl: "product6.jpg",    vendorId:0, vendorName:"Kofi Amankwah",     category:"electronics" },
-    { id:  7, title: "Hardcover Novel",          price:  79.00, imageUrl: "product7.webp",   vendorId:0, vendorName:"Efua Owusu",        category:"books"       },
-    { id:  8, title: "Phone Case",               price:  25.00, imageUrl: "product8.jpg",    vendorId:0, vendorName:"Nana Osei",         category:"electronics" },
-    { id:  9, title: "Sunglasses",               price:  65.00, imageUrl: "product9.webp",   vendorId:0, vendorName:"Abena Acheampong",  category:"fashion"     },
-    { id: 10, title: "Ceramic Mug",              price:  35.00, imageUrl: "product10.jpg",   vendorId:0, vendorName:"Yaw Koranteng",     category:"accessories" },
-    { id: 11, title: "Backpack",                 price: 129.00, imageUrl: "product11.jpg",   vendorId:0, vendorName:"Esi Boateng",       category:"fashion"     },
-    { id: 12, title: "Matte Lipstick",           price:  45.00, imageUrl: "product12.jpg",   vendorId:0, vendorName:"Kwabena Agyeman",   category:"beauty"      },
-    { id: 13, title: "Over-Ear Headphones",      price: 189.00, imageUrl: "product13.jpg",   vendorId:0, vendorName:"Maame Agyapong",    category:"electronics" },
-    { id: 14, title: "Laptop Sleeve",            price:  75.00, imageUrl: "product14.webp",  vendorId:0, vendorName:"Kwaku Mensah",      category:"electronics" },
-    { id: 15, title: "Fitness Band",             price:  99.00, imageUrl: "product15.jpg",   vendorId:0, vendorName:"Akosua Konadu",     category:"electronics" },
-    { id: 16, title: "Kids’ Sneakers",           price:  65.00, imageUrl: "product16.webp",  vendorId:0, vendorName:"Samuel Opoku",      category:"shoes"       },
-    { id: 17, title: "Gaming Mouse",             price:  85.00, imageUrl: "product17.jpg",   vendorId:0, vendorName:"Esther Darko",      category:"electronics" },
-    { id: 18, title: "Insulated Water Bottle",   price:  55.00, imageUrl: "product18.jpg",   vendorId:0, vendorName:"Michael Yeboah",    category:"accessories" },
-    { id: 19, title: "LED Desk Lamp",            price:  99.00, imageUrl: "product19.jpg",   vendorId:0, vendorName:"Joy Adjei",         category:"electronics" },
-    { id: 20, title: "Wireless Charger",         price:  69.00, imageUrl: "product20.jpg",   vendorId:0, vendorName:"Daniel Ofori",      category:"electronics" },
-    { id: 21, title: "Bluetooth Speaker",        price: 120.00, imageUrl: "product21.jpg",   vendorId:0, vendorName:"Nana Ama Adjei",    category:"electronics" },
-    { id: 22, title: "Eco Yoga Mat",             price:  80.00, imageUrl: "product22.webp",  vendorId:0, vendorName:"Afua Sarpong",      category:"accessories" },
-    { id: 23, title: "Desk Organizer Set",       price:  45.00, imageUrl: "product23.jpg",   vendorId:0, vendorName:"Kwesi Danso",       category:"accessories" },
-    { id: 24, title: "Insulated Steel Bottle",   price:  65.00, imageUrl: "product24.webp",  vendorId:0, vendorName:"Nana Kofi Boakye",  category:"accessories" },
-    { id: 25, title: "Silk Pillowcase",          price: 110.00, imageUrl: "product25.jpg",   vendorId:0, vendorName:"Adjei Martins",     category:"accessories" },
-    { id: 26, title: "Power Bank 10000mAh",      price:  95.00, imageUrl: "product26.webp",  vendorId:0, vendorName:"Selasie Nyarko",    category:"electronics" },
-    { id: 27, title: "Gardening Tools Kit",      price:  75.00, imageUrl: "product27.jpg",   vendorId:0, vendorName:"Ama Nyarko",        category:"accessories" },
-    { id: 28, title: "Ceramic Planter",          price:  55.00, imageUrl: "product28.jpg",   vendorId:0, vendorName:"Kwabena Darko",     category:"accessories" },
-    { id: 29, title: "Ergonomic Keyboard",       price: 130.00, imageUrl: "product29.jpg",   vendorId:0, vendorName:"Akua Fosu",         category:"electronics" },
-    { id: 30, title: "LED Strip Lights",         price:  49.00, imageUrl: "product30.avif",  vendorId:0, vendorName:"Kwesi Nkrumah",     category:"electronics" },
-    { id: 31, title: "Canvas Sneakers",          price: 110.00, imageUrl: "product31.avif",  vendorId:0, vendorName:"Maame Owusu",       category:"shoes"       },
-    { id: 32, title: "Classic Fedora Hat",       price:  65.00, imageUrl: "product32.webp",  vendorId:0, vendorName:"Efia Sarpong",      category:"fashion"     },
-    { id: 33, title: "Scented Candle Set",       price:  85.00, imageUrl: "product33.webp",  vendorId:0, vendorName:"Kweku Amoah",       category:"accessories" },
-    { id: 34, title: "Memory Foam Pillow",       price: 140.00, imageUrl: "product34.webp",  vendorId:0, vendorName:"Adjoa Frimpong",    category:"accessories" },
-    { id: 35, title: "Travel Backpack",          price: 180.00, imageUrl: "product35.webp",  vendorId:0, vendorName:"Selina Ankrah",     category:"accessories" },
-    { id: 36, title: "Graphic Hoodie",           price: 120.00, imageUrl: "product36.jpg",   vendorId:0, vendorName:"John Kotey",        category:"fashion"     },
-    { id: 37, title: "Portable Projector",       price: 450.00, imageUrl: "product37.jpg",   vendorId:0, vendorName:"Mercy Opoku",       category:"electronics" },
-    { id: 38, title: "Electric Kettle",          price:  95.00, imageUrl: "product38.jpg",   vendorId:0, vendorName:"Isaac Owusu",       category:"electronics" },
-    { id: 39, title: "Bluetooth Headphones",     price: 160.00, imageUrl: "product39.webp",  vendorId:0, vendorName:"Maame Ntow",        category:"electronics" },
-    { id: 40, title: "Smart Light Bulb",         price:  55.00, imageUrl: "product40.webp",  vendorId:0, vendorName:"Kwabena Duah",      category:"electronics" },
-    { id: 41, title: "Silicone Bakeware Set",    price:  70.00, imageUrl: "product41.jpg",   vendorId:0, vendorName:"African Crafts",    category:"accessories" },
-    { id: 42, title: "Digital Alarm Clock",      price:  65.00, imageUrl: "product42.jpg",   vendorId:0, vendorName:"Nana Gyamfi",       category:"electronics" },
-    { id: 43, title: "Gaming Headset",           price: 220.00, imageUrl: "product43.jpg",   vendorId:0, vendorName:"Kofi Boateng",      category:"electronics" },
-    { id: 44, title: "Cookware Set 10-Piece",    price: 450.00, imageUrl: "product44.webp",  vendorId:0, vendorName:"Maame Fosu",        category:"accessories" },
-    { id: 45, title: "Bluetooth Car Kit",        price: 140.00, imageUrl: "product45.webp",  vendorId:0, vendorName:"Samuel Boadu",      category:"electronics" },
-    { id: 46, title: "Dinnerware Set (16-Piece)",price: 380.00, imageUrl: "product46.jpg",   vendorId:0, vendorName:"Adwoa Ansah",       category:"accessories" },
-    { id: 47, title: "Wireless Game Controller", price: 210.00, imageUrl: "product47.webp",  vendorId:0, vendorName:"Kweku Dzifa",       category:"electronics" },
-    { id: 48, title: "Silk Scarf",               price:  55.00, imageUrl: "product48.jpg",   vendorId:0, vendorName:"Maame Dede",        category:"fashion"     },
-    { id: 49, title: "Digital Photo Frame",      price: 155.00, imageUrl: "product49.webp",  vendorId:0, vendorName:"Kwabena Ansah",     category:"electronics" },
-    { id: 50, title: "Compact Air Fryer",        price: 270.00, imageUrl: "product50.png",   vendorId:0, vendorName:"Efia Opoku",        category:"electronics" }
+    { id:1,  title:"Stylish Handbag",            price:149.00, imageUrl:"product1.jpg",  vendorName:"Ama Mensah",       category:"fashion"     },
+    { id:2,  title:"Wireless Earbuds",           price:199.00, imageUrl:"product2.webp", vendorName:"Kwame Asante",     category:"electronics" },
+    { id:3,  title:"Cotton T-Shirt",             price: 59.00, imageUrl:"product3.jpg",  vendorName:"Adwoa Boateng",    category:"fashion"     },
+    { id:4,  title:"Leather Wallet",             price: 89.00, imageUrl:"product4.webp", vendorName:"Kojo Owusu",       category:"fashion"     },
+    { id:5,  title:"Running Shoes",              price:249.00, imageUrl:"product5.webp", vendorName:"Yaa Adusei",       category:"shoes"       },
+    { id:6,  title:"Smartwatch",                 price:299.00, imageUrl:"product6.jpg",  vendorName:"Kofi Amankwah",    category:"electronics" },
+    { id:7,  title:"Hardcover Novel",            price: 79.00, imageUrl:"product7.webp", vendorName:"Efua Owusu",       category:"books"       },
+    { id:8,  title:"Phone Case",                 price: 25.00, imageUrl:"product8.jpg",  vendorName:"Nana Osei",        category:"electronics" },
+    { id:9,  title:"Sunglasses",                 price: 65.00, imageUrl:"product9.webp", vendorName:"Abena Acheampong", category:"fashion"     },
+    { id:10, title:"Ceramic Mug",                price: 35.00, imageUrl:"product10.jpg",vendorName:"Yaw Koranteng",    category:"accessories" },
+    { id:11, title:"Backpack",                   price:129.00, imageUrl:"product11.jpg",vendorName:"Esi Boateng",      category:"fashion"     },
+    { id:12, title:"Matte Lipstick",             price: 45.00, imageUrl:"product12.jpg",vendorName:"Kwabena Agyeman",  category:"beauty"      },
+    { id:13, title:"Over-Ear Headphones",        price:189.00, imageUrl:"product13.jpg",vendorName:"Maame Agyapong",   category:"electronics" },
+    { id:14, title:"Laptop Sleeve",              price: 75.00, imageUrl:"product14.webp",vendorName:"Kwaku Mensah",     category:"electronics" },
+    { id:15, title:"Fitness Band",               price: 99.00, imageUrl:"product15.jpg",vendorName:"Akosua Konadu",    category:"electronics" },
+    { id:16, title:"Kids’ Sneakers",             price: 65.00, imageUrl:"product16.webp",vendorName:"Samuel Opoku",     category:"shoes"       },
+    { id:17, title:"Gaming Mouse",               price: 85.00, imageUrl:"product17.jpg",vendorName:"Esther Darko",     category:"electronics" },
+    { id:18, title:"Insulated Water Bottle",     price: 55.00, imageUrl:"product18.jpg",vendorName:"Michael Yeboah",   category:"accessories" },
+    { id:19, title:"LED Desk Lamp",              price: 99.00, imageUrl:"product19.jpg",vendorName:"Joy Adjei",        category:"electronics" },
+    { id:20, title:"Wireless Charger",           price: 69.00, imageUrl:"product20.jpg",vendorName:"Daniel Ofori",     category:"electronics" },
+    { id:21, title:"Bluetooth Speaker",          price:120.00, imageUrl:"product21.jpg",vendorName:"Nana Ama Adjei",   category:"electronics" },
+    { id:22, title:"Eco Yoga Mat",               price: 80.00, imageUrl:"product22.webp",vendorName:"Afua Sarpong",     category:"accessories" },
+    { id:23, title:"Desk Organizer Set",         price: 45.00, imageUrl:"product23.jpg",vendorName:"Kwesi Danso",      category:"accessories" },
+    { id:24, title:"Insulated Steel Bottle",     price: 65.00, imageUrl:"product24.webp",vendorName:"Nana Kofi Boakye", category:"accessories" },
+    { id:25, title:"Silk Pillowcase",            price:110.00, imageUrl:"product25.jpg",vendorName:"Adjei Martins",    category:"accessories" },
+    { id:26, title:"Power Bank 10000mAh",        price: 95.00, imageUrl:"product26.webp",vendorName:"Selasie Nyarko",   category:"electronics" },
+    { id:27, title:"Gardening Tools Kit",        price: 75.00, imageUrl:"product27.jpg",vendorName:"Ama Nyarko",       category:"accessories" },
+    { id:28, title:"Ceramic Planter",            price: 55.00, imageUrl:"product28.jpg",vendorName:"Kwabena Darko",    category:"accessories" },
+    { id:29, title:"Ergonomic Keyboard",         price:130.00, imageUrl:"product29.jpg",vendorName:"Akua Fosu",        category:"electronics" },
+    { id:30, title:"LED Strip Lights",           price: 49.00, imageUrl:"product30.avif",vendorName:"Kwesi Nkrumah",    category:"electronics" },
+    { id:31, title:"Canvas Sneakers",            price:110.00, imageUrl:"product31.avif",vendorName:"Maame Owusu",      category:"shoes"       },
+    { id:32, title:"Classic Fedora Hat",         price: 65.00, imageUrl:"product32.webp",vendorName:"Efia Sarpong",     category:"fashion"     },
+    { id:33, title:"Scented Candle Set",         price: 85.00, imageUrl:"product33.webp",vendorName:"Kweku Amoah",      category:"accessories" },
+    { id:34, title:"Memory Foam Pillow",         price:140.00, imageUrl:"product34.webp",vendorName:"Adjoa Frimpong",   category:"accessories" },
+    { id:35, title:"Travel Backpack",            price:180.00, imageUrl:"product35.webp",vendorName:"Selina Ankrah",    category:"accessories" },
+    { id:36, title:"Graphic Hoodie",             price:120.00, imageUrl:"product36.jpg",vendorName:"John Kotey",       category:"fashion"     },
+    { id:37, title:"Portable Projector",         price:450.00, imageUrl:"product37.jpg",vendorName:"Mercy Opoku",      category:"electronics" },
+    { id:38, title:"Electric Kettle",            price: 95.00, imageUrl:"product38.jpg",vendorName:"Isaac Owusu",      category:"electronics" },
+    { id:39, title:"Bluetooth Headphones",       price:160.00, imageUrl:"product39.webp",vendorName:"Maame Ntow",       category:"electronics" },
+    { id:40, title:"Smart Light Bulb",           price: 55.00, imageUrl:"product40.webp",vendorName:"Kwabena Duah",     category:"electronics" },
+    { id:41, title:"Silicone Bakeware Set",      price: 70.00, imageUrl:"product41.jpg",vendorName:"African Crafts",   category:"accessories" },
+    { id:42, title:"Digital Alarm Clock",        price: 65.00, imageUrl:"product42.jpg",vendorName:"Nana Gyamfi",      category:"electronics" },
+    { id:43, title:"Gaming Headset",             price:220.00, imageUrl:"product43.jpg",vendorName:"Kofi Boateng",     category:"electronics" },
+    { id:44, title:"Cookware Set 10-Piece",      price:450.00, imageUrl:"product44.webp",vendorName:"Maame Fosu",       category:"accessories" },
+    { id:45, title:"Bluetooth Car Kit",          price:140.00, imageUrl:"product45.webp",vendorName:"Samuel Boadu",     category:"electronics" },
+    { id:46, title:"Dinnerware Set (16-Piece)",  price:380.00, imageUrl:"product46.jpg",vendorName:"Adwoa Ansah",      category:"accessories" },
+    { id:47, title:"Wireless Game Controller",   price:210.00, imageUrl:"product47.webp",vendorName:"Kweku Dzifa",      category:"electronics" },
+    { id:48, title:"Silk Scarf",                 price: 55.00, imageUrl:"product48.jpg",vendorName:"Maame Dede",       category:"fashion"     },
+    { id:49, title:"Digital Photo Frame",        price:155.00, imageUrl:"product49.webp",vendorName:"Kwabena Ansah",    category:"electronics" },
+    { id:50, title:"Compact Air Fryer",          price:270.00, imageUrl:"product50.png",vendorName:"Efia Opoku",       category:"electronics" }
   ];
 
   function renderProducts() {
@@ -1442,296 +1442,312 @@ html {
     });
   }
 
-  document.addEventListener("DOMContentLoaded", ()=>{
+  document.addEventListener("DOMContentLoaded", () => {
     if (!localStorage.getItem("products")) {
       localStorage.setItem("products", JSON.stringify(initialProducts));
     }
     renderProducts();
+    initHeroSlider();
+    initUI();
   });
 
   window.addEventListener("storage", e => {
     if (e.key === "products") renderProducts();
   });
 
-  window.renderProducts = renderProducts;
-</script>
 
-<script>
   // ─── 2) HERO SLIDER ───────────────────────────────────────────────────
-  (function(){
+  function initHeroSlider() {
     const slides = [...document.querySelectorAll('.hero-slider .slide')];
-    const dots   = document.querySelector('.slider-dots');
-    let current=0, timer;
+    const dotsContainer = document.querySelector('.slider-dots');
+    let current = 0, timer;
 
-    slides.forEach((_,i)=>{
+    // build dots
+    slides.forEach((_,i) => {
       const d = document.createElement('span');
-      d.addEventListener('click', ()=> goTo(i));
-      dots.appendChild(d);
+      d.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(d);
     });
-    const dotEls = [...dots.children];
-    dotEls[0].classList.add('active');
+    const dots = [...dotsContainer.children];
+    dots[0].classList.add('active');
 
-    function show(i){
+    function show(idx){
       slides.forEach(s=>s.classList.remove('active'));
-      dotEls.forEach(d=>d.classList.remove('active'));
-      slides[i].classList.add('active');
-      dotEls[i].classList.add('active');
+      dots.forEach(d=>d.classList.remove('active'));
+      slides[idx].classList.add('active');
+      dots[idx].classList.add('active');
     }
-    function next(){ current=(current+1)%slides.length; show(current);}
-    function prev(){ current=(current-1+slides.length)%slides.length; show(current);}
-    function goTo(i){ current=i; show(i); reset(); }
+    function next(){
+      current = (current+1)%slides.length;
+      show(current);
+    }
+    function prev(){
+      current = (current-1+slides.length)%slides.length;
+      show(current);
+    }
+    function goTo(i){
+      current = i; show(i); reset();
+    }
 
-    document.querySelector('.slider-nav.next').onclick = ()=>{ next(); reset(); };
-    document.querySelector('.slider-nav.prev').onclick = ()=>{ prev(); reset(); };
+    document.querySelector('.slider-nav.next').addEventListener('click', ()=>{ next(); reset(); });
+    document.querySelector('.slider-nav.prev').addEventListener('click', ()=>{ prev(); reset(); });
 
-    function reset(){ clearInterval(timer); timer = setInterval(next,5000); }
-    timer = setInterval(next,5000);
+    function reset(){
+      clearInterval(timer);
+      timer = setInterval(next, 5000);
+    }
+    timer = setInterval(next, 5000);
     show(0);
-  })();
-</script>
+  }
 
-<script>
-  // ─── 3) UI: hamburger, scroll, modal, cart, filters, search, load-more, back-to-top & newsletter ────────────────────────
 
-  // 3.1) Hamburger & smooth scroll
-  document.getElementById('hamburger').addEventListener('click', ()=> {
-    document.getElementById('navMenu').classList.toggle('active');
-  });
-  window.addEventListener('click', e=>{
-    if(!document.getElementById('hamburger').contains(e.target)
-       && !document.getElementById('navMenu').contains(e.target)) {
-      document.getElementById('navMenu').classList.remove('active');
-    }
-  });
-  document.getElementById('main-market').scrollIntoView({behavior:'smooth'});
-
-  // 3.2) PRODUCT/DEAL MODAL
-  const modal       = document.getElementById('product-modal'),
-        backModal   = document.getElementById('product-modal-backdrop'),
-        imgEl       = document.getElementById('modal-img'),
-        titleEl     = document.getElementById('modal-title'),
-        sellerEl    = document.getElementById('modal-seller'),
-        priceEl     = document.getElementById('modal-price'),
-        ratingEl    = document.getElementById('modal-rating'),
-        stockEl     = document.getElementById('modal-stock'),
-        descEl      = document.querySelector('#modal-description p'),
-        featuresEl  = document.getElementById('modal-features'),
-        qtyInput    = document.getElementById('qty-input'),
-        decBtn      = document.getElementById('qty-decrease'),
-        incBtn      = document.getElementById('qty-increase');
-
-  function openModal(data){
-    imgEl.src        = data.img;
-    imgEl.alt        = data.title;
-    titleEl.textContent  = data.title;
-    sellerEl.textContent = data.seller;
-    priceEl.textContent  = data.price;
-    stockEl.textContent  = data.stock;
-    descEl.textContent   = data.description;
-    ratingEl.innerHTML   = "";
-    for(let i=0;i<5;i++){
-      const star = document.createElement('i');
-      star.className = i < data.rating ? 'fas fa-star' : 'far fa-star';
-      ratingEl.appendChild(star);
-    }
-    featuresEl.innerHTML = "";
-    data.features.forEach(f=>{
-      const li = document.createElement('li');
-      li.textContent = f;
-      featuresEl.appendChild(li);
+  // ─── 3) UI INITIALIZATION ────────────────────────────────────────────
+  function initUI() {
+    // 3.1) Hamburger & smooth scroll
+    const ham = document.getElementById('hamburger'),
+          nav = document.getElementById('navMenu');
+    ham.addEventListener('click', ()=> nav.classList.toggle('active'));
+    window.addEventListener('click', e => {
+      if (!ham.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+      }
     });
-    qtyInput.value = 1;
-    modal.classList.add('active');
-    backModal.classList.add('active');
-  }
-  function closeModal(){
-    modal.classList.remove('active');
-    backModal.classList.remove('active');
-  }
+    document.getElementById('main-market').scrollIntoView({behavior:'smooth'});
 
-  document.getElementById('modal-close').onclick = closeModal;
-  backModal.onclick = closeModal;
-  decBtn.onclick = ()=>{ if(+qtyInput.value>1) qtyInput.value--; };
-  incBtn.onclick = ()=>{ qtyInput.value++; };
+    // 3.2) PRODUCT/DEAL MODAL
+    const modal      = document.getElementById('product-modal'),
+          backModal  = document.getElementById('product-modal-backdrop'),
+          imgEl      = document.getElementById('modal-img'),
+          titleEl    = document.getElementById('modal-title'),
+          sellerEl   = document.getElementById('modal-seller'),
+          priceEl    = document.getElementById('modal-price'),
+          ratingEl   = document.getElementById('modal-rating'),
+          stockEl    = document.getElementById('modal-stock'),
+          descEl     = document.querySelector('#modal-description p'),
+          featuresEl = document.getElementById('modal-features'),
+          qtyInput   = document.getElementById('qty-input'),
+          decBtn     = document.getElementById('qty-decrease'),
+          incBtn     = document.getElementById('qty-increase'),
+          modalClose = document.getElementById('modal-close');
 
-  document.querySelectorAll('.product-card, .deal-card').forEach(card=>{
-    card.style.cursor='pointer';
-    card.addEventListener('click', e=>{
-      if(e.target.closest('.btn-cart, .btn-deal, #modal-add-cart')) return;
-      const img    = card.querySelector('img').src,
-            title  = (card.querySelector('.product-title, .deal-info h3')||{}).innerText,
-            price  = (card.querySelector('.price')||{}).innerText,
-            seller = ((card.querySelector('.seller a')||{}).innerText)||'Marketplace';
-      openModal({
-        img, title, price, seller,
-        stock:'In Stock', rating: Math.floor(Math.random()*2)+4,
-        description:`Detailed description for "${title}".`,
-        features:['High quality','Warranty','Free shipping']
+    function openModal(data){
+      imgEl.src         = data.img;
+      imgEl.alt         = data.title;
+      titleEl.textContent  = data.title;
+      sellerEl.textContent = data.seller;
+      priceEl.textContent  = data.price;
+      stockEl.textContent  = data.stock;
+      descEl.textContent   = data.description;
+      ratingEl.innerHTML   = "";
+      for(let i=0;i<5;i++){
+        const star = document.createElement('i');
+        star.className = i < data.rating ? 'fas fa-star' : 'far fa-star';
+        ratingEl.appendChild(star);
+      }
+      featuresEl.innerHTML = "";
+      data.features.forEach(f=>{
+        const li = document.createElement('li');
+        li.textContent = f;
+        featuresEl.appendChild(li);
+      });
+      qtyInput.value = 1;
+      modal.classList.add('active');
+      backModal.classList.add('active');
+    }
+    function closeModal(){
+      modal.classList.remove('active');
+      backModal.classList.remove('active');
+    }
+
+    modalClose.onclick = closeModal;
+    backModal.onclick = closeModal;
+    decBtn.onclick = ()=> { if(+qtyInput.value>1) qtyInput.value--; };
+    incBtn.onclick = ()=> { qtyInput.value++; };
+
+    document.querySelectorAll('.product-card, .deal-card').forEach(card=>{
+      card.style.cursor='pointer';
+      card.addEventListener('click', e=>{
+        if (e.target.closest('.btn-cart, .btn-deal, #modal-add-cart')) return;
+        const img    = card.querySelector('img').src,
+              title  = (card.querySelector('.product-title, .deal-info h3')||{}).innerText,
+              price  = (card.querySelector('.price')||{}).innerText,
+              seller = ((card.querySelector('.seller a')||{}).innerText) || 'Marketplace';
+        openModal({
+          img, title, price, seller,
+          stock:'In Stock',
+          rating: Math.floor(Math.random()*2)+4,
+          description:`Detailed description for "${title}".`,
+          features:['High quality','Warranty','Free shipping']
+        });
       });
     });
-  });
 
-  // 3.3) CART SIDEBAR
-  const cartIcon     = document.getElementById('cart-icon'),
-        cartBackdrop = document.getElementById('cart-backdrop'),
-        cartSidebar  = document.getElementById('cart-sidebar'),
-        cartCloseBtn = document.getElementById('cart-close'),
-        cartItems    = document.getElementById('cart-items'),
-        cartCount    = document.getElementById('cart-count'),
-        subEl        = document.getElementById('subtotal'),
-        taxEl        = document.getElementById('tax'),
-        totalEl      = document.getElementById('total'),
-        clearBtn     = document.getElementById('clear-cart'),
-        applyBtn     = document.getElementById('apply-coupon'),
-        couponInput  = document.getElementById('coupon-code');
+    // 3.3) CART SIDEBAR
+    const cartIcon     = document.getElementById('cart-icon'),
+          cartBackdrop = document.getElementById('cart-backdrop'),
+          cartSidebar  = document.getElementById('cart-sidebar'),
+          cartCloseBtn = document.getElementById('cart-close'),
+          cartItems    = document.getElementById('cart-items'),
+          cartCount    = document.getElementById('cart-count'),
+          subEl        = document.getElementById('subtotal'),
+          taxEl        = document.getElementById('tax'),
+          totalEl      = document.getElementById('total'),
+          clearBtn     = document.getElementById('clear-cart'),
+          applyBtn     = document.getElementById('apply-coupon'),
+          couponInput  = document.getElementById('coupon-code');
 
-  let cart = [];
+    let cart = [];
+    const fmt = v => '₵'+v.toFixed(2);
 
-  function openCart(){ cartSidebar.classList.add('active'); cartBackdrop.classList.add('active'); }
-  function closeCart(){ cartSidebar.classList.remove('active'); cartBackdrop.classList.remove('active'); }
-  cartIcon.onclick = openCart;
-  cartCloseBtn.onclick = closeCart;
-  cartBackdrop.onclick  = closeCart;
+    function openCart(){ cartSidebar.classList.add('active'); cartBackdrop.classList.add('active'); }
+    function closeCart(){ cartSidebar.classList.remove('active'); cartBackdrop.classList.remove('active'); }
+    cartIcon.onclick = openCart;
+    cartCloseBtn.onclick = closeCart;
+    cartBackdrop.onclick  = closeCart;
 
-  const fmt = v => '₵'+v.toFixed(2);
+    function updateSummary(){
+      const subtotal = cart.reduce((s,i)=> s + i.price*i.qty, 0),
+            tax      = subtotal * 0.05,
+            total    = subtotal + tax;
+      subEl.textContent   = fmt(subtotal);
+      taxEl.textContent   = fmt(tax);
+      totalEl.textContent = fmt(total);
+      cartCount.textContent = cart.reduce((s,i)=> s + i.qty, 0);
+    }
 
-  function updateSummary(){
-    const subtotal = cart.reduce((s,i)=>s + i.price*i.qty,0),
-          tax      = subtotal * 0.05,
-          total    = subtotal + tax;
-    subEl.textContent   = fmt(subtotal);
-    taxEl.textContent   = fmt(tax);
-    totalEl.textContent = fmt(total);
-    cartCount.textContent = cart.reduce((s,i)=>s + i.qty,0);
-  }
+    function renderCart(){
+      cartItems.innerHTML = "";
+      cart.forEach((item,idx)=>{
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <img src="${item.img}" alt="${item.title}">
+          <div class="item-details">
+            <h3>${item.title}</h3>
+            <p class="seller">${item.seller}</p>
+            <p class="price">${fmt(item.price)}</p>
+            <div class="qty-control">
+              <button class="dec">–</button>
+              <input type="number" value="${item.qty}" min="1">
+              <button class="inc">+</button>
+            </div>
+            <div class="actions">
+              <a href="#" class="remove">Remove</a>
+            </div>
+          </div>`;
+        div.querySelector('.dec').onclick = ()=>{ if(item.qty>1) item.qty--, syncCart(); };
+        div.querySelector('.inc').onclick = ()=>{ item.qty++, syncCart(); };
+        div.querySelector('.remove').onclick = e=>{ e.preventDefault(); cart.splice(idx,1); syncCart(); };
+        div.querySelector('input').onchange = e=>{
+          item.qty = Math.max(1, parseInt(e.target.value)||1);
+          syncCart();
+        };
+        cartItems.appendChild(div);
+      });
+    }
 
-  function renderCart(){
-    cartItems.innerHTML = "";
-    cart.forEach((item,idx)=>{
-      const div = document.createElement('div');
-      div.className = 'cart-item';
-      div.innerHTML = `
-        <img src="${item.img}" alt="${item.title}">
-        <div class="item-details">
-          <h3>${item.title}</h3>
-          <p class="seller">${item.seller}</p>
-          <p class="price">${fmt(item.price)}</p>
-          <div class="qty-control">
-            <button class="dec">–</button>
-            <input type="number" value="${item.qty}" min="1">
-            <button class="inc">+</button>
-          </div>
-          <div class="actions">
-            <a href="#" class="remove">Remove</a>
-          </div>
-        </div>`;
-      // qty + remove
-      div.querySelector('.dec').onclick = ()=>{ if(item.qty>1) item.qty--, sync(); };
-      div.querySelector('.inc').onclick = ()=>{ item.qty++, sync(); };
-      div.querySelector('.remove').onclick = e=>{ e.preventDefault(); cart.splice(idx,1); sync(); };
-      div.querySelector('input').onchange = e=>{
-        item.qty = Math.max(1,parseInt(e.target.value)||1); sync();
-      };
-      cartItems.appendChild(div);
-    });
-  }
-  function sync(){
-    renderCart();
-    updateSummary();
-    document.querySelectorAll('.btn-cart').forEach(btn=>{
-      const inx = cart.find(i=>i.title===btn.dataset.title);
-      btn.innerHTML = inx?'<i class="fas fa-trash"></i> Remove':'<i class="fas fa-shopping-cart"></i> Add to Cart';
-      btn.classList.toggle('in-cart',!!inx);
-    });
-  }
+    function syncCart(){
+      renderCart();
+      updateSummary();
+      document.querySelectorAll('.btn-cart').forEach(btn=>{
+        const title = btn.dataset.title;
+        const inCart = cart.some(i=>i.title===title);
+        btn.innerHTML = inCart ? '<i class="fas fa-trash"></i> Remove' : '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        btn.classList.toggle('in-cart', inCart);
+      });
+    }
 
-  function toggleCartItem(data){
-    const idx = cart.findIndex(i=>i.title===data.title);
-    if(idx>-1) cart.splice(idx,1);
-    else cart.push({...data,qty:1});
-    sync();
-  }
+    function toggleCartItem(data){
+      const idx = cart.findIndex(i=>i.title===data.title);
+      if (idx > -1) cart.splice(idx,1);
+      else cart.push({...data, qty:1});
+      syncCart();
+    }
 
-  // attach to all btn-cart
-  document.body.addEventListener('click', e=>{
-    if(!e.target.closest('.btn-cart')) return;
-    e.preventDefault();
-    const btn = e.target.closest('.btn-cart');
-    const card = btn.closest('.product-card, .deal-card');
-    const data = {
-      img: card.querySelector('img').src,
-      title: (card.querySelector('.product-title')||card.querySelector('h3')).innerText,
-      price: +((card.querySelector('.price')||{}).innerText.replace('₵','')||0),
-      seller: ((card.querySelector('.seller a')||{}).innerText)||'Marketplace'
-    };
-    toggleCartItem(data);
-  });
-
-  clearBtn.onclick = ()=>{ cart=[]; sync(); };
-  applyBtn.onclick = ()=>{ alert(`Coupon "${couponInput.value}" applied!`); };
-
-  // init
-  sync();
-
-  // 3.4) FILTER LINKS (categories)
-  const filterLinks = document.querySelectorAll('.filter-link'),
-        dealLinks   = document.querySelectorAll('.filter-link');
-  filterLinks.forEach(link=>{
-    link.onclick = e=>{
+    document.body.addEventListener('click', e=>{
+      const btn = e.target.closest('.btn-cart');
+      if (!btn) return;
       e.preventDefault();
-      filterLinks.forEach(l=>l.classList.remove('active'));
-      link.classList.add('active');
-      const cat = link.dataset.cat;
-      [...document.querySelectorAll('.product-card, .deal-card')].forEach(c=>{
-        c.style.display = (cat==='all'||c.dataset.category===cat)?'':'none';
+      const card = btn.closest('.product-card, .deal-card');
+      const data = {
+        img: card.querySelector('img').src,
+        title: (card.querySelector('.product-title')||card.querySelector('h3')).innerText,
+        price: parseFloat((card.querySelector('.price').innerText||"₵0").replace('₵','')),
+        seller: (card.querySelector('.seller a')||{}).innerText || 'Marketplace'
+      };
+      toggleCartItem(data);
+    });
+
+    clearBtn.onclick = ()=>{ cart=[]; syncCart(); };
+    applyBtn.onclick = ()=>{ alert(`Coupon "${couponInput.value}" applied!`); };
+    syncCart();
+
+
+    // 3.4) CATEGORY FILTER
+    document.querySelectorAll('.filter-link').forEach(link=>{
+      link.addEventListener('click', e=>{
+        e.preventDefault();
+        document.querySelectorAll('.filter-link').forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+        const cat = link.dataset.cat;
+        document.querySelectorAll('.product-card, .deal-card').forEach(c=>{
+          c.style.display = (cat==='all' || c.dataset.category===cat) ? '' : 'none';
+        });
       });
-    };
-  });
-  // activate “All”
-  document.querySelector('.filter-link[data-cat="all"]').click();
-
-  // 3.5) SEARCH FILTER
-  const searchInput = document.querySelector('.search-bar input');
-  searchInput.oninput = ()=> {
-    const q = searchInput.value.trim().toLowerCase();
-    [...document.querySelectorAll('.product-card, .deal-card')].forEach(c=>{
-      const t = ((c.querySelector('.product-title')||c.querySelector('h3')||{}).innerText||"").toLowerCase();
-      c.style.display = t.includes(q)?'':'none';
     });
-  };
+    // activate “All”
+    document.querySelector('.filter-link[data-cat="all"]').click();
 
-  // 3.6) LOAD MORE
-  const loadMoreBtn = document.querySelector('.btn-load-more');
-  loadMoreBtn.onclick = ()=> {
-    const hidden = [...document.querySelectorAll('.product-card.hidden')];
-    hidden.slice(0,20).forEach(c=>{
-      c.classList.remove('hidden');
-      c.style.display = '';
+
+    // 3.5) SEARCH FILTER
+    document.querySelector('.search-bar input').addEventListener('input', e=>{
+      const q = e.target.value.trim().toLowerCase();
+      document.querySelectorAll('.product-card, .deal-card').forEach(c=>{
+        const txt = ((c.querySelector('.product-title')||c.querySelector('h3')||{}).innerText||"").toLowerCase();
+        c.style.display = txt.includes(q) ? '' : 'none';
+      });
     });
-    if(!document.querySelector('.product-card.hidden')) loadMoreBtn.style.display='none';
-  };
-  document.addEventListener("DOMContentLoaded", ()=>{
-    const cards = [...document.querySelectorAll('.product-card')];
-    cards.slice(20).forEach(c=>{
-      c.classList.add('hidden');
-      c.style.display='none';
+
+
+    // 3.6) LOAD MORE
+    const loadMoreBtn = document.querySelector('.btn-load-more');
+    loadMoreBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.product-card.hidden').forEach((c,i)=>{
+        if (i<20){
+          c.classList.remove('hidden');
+          c.style.display='';
+        }
+      });
+      if (!document.querySelector('.product-card.hidden')) loadMoreBtn.style.display='none';
     });
-    if(cards.length<=20) loadMoreBtn.style.display='none';
-  });
+    // initial hide beyond 20
+    document.querySelectorAll('.product-card').forEach((c,i)=>{
+      if (i>=20){
+        c.classList.add('hidden');
+        c.style.display='none';
+      }
+    });
+    if (document.querySelectorAll('.product-card').length <= 20){
+      loadMoreBtn.style.display='none';
+    }
 
-  // 3.7) BACK TO TOP
-  document.getElementById('back-to-top').onclick = ()=>{
-    window.scrollTo({top:0,behavior:'smooth'});
-  };
 
-  // 3.8) NEWSLETTER FORM
-  document.getElementById('footer-newsletter-form').onsubmit = e=>{
-    e.preventDefault();
-    const email = e.target.querySelector('input').value;
-    alert(`Thanks for subscribing with ${email}!`);
-    e.target.reset();
-  };
+    // 3.7) BACK TO TOP
+    document.getElementById('back-to-top').addEventListener('click', ()=>{
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+
+    // 3.8) NEWSLETTER FORM
+    document.getElementById('footer-newsletter-form').addEventListener('submit', e=>{
+      e.preventDefault();
+      const email = e.target.querySelector('input').value;
+      alert(`Thanks for subscribing with ${email}!`);
+      e.target.reset();
+    });
+  }
 </script>
+
 
 </body>
 </html>
