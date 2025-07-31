@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Frontend-Only Vendor Demo</title>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; }
+    .hidden { display: none; }
+    .product { border: 1px solid #ccc; padding: .5rem; margin: .5rem; display: inline-block; width: 200px; vertical-align: top; }
+    .product img { max-width: 100%; height: auto; }
+    form { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+
+  <h1>All-in-One Market (Frontend Demo)</h1>
+
+  <!-- STEP A: Vendor Sign Up / Login -->
+  <div id="auth-section">
+    <h2>Vendor Sign Up</h2>
+    <form id="signup-form">
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <input type="password" id="signup-pass" placeholder="Password" required>
+      <select id="signup-plan">
+        <option value="monthly">Monthly – 8 GHS</option>
+        <option value="semiannual">6 months – 45 GHS</option>
+        <option value="annual">1 year – 75 GHS</option>
+      </select>
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <h2>Vendor Login</h2>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="Email" required>
+      <input type="password" id="login-pass" placeholder="Password" required>
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+
+  <!-- STEP B: Vendor Portal -->
+  <div id="vendor-portal" class="hidden">
+    <h2>Welcome, <span id="vendor-email"></span>!</h2>
+    <button id="logout-btn">Log Out</button>
+    <h3>Add New Product</h3>
+    <form id="product-form">
+      <input type="text" id="prod-title" placeholder="Product Title" required><br>
+      <input type="number" id="prod-price" placeholder="Price" required step="0.01"><br>
+      <input type="file" id="prod-image" accept="image/*" required><br>
+      <button type="submit">Upload Product</button>
+    </form>
+  </div>
+
+  <!-- STEP C: Public Product Gallery -->
+  <h2>Featured Products</h2>
+  <div id="gallery"></div>
+<a href="index.html">← Back to Market</a>
+
+<script>
+  // -- Utilities
+  const load = key => JSON.parse(localStorage.getItem(key) || '[]');
+  const save = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+  // -- Hashing (demo only)
+  const hash = str => btoa(str); // not secure—just demo
+
+  // -- Auth / Subscription Logic
+  let currentVendor = null;
+
+  function renderAuth() {
+    document.getElementById('auth-section').classList.toggle('hidden', !!currentVendor);
+    document.getElementById('vendor-portal').classList.toggle('hidden', !currentVendor);
+    if (currentVendor) {
+      document.getElementById('vendor-email').textContent = currentVendor.email;
+    }
+  }
+
+  // Sign Up
+  document.getElementById('signup-form').onsubmit = e => {
+    e.preventDefault();
+    const email = e.target['signup-email'].value;
+    const pass  = e.target['signup-pass'].value;
+    const plan  = e.target['signup-plan'].value;
+    const expiresMap = { monthly:30, semiannual:180, annual:365 };
+    const expiresAt = Date.now() + expiresMap[plan]*24*60*60*1000;
+    const vendors = load('vendors');
+
+    if (vendors.find(v=>v.email===email)) {
+      return alert('Email already used');
+    }
+
+    vendors.push({
+      id: Date.now(),
+      email,
+      passwordHash: hash(pass),
+      subscription: { plan, expiresAt }
+    });
+    save('vendors', vendors);
+    alert('Signed up! Now log in.');
+    e.target.reset();
+  };
+
+  // Log In
+  document.getElementById('login-form').onsubmit = e => {
+    e.preventDefault();
+    const email = e.target['login-email'].value;
+    const pass  = e.target['login-pass'].value;
+    const vendors = load('vendors');
+    const vendor = vendors.find(v=>v.email===email && v.passwordHash===hash(pass));
+    if (!vendor) return alert('Invalid credentials');
+    if (vendor.subscription.expiresAt < Date.now()) {
+      return alert('Subscription expired!');
+    }
+    currentVendor = vendor;
+    renderAuth();
+  };
+
+  document.getElementById('logout-btn').onclick = () => {
+    currentVendor = null;
+    renderAuth();
+  };
+
+  // -- Product Upload
+  document.getElementById('product-form').onsubmit = async e => {
+    e.preventDefault();
+    if (!currentVendor) return alert('Log in first');
+
+    const title = e.target['prod-title'].value;
+    const price = parseFloat(e.target['prod-price'].value).toFixed(2);
+    const file  = e.target['prod-image'].files[0];
+
+    // Convert to Base64
+    const reader = new FileReader();
+    reader.onload = () => {
+      const products = load('products');
+      products.push({
+        id: Date.now(),
+        vendorId:  currentVendor.id,
+        title,
+        price,
+        imageBase64: reader.result
+      });
+      save('products', products);
+      e.target.reset();
+      renderGallery();
+      alert('Product added!');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // -- Public Gallery
+  function renderGallery() {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+    const products = load('products');
+    products.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.innerHTML = `
+        <img src="${p.imageBase64}" alt="${p.title}">
+        <h4>${p.title}</h4>
+        <p>₵${p.price}</p>
+      `;
+      gallery.appendChild(div);
+    });
+  }
+
+  // -- Init
+  renderAuth();
+  renderGallery();
+</script>
+</body>
+</html>
