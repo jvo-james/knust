@@ -1066,6 +1066,97 @@ html {
   color: #ff3860;
 }
 
+@media (max-width: 514px) {
+  /* Root tweaks */
+  body {
+    font-size: 16px;           /* slightly larger base */
+    line-height: 1.6;
+    background: #fff;
+  }
+
+  /* Header */
+  header {
+    padding: 12px 16px;
+  }
+  #cart-icon-container {
+    transform: scale(1.2);
+  }
+
+  /* Hero slider captions */
+  .hero-slider .caption {
+    bottom: 6%;
+    left: 4%;
+    max-width: 90%;
+    background: rgba(255, 255, 255, 0.8);
+    color: #111;
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  .btn-hero {
+    padding: 0.8rem 1.4rem;
+    font-size: 1rem;
+    border-radius: 30px;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 16px;
+  }
+
+  /* Cards */
+  .deal-card, .product-card, .category-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  }
+  .deal-card img, .product-card img, .category-card img {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+
+  /* Buttons */
+  .btn-cart, .btn-deal, #modal-add-cart, .btn-load-more {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    border-radius: 30px;
+  }
+
+  /* Grid tweaks */
+  .products-grid, .deals-grid, .categories-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  /* Modal */
+  #product-modal {
+    width: 95%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .modal-content {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .modal-media img {
+    max-height: 200px;
+    border-radius: 12px;
+  }
+  .modal-info {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  /* Footer */
+  .site-footer {
+    padding: 32px 16px;
+  }
+  .footer-container {
+    grid-template-columns: 1fr !important;
+  }
+}
+
   </style>
 </head>
 
@@ -1083,7 +1174,21 @@ html {
       <div class="header-icons">
        <a href="vendor.html" target="_blank" style="text-decoration: none;"> <i class="fas fa-user"></i> Vendor Portal</a>
         <i class="fas fa-heart"></i>
-        <i class="fas fa-shopping-cart" id="cart-icon"></i>
+        <div id="cart-icon-container" style="position: relative; display: inline-block;">
+          <i class="fas fa-shopping-cart" id="cart-icon"></i>
+          <span id="cart-badge"
+                style="
+                  position: absolute;
+                  top: -6px; right: -6px;
+                  background: #ff3860;
+                  color: #fff;
+                  font-size: 0.7rem;
+                  width: 18px; height: 18px;
+                  line-height: 18px;
+                  text-align: center;
+                  border-radius: 50%;
+                ">0</span>
+        </div>
         <div class="hamburger" id="hamburger">
           <span></span><span></span><span></span>
         </div>
@@ -1282,47 +1387,65 @@ html {
     </div>
   </section>
 
-  <section class="top-deals">
-    <div class="container">
-      <h2 class="section-title">Top Deals This Week</h2>
-      <div class="deals-grid">
-        <!-- Example Product Card -->
-        <div class="deal-card" data-category="electronics">
-          <img src="deal1.jpg" alt="Product 1" loading="lazy">
-          <div class="deal-info">
-            <h3>Wireless Headphones</h3>
-            <p class="price">$59.00</p>
-            <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-          </div>
+<section class="top-deals">
+  <div class="container">
+    <h2 class="section-title">Top Deals This Week</h2>
+    <div class="deals-grid">
+      <!-- Deal 1 -->
+      <div class="deal-card"
+           data-category="electronics"
+           data-description="Experience immersive sound with active noise cancellation, up to 20 hours of playback, and a snug, over-ear fit."
+           data-features="Active noise cancellation,20h battery life,Over-ear comfort,Wireless Bluetooth 5.2">
+        <img src="deal1.jpg" alt="Wireless Headphones" loading="lazy">
+        <div class="deal-info">
+          <h3>Wireless Headphones</h3>
+          <p class="price">$59.00</p>
+          <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
+      </div>
 
-                <div class="deal-card" data-category="fashion">
-          <img src="deal2.jpg" alt="Product 2" loading="lazy">
-          <div class="deal-info">
-            <h3>Classic Handbag</h3>
-            <p class="price">$45.00</p>
-            <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-          </div>
+      <!-- Deal 2 -->
+      <div class="deal-card"
+           data-category="fashion"
+           data-description="A timeless leather handbag with a sleek silhouette, adjustable strap, and soft microfiber interior."
+           data-features="Genuine leather,Adjustable strap,Microfiber lining,Inner zip pocket">
+        <img src="deal2.jpg" alt="Classic Handbag" loading="lazy">
+        <div class="deal-info">
+          <h3>Classic Handbag</h3>
+          <p class="price">$45.00</p>
+          <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
-        <div class="deal-card" data-category="shoes">
-          <img src="deal3.webp" alt="Product 3" loading="lazy">
-          <div class="deal-info">
-            <h3>Leather Boots</h3>
-            <p class="price">$75.00</p>
-            <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-          </div>
+      </div>
+
+      <!-- Deal 3 -->
+      <div class="deal-card"
+           data-category="shoes"
+           data-description="Durable leather boots with cushioned insole and anti-slip rubber outsole—perfect for city streets or trail hikes."
+           data-features="Full-grain leather,Cushioned insole,Anti-slip outsole,Ankle support">
+        <img src="deal3.webp" alt="Leather Boots" loading="lazy">
+        <div class="deal-info">
+          <h3>Leather Boots</h3>
+          <p class="price">$75.00</p>
+          <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
-        <div class="deal-card" data-category="electronics">
-          <img src="deal4.webp" alt="Product 4" loading="lazy">
-          <div class="deal-info">
-            <h3>Rolex Watch</h3>
-            <p class="price">$120.00</p>
-            <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-          </div>
+      </div>
+
+      <!-- Deal 4 -->
+      <div class="deal-card"
+           data-category="electronics"
+           data-description="Premium stainless-steel smart watch with heart-rate monitoring, customizable watch-faces, and water resistance up to 50m."
+           data-features="Heart-rate monitor,Custom watch-faces,50m water resistant,Sleep tracking">
+        <img src="deal4.webp" alt="Rolex Watch" loading="lazy">
+        <div class="deal-info">
+          <h3>Rolex Watch</h3>
+          <p class="price">$120.00</p>
+          <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- ─── MAIN MARKET ────────────────────────────────────────────────────────── -->
 <section class="main-market"  id="main-market">
@@ -1696,6 +1819,32 @@ html {
       qtyInput.value = 1;
       modal.classList.add('active');
       backModal.classList.add('active');
+
+       const modalBtn = document.getElementById('modal-add-cart');
+  // set button text/icon based on whether item is already in cart
+  const inCart   = cart.some(i => i.title === data.title);
+  modalBtn.innerHTML = inCart
+    ? '<i class="fas fa-trash"></i> Remove'
+    : '<i class="fas fa-shopping-cart"></i> Add to Cart';
+
+  // remove any previous listener to avoid duplicates
+  modalBtn.replaceWith(modalBtn.cloneNode(true));
+  const newBtn = document.getElementById('modal-add-cart');
+  newBtn.addEventListener('click', e => {
+    e.preventDefault();
+    // toggle in cart, then update both modal and page buttons
+    toggleCartItem({
+      img: data.img,
+      title: data.title,
+      price: parseFloat(data.price.replace('₵','')),
+      seller: data.seller
+    });
+    // reflect change immediately in modal
+    const nowInCart = cart.some(i => i.title === data.title);
+    newBtn.innerHTML = nowInCart
+      ? '<i class="fas fa-trash"></i> Remove'
+      : '<i class="fas fa-shopping-cart"></i> Add to Cart';
+  });
     }
     function closeModal(){
       modal.classList.remove('active');
@@ -1760,7 +1909,9 @@ html {
       subEl.textContent   = fmt(subtotal);
       taxEl.textContent   = fmt(tax);
       totalEl.textContent = fmt(total);
-      cartCount.textContent = cart.reduce((s,i)=> s + i.qty, 0);
+      const totalItems = cart.reduce((s,i)=> s + i.qty, 0);
+      cartCount.textContent = totalItems;
+      document.getElementById('cart-badge').textContent = totalItems;
     }
 
     function renderCart(){
@@ -1801,6 +1952,15 @@ html {
           : '<i class="fas fa-shopping-cart"></i> Add to Cart';
         btn.classList.toggle('in-cart', inCart);
       });
+      document.querySelectorAll('.btn-deal').forEach(btn=>{
+      const card    = btn.closest('.deal-card');
+      const title   = card.querySelector('h3').innerText;
+      const inCart  = cart.some(i=>i.title===title);
+      btn.innerHTML = inCart
+        ? '<i class="fas fa-trash"></i> Remove'
+        : '<i class="fas fa-shopping-cart"></i> Add to Cart';
+      btn.classList.toggle('in-cart', inCart);
+    });
     }
 
     function toggleCartItem(data){
@@ -1907,19 +2067,24 @@ document
   // treat deal-cards the same as product-cards
 document.querySelectorAll('.deal-card').forEach(card => {
   card.addEventListener('click', e => {
-    if (e.target.closest('.btn-deal')) return; // let button handle cart
-    const img    = card.querySelector('img').src;
-    const title  = card.querySelector('h3').innerText;
-    const price  = card.querySelector('.price').innerText.replace('$','₵');
+    if (e.target.closest('.btn-deal')) return; // let cart button handle it
+
+    // pull in data-attributes for description & features
+    const img         = card.querySelector('img').src;
+    const title       = card.querySelector('h3').innerText;
+    const price       = card.querySelector('.price').innerText.replace('$','₵');
+    const description = card.dataset.description;
+    const features    = card.dataset.features.split(',');
+
     openModal({
       img,
       title,
       seller: 'Marketplace',
       price,
       stock: 'In Stock',
-      rating: Math.floor(Math.random()*2)+4,
-      description: `Details for ${title}.`,
-      features: [`Category: ${card.dataset.category}`, 'Free shipping']
+      rating: Math.floor(Math.random()*2) + 4,
+      description,
+      features
     });
   });
 });
