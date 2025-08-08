@@ -1710,7 +1710,7 @@ html {
       if (p.sku) c.dataset.sku = p.sku;
       grid.appendChild(c);
     });
-  }
+  };
  window.renderProducts = renderProducts;
   // ─── 3) HERO SLIDER ────────────────────────────────────────────────────
   function initHeroSlider() {
@@ -1954,7 +1954,7 @@ html {
       if (idx > -1) cart.splice(idx,1);
       else cart.push({...data, qty:1});
       syncCart();
-    }
+    };
  window.toggleCartItem = toggleCartItem;
     
    function payWithPaystack(email, amount, reference) {
