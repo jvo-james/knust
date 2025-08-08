@@ -2410,16 +2410,18 @@ function updateHistoryBadge() {
   document.getElementById('history-badge').textContent = history.length;
 }
 
-// ── HOOKUP HISTORY BUTTON ─────────────────────────────────────────────
-document.getElementById('history-icon').addEventListener('click', openHistoryModal);
-document.getElementById('history-close').onclick = () => {
-  document.getElementById('history-modal-backdrop').classList.remove('active');
-  document.getElementById('history-modal').classList.remove('active');
-};
-document.getElementById('history-modal-backdrop').onclick = () => {
-  document.getElementById('history-modal-backdrop').classList.remove('active');
-  document.getElementById('history-modal').classList.remove('active');
-};
+ document.getElementById('history-icon')
+      .addEventListener('click', openHistoryModal);
+    document.getElementById('history-close')
+      .addEventListener('click', () => {
+        document.getElementById('history-modal-backdrop').classList.remove('active');
+        document.getElementById('history-modal').classList.remove('active');
+      });
+    document.getElementById('history-modal-backdrop')
+      .addEventListener('click', () => {
+        document.getElementById('history-modal-backdrop').classList.remove('active');
+        document.getElementById('history-modal').classList.remove('active');
+      });
 
 
 updateHistoryBadge();
