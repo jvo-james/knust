@@ -2207,6 +2207,7 @@ html {
   } catch {
     cart = [];
   }
+    syncCart();
     const fmt = v => '₵'+v.toFixed(2);
 
     function openCart(){ cartSidebar.classList.add('active'); cartBackdrop.classList.add('active'); }
