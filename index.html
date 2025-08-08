@@ -2201,14 +2201,14 @@ html {
           applyBtn     = document.getElementById('apply-coupon'),
           couponInput  = document.getElementById('coupon-code');
 
-    let cart = [];
-    try {
-    cart = JSON.parse(localStorage.getItem('cart')||'[]');
-  } catch {
-    cart = [];
-  }
-    syncCart();
-    const fmt = v => '₵'+v.toFixed(2);
+   let cart = [];
+  const fmt = v => '₵'+v.toFixed(2);         
+   try {
+     cart = JSON.parse(localStorage.getItem('cart')||'[]');
+   } catch {
+     cart = [];
+   }
+   syncCart(); 
 
     function openCart(){ cartSidebar.classList.add('active'); cartBackdrop.classList.add('active'); }
     function closeCart(){ cartSidebar.classList.remove('active'); cartBackdrop.classList.remove('active'); }
