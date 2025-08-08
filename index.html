@@ -1687,7 +1687,6 @@ html {
     const grid  = document.getElementById("products-grid");
     grid.innerHTML = "";
     prods.forEach(p => {
-      // normalize price in case it's a string
       const priceNum = typeof p.price === "string" ? parseFloat(p.price) : p.price;
       const c = document.createElement("div");
       c.className = "product-card";
@@ -1710,8 +1709,8 @@ html {
       if (p.sku) c.dataset.sku = p.sku;
       grid.appendChild(c);
     });
-  };
- window.renderProducts = renderProducts;
+  }
+
   // ─── 3) HERO SLIDER ────────────────────────────────────────────────────
   function initHeroSlider() {
     const slides = [...document.querySelectorAll('.hero-slider .slide')];
@@ -1806,32 +1805,28 @@ html {
       modal.classList.add('active');
       backModal.classList.add('active');
 
-       const modalBtn = document.getElementById('modal-add-cart');
-  // set button text/icon based on whether item is already in cart
-  const inCart   = cart.some(i => i.title === data.title);
-  modalBtn.innerHTML = inCart
-    ? '<i class="fas fa-trash"></i> Remove'
-    : '<i class="fas fa-shopping-cart"></i> Add to Cart';
-
-  // remove any previous listener to avoid duplicates
-  modalBtn.replaceWith(modalBtn.cloneNode(true));
-  const newBtn = document.getElementById('modal-add-cart');
-  newBtn.addEventListener('click', e => {
-    e.preventDefault();
-    // toggle in cart, then update both modal and page buttons
-    toggleCartItem({
-      img: data.img,
-      title: data.title,
-      price: parseFloat(data.price.replace('₵','')),
-      seller: data.seller
-    });
-    // reflect change immediately in modal
-    const nowInCart = cart.some(i => i.title === data.title);
-    newBtn.innerHTML = nowInCart
-      ? '<i class="fas fa-trash"></i> Remove'
-      : '<i class="fas fa-shopping-cart"></i> Add to Cart';
-  });
+      const modalBtn = document.getElementById('modal-add-cart');
+      const inCart   = cart.some(i => i.title === data.title);
+      modalBtn.innerHTML = inCart
+        ? '<i class="fas fa-trash"></i> Remove'
+        : '<i class="fas fa-shopping-cart"></i> Add to Cart';
+      modalBtn.replaceWith(modalBtn.cloneNode(true));
+      const newBtn = document.getElementById('modal-add-cart');
+      newBtn.addEventListener('click', e => {
+        e.preventDefault();
+        toggleCartItem({
+          img: data.img,
+          title: data.title,
+          price: parseFloat(data.price.replace('₵','')),
+          seller: data.seller
+        });
+        const nowInCart = cart.some(i => i.title === data.title);
+        newBtn.innerHTML = nowInCart
+          ? '<i class="fas fa-trash"></i> Remove'
+          : '<i class="fas fa-shopping-cart"></i> Add to Cart';
+      });
     }
+
     function closeModal(){
       modal.classList.remove('active');
       backModal.classList.remove('active');
@@ -1845,23 +1840,19 @@ html {
       if (e.target.closest('.btn-cart')) return;
       const card = e.target.closest('.product-card');
       if (!card) return;
-      const img         = card.querySelector('img').src;
-      const title       = card.querySelector('.product-title').innerText;
-      const price       = card.querySelector('.price').innerText;
-      const seller      = card.querySelector('.seller a')?.innerText || 'Marketplace';
-      const description = card.dataset.description || `Detailed description for "${title}".`;
-      const stock       = card.dataset.stock ? `${card.dataset.stock} available` : 'In Stock';
-      const sku         = card.dataset.sku ? `SKU: ${card.dataset.sku}` : null;
-      const features    = [];
-      if (sku) features.push(sku);
-      features.push(`Category: ${card.dataset.category}`, 'Free shipping');
-
       openModal({
-        img, title, price, seller,
-        stock,
+        img: card.querySelector('img').src,
+        title: card.querySelector('.product-title').innerText,
+        price: card.querySelector('.price').innerText,
+        seller: card.querySelector('.seller a')?.innerText || 'Marketplace',
+        stock: card.dataset.stock ? `${card.dataset.stock} available` : 'In Stock',
         rating: Math.floor(Math.random()*2)+4,
-        description,
-        features
+        description: card.dataset.description || `Detailed description for "${card.querySelector('.product-title').innerText}".`,
+        features: [
+          ...(card.dataset.sku ? [`SKU: ${card.dataset.sku}`] : []),
+          `Category: ${card.dataset.category}`,
+          'Free shipping'
+        ]
       });
     });
 
@@ -1939,14 +1930,14 @@ html {
         btn.classList.toggle('in-cart', inCart);
       });
       document.querySelectorAll('.btn-deal').forEach(btn=>{
-      const card    = btn.closest('.deal-card');
-      const title   = card.querySelector('h3').innerText;
-      const inCart  = cart.some(i=>i.title===title);
-      btn.innerHTML = inCart
-        ? '<i class="fas fa-trash"></i> Remove'
-        : '<i class="fas fa-shopping-cart"></i> Add to Cart';
-      btn.classList.toggle('in-cart', inCart);
-    });
+        const card  = btn.closest('.deal-card');
+        const title = card.querySelector('h3').innerText;
+        const inCart= cart.some(i=>i.title===title);
+        btn.innerHTML = inCart
+          ? '<i class="fas fa-trash"></i> Remove'
+          : '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        btn.classList.toggle('in-cart', inCart);
+      });
     }
 
     function toggleCartItem(data){
@@ -1954,98 +1945,74 @@ html {
       if (idx > -1) cart.splice(idx,1);
       else cart.push({...data, qty:1});
       syncCart();
-    };
- window.toggleCartItem = toggleCartItem;
-    
-   function payWithPaystack(email, amount, reference) {
-   var handler = PaystackPop.setup({
-     key: 'pk_test_297586e51710e83d3c159bfe71ff45c7e23411fa',     
-     email: email,
-     amount: amount * 100,                 // convert ₵ to kobo
-     currency: 'GHS',
-     ref: reference,
-     callback: function(response){
-       alert('Payment complete! Reference: ' + response.reference);
-       // you can clear cart here if successful
-       cart = [];
-       syncCart();
-     },
-     onClose: function(){
-       alert('Transaction was not completed, window closed.');
-     }
-   });
-   handler.openIframe();
- }
-      // ─── Top‐Deals grid click + detail modal ───────────────────
-  document.querySelector('.deals-grid').addEventListener('click', e => {
-    const dealBtn  = e.target.closest('.btn-deal');
-    const dealCard = e.target.closest('.deal-card');
-    if (dealBtn) {
-      e.preventDefault();
-      const card = dealBtn.closest('.deal-card');
-      toggleCartItem({
-        img:    card.querySelector('img').src,
-        title:  card.querySelector('h3').innerText,
-        price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
-        seller: 'Marketplace'
-      });
-    } else if (dealCard) {
-      const img         = dealCard.querySelector('img').src;
-      const title       = dealCard.querySelector('h3').innerText;
-      const price       = dealCard.querySelector('.price').innerText.replace('$','₵');
-      const description = dealCard.dataset.description;
-      const features    = dealCard.dataset.features.split(',');
-      openModal({
-        img, title, seller: 'Marketplace',
-        price, stock: 'In Stock',
-        rating: Math.floor(Math.random()*2)+4,
-        description, features
-      });
     }
-  });
+     window.toggleCartItem = toggleCartItem;
+    window.renderProducts   = renderProducts;
 
-  // ─── Checkout modal open/close + submit ───────────────────
-  document.getElementById('checkout').onclick = () => {
-    const total = cart.reduce((s,i)=> s + i.price*i.qty, 0);
-    if (total <= 0) { alert('Your cart is empty.'); return; }
-    document.getElementById('checkout-amount').innerText = total.toFixed(2);
-    document.getElementById('checkout-modal-backdrop').classList.add('active');
-    document.getElementById('checkout-modal').classList.add('active');
-  };
-  document.getElementById('checkout-close').onclick = () => {
-    document.getElementById('checkout-modal-backdrop').classList.remove('active');
-    document.getElementById('checkout-modal').classList.remove('active');
-  };
-  document.getElementById('checkout-form').addEventListener('submit', e => {
-    e.preventDefault();
-    const data  = new FormData(e.target);
-    const email = data.get('email');
-    const total = parseFloat(document.getElementById('checkout-amount').innerText);
-    const ref   = 'EMART-' + Math.random().toString().slice(2);
-    payWithPaystack(email, total, ref);
-    // show a thank-you message
-    e.target.innerHTML = `<h3>Thank you for your purchase!</h3>
-                          <p>Your reference is ${ref}</p>`;
-  });
-   }
-  
-    document.body.addEventListener('click', e=>{
-      const btn = e.target.closest('.btn-cart');
-      if (!btn) return;
-      e.preventDefault();
-      const card = btn.closest('.product-card, .deal-card');
-      const data = {
-        img: card.querySelector('img').src,
-        title: (card.querySelector('.product-title')||card.querySelector('h3')).innerText,
-        price: parseFloat((card.querySelector('.price').innerText||"₵0").replace('₵','')),
-        seller: (card.querySelector('.seller a')||{}).innerText || 'Marketplace'
-      };
-      toggleCartItem(data);
+    function payWithPaystack(email, amount, reference) {
+      var handler = PaystackPop.setup({
+        key: 'pk_test_297586e51710e83d3c159bfe71ff45c7e23411fa',
+        email, amount: amount * 100, currency: 'GHS', ref: reference,
+        callback: function(response){
+          alert('Payment complete! Reference: ' + response.reference);
+          cart = []; syncCart();
+        },
+        onClose: function(){
+          alert('Transaction was not completed, window closed.');
+        }
+      });
+      handler.openIframe();
+    }
+
+    // ─── Top-Deals grid click + detail modal ─────────────────
+    document.querySelector('.deals-grid').addEventListener('click', e => {
+      const dealBtn  = e.target.closest('.btn-deal');
+      const dealCard = e.target.closest('.deal-card');
+      if (dealBtn) {
+        e.preventDefault();
+        const card = dealBtn.closest('.deal-card');
+        toggleCartItem({
+          img:    card.querySelector('img').src,
+          title:  card.querySelector('h3').innerText,
+          price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
+          seller: 'Marketplace'
+        });
+      } else if (dealCard) {
+        openModal({
+          img: dealCard.querySelector('img').src,
+          title: dealCard.querySelector('h3').innerText,
+          price: dealCard.querySelector('.price').innerText.replace('$','₵'),
+          seller: 'Marketplace',
+          stock: 'In Stock',
+          rating: Math.floor(Math.random()*2)+4,
+          description: dealCard.dataset.description,
+          features: dealCard.dataset.features.split(',')
+        });
+      }
     });
 
-    clearBtn.onclick = ()=>{ cart=[]; syncCart(); };
-    applyBtn.onclick = ()=>{ alert(`Coupon "${couponInput.value}" applied!`); };
-    syncCart();
+    // ─── Checkout modal open/close + submit ───────────────
+    document.getElementById('checkout').onclick = () => {
+      const total = cart.reduce((s,i)=> s + i.price*i.qty, 0);
+      if (total <= 0) { alert('Your cart is empty.'); return; }
+      document.getElementById('checkout-amount').innerText = total.toFixed(2);
+      document.getElementById('checkout-modal-backdrop').classList.add('active');
+      document.getElementById('checkout-modal').classList.add('active');
+    };
+    document.getElementById('checkout-close').onclick = () => {
+      document.getElementById('checkout-modal-backdrop').classList.remove('active');
+      document.getElementById('checkout-modal').classList.remove('active');
+    };
+    document.getElementById('checkout-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const data  = new FormData(e.target);
+      const email = data.get('email');
+      const total = parseFloat(document.getElementById('checkout-amount').innerText);
+      const ref   = 'EMART-' + Math.random().toString().slice(2);
+      payWithPaystack(email, total, ref);
+      e.target.innerHTML = `<h3>Thank you for your purchase!</h3>
+                            <p>Your reference is ${ref}</p>`;
+    });
 
     // 4.4) CATEGORY FILTER
     document.querySelectorAll('.filter-link').forEach(link=>{
@@ -2100,7 +2067,7 @@ html {
       alert(`Thanks for subscribing with ${email}!`);
       e.target.reset();
     });
-  }
+  } // ← closes initUI()
 
   // ─── 5) INITIALIZE ON LOAD & STORAGE EVENTS ─────────────────────────
   window.addEventListener("storage", e => {
@@ -2113,83 +2080,66 @@ html {
     initHeroSlider();
     initUI();
   });
-document
-  .getElementById('products-grid')
-  .addEventListener('click', e => {
-    // if user clicked on vendor name link
+
+  // ─── VENDOR MODAL SETUP ───────────────────────────────────────────────
+  document.getElementById('products-grid').addEventListener('click', e=>{
     if (e.target.closest('.seller a')) {
       const vendName = e.target.innerText;
       openVendorModalByName(vendName);
     }
   });
 
-
-
   function openVendorModalByName(vendorDisplayName) {
-  // load your vendors list
-  const vendors = JSON.parse(localStorage.getItem('vendors') || '[]');
-  const vendor  = vendors.find(v => v.fullName === vendorDisplayName);
-  if (!vendor) return alert('Vendor not found.');
+    const vendors = JSON.parse(localStorage.getItem('vendors') || '[]');
+    const vendor  = vendors.find(v => v.fullName === vendorDisplayName);
+    if (!vendor) return alert('Vendor not found.');
 
-  // avatar or fallback icon
-  const avatarUrl = vendor.profilePic || 'https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/svg/person-circle-outline.svg';
-  document.getElementById('vendor-avatar').src    = avatarUrl;
-  document.getElementById('vendor-name').textContent  = vendor.fullName;
-  document.getElementById('vendor-name-2').textContent= vendor.fullName;
-  document.getElementById('vendor-email').textContent = vendor.email;
-  document.getElementById('vendor-phone').textContent = vendor.phone;
+    const avatarUrl = vendor.profilePic || 'https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/svg/person-circle-outline.svg';
+    document.getElementById('vendor-avatar').src     = avatarUrl;
+    document.getElementById('vendor-name').textContent = vendor.fullName;
+    document.getElementById('vendor-name-2').textContent = vendor.fullName;
+    document.getElementById('vendor-email').textContent  = vendor.email;
+    document.getElementById('vendor-phone').textContent  = vendor.phone;
 
-  // payment buttons
-  const payDiv = document.getElementById('vendor-payment-methods');
-  payDiv.innerHTML = '';
-  // Paystack
-  payDiv.innerHTML += `<button id="paystack-btn">Pay via Paystack</button>`;
-  // Momo & Bank
-  if (vendor.paymentMethods.momo) {
-    payDiv.innerHTML += `<button class="momo-btn">Momo: ${vendor.paymentMethods.momo}</button>`;
+    const payDiv = document.getElementById('vendor-payment-methods');
+    payDiv.innerHTML = `<button id="paystack-btn">Pay via Paystack</button>`;
+    if (vendor.paymentMethods.momo) payDiv.innerHTML += `<button class="momo-btn">Momo: ${vendor.paymentMethods.momo}</button>`;
+    if (vendor.paymentMethods.bank) payDiv.innerHTML += `<button class="bank-btn">Bank: ${vendor.paymentMethods.bank}</button>`;
+
+    const allProds = JSON.parse(localStorage.getItem('products')||'[]');
+    const mine     = allProds.filter(p => p.vendorName === vendor.email);
+    const grid     = document.getElementById('vendor-products-grid');
+    grid.innerHTML = '';
+    mine.forEach(p => {
+      const priceNum = typeof p.price==='string' ? parseFloat(p.price):p.price;
+      const card     = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="card-media">
+          <img src="${p.imageUrl}" alt="${p.title}">
+        </div>
+        <div class="card-body">
+          <h4 class="product-title">${p.title}</h4>
+          <p class="price">₵${priceNum.toFixed(2)}</p>
+          <button class="btn-cart" data-title="${p.title}">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    document.getElementById('vendor-modal-backdrop').classList.add('active');
+    document.getElementById('vendor-modal').classList.add('active');
   }
-  if (vendor.paymentMethods.bank) {
-    payDiv.innerHTML += `<button class="bank-btn">Bank: ${vendor.paymentMethods.bank}</button>`;
-  }
 
-  // inject this vendor's products into the grid
-  const allProds = JSON.parse(localStorage.getItem('products')||'[]');
-  const mine     = allProds.filter(p => p.vendorName === vendor.email);
-  const grid     = document.getElementById('vendor-products-grid');
-  grid.innerHTML = '';
-  mine.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    const priceNum = typeof p.price==='string' ? parseFloat(p.price):p.price;
-    card.innerHTML = `
-      <div class="card-media">
-        <img src="${p.imageUrl}" alt="${p.title}">
-      </div>
-      <div class="card-body">
-        <h4 class="product-title">${p.title}</h4>
-        <p class="price">₵${priceNum.toFixed(2)}</p>
-        <button class="btn-cart" data-title="${p.title}">
-          <i class="fas fa-shopping-cart"></i> Add to Cart
-        </button>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-
-  // show the modal
-  document.getElementById('vendor-modal-backdrop').classList.add('active');
-  document.getElementById('vendor-modal').classList.add('active');
-}
-
-// close button
-document.getElementById('vendor-modal-close').onclick = () => {
-  document.getElementById('vendor-modal-backdrop').classList.remove('active');
-  document.getElementById('vendor-modal').classList.remove('active');
-};
-document.getElementById('vendor-modal-backdrop').onclick = () => {
-  document.getElementById('vendor-modal-backdrop').classList.remove('active');
-  document.getElementById('vendor-modal').classList.remove('active');
-};
+  document.getElementById('vendor-modal-close').onclick = () => {
+    document.getElementById('vendor-modal-backdrop').classList.remove('active');
+    document.getElementById('vendor-modal').classList.remove('active');
+  };
+  document.getElementById('vendor-modal-backdrop').onclick = () => {
+    document.getElementById('vendor-modal-backdrop').classList.remove('active');
+    document.getElementById('vendor-modal').classList.remove('active');
+  };
 
   const initialVendors = [
   { fullName: "Ama Mensah",       email: "ama.mensah@yourmarket.com",        phone: "+233500000001", profilePic: "", paymentMethods: { momo: "+233500000001", bank: "GTBank • 0000000001" } },
@@ -2248,19 +2198,19 @@ document.getElementById('vendor-modal-backdrop').onclick = () => {
   { fullName: "Efia Opoku",       email: "efia.opoku@yourmarket.com",        phone: "+233500000050", profilePic: "", paymentMethods: { momo: "+233500000050", bank: "UBA • 0000000050" } }
 ];
 
+
   function seedVendors(){
-  try {
-    const stored = JSON.parse(localStorage.getItem("vendors")||"[]");
-    if (!Array.isArray(stored) || stored.length < initialVendors.length) {
+    try {
+      const stored = JSON.parse(localStorage.getItem("vendors") || "[]");
+      if (!Array.isArray(stored) || stored.length < initialVendors.length) {
+        localStorage.setItem("vendors", JSON.stringify(initialVendors));
+      }
+    } catch {
       localStorage.setItem("vendors", JSON.stringify(initialVendors));
     }
-  } catch {
-    localStorage.setItem("vendors", JSON.stringify(initialVendors));
   }
-}
 })();
 </script>
-
 
 <script>
   (function(){
