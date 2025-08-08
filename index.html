@@ -2171,6 +2171,7 @@ html {
     currency: 'GHS',
     ref: reference,
     callback(response) {
+      recordPurchase(cart, response.reference);
       // Payment was successful
       msgDiv.classList.add('success');
       msgDiv.textContent = `✔️ Payment succeeded! Reference: ${response.reference}`;
@@ -2193,11 +2194,11 @@ html {
 }
 
     // ── RECORD PURCHASES ───────────────────────────────────────────────────
-function recordPurchase(items) {
+function recordPurchase(items, txnRef) {
   const history = JSON.parse(localStorage.getItem('purchaseHistory')||'[]');
   history.unshift({
     timestamp: new Date().toISOString(),
-     txnRef,
+    txnRef: txnRef,
     items: items.map(i=>({
       title: i.title,
       img: i.img, 
@@ -2256,15 +2257,7 @@ document.getElementById('history-modal-backdrop').onclick = () => {
   document.getElementById('history-modal').classList.remove('active');
 };
 
-// ── INTEGRATE WITH PAYSTACK CALLBACK ─────────────────────────────────
-const originalCallback = PaystackPop.setup; // just to locate
-// Inside your payWithPaystack callback, *before* you `cart = []; syncCart();` add:
-recordPurchase(cart
-              .map(i=>i)
-              response.reference 
-              );
 
-// Finally, call this on load:
 updateHistoryBadge();
 
     // ─── Top-Deals grid click + detail modal ─────────────────
