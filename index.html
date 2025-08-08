@@ -1101,6 +1101,7 @@ html {
     transform: scale(1.02);        /* slight zoom */
     transition: transform .6s ease;
   }
+  .hero-slider img { height:75vh; }
   .hero-slider .slide.active img {
     transform: scale(1);
   }
@@ -1155,7 +1156,8 @@ html {
     grid-template-columns: 1fr !important;
   }
 }
-
+#checkout-form label { display:block; margin-bottom:1rem; }
+#checkout-form input, #checkout-form textarea { width:100%; padding:0.5rem; margin-top:0.3rem; }
   </style>
 </head>
 
@@ -1542,6 +1544,19 @@ html {
 
   <!-- CART SIDEBAR & BACKDROP -->
 <div id="cart-backdrop"></div>
+<div id="checkout-modal-backdrop" class="modal-backdrop"></div>
+<div id="checkout-modal" class="vendor-modal">
+  <button id="checkout-close" class="modal-close"><i class="fas fa-times"></i></button>
+  <div class="vendor-modal-content">
+    <h2>Checkout Details</h2>
+    <form id="checkout-form">
+      <label>Name:<input type="text" name="name" required></label>
+      <label>Email:<input type="email" name="email" required></label>
+      <label>Address:<textarea name="address" required></textarea></label>
+      <button type="submit" class="btn-hero">Pay ₵<span id="checkout-amount">0.00</span></button>
+    </form>
+  </div>
+</div>
 <aside id="cart-sidebar">
   <div class="cart-header">
     <h2>Your Cart (<span id="cart-count">0</span>)</h2>
@@ -1990,14 +2005,28 @@ html {
  }
      document.getElementById('checkout').onclick = () => {
      const total = cart.reduce((s,i)=> s + i.price * i.qty, 0);
-     if (total <= 0) {
-       alert('Your cart is empty. Add items before checkout.');
-       return;
-     }
-     const userEmail = prompt('Enter your email for receipt:'); 
-     if (!userEmail) return alert('Email is required.');
-     const ref = 'EMART-' + Math.floor((Math.random() * 1e12));
-     payWithPaystack(userEmail, total, ref);
+    if (total <= 0) { alert('Your cart is empty.'); return; }
+    // show our checkout form
+    document.getElementById('checkout-amount').innerText = total.toFixed(2);
+    document.getElementById('checkout-modal-backdrop').classList.add('active');
+    document.getElementById('checkout-modal').classList.add('active');
+  };
+
+  // handle closing and form submit
+  document.getElementById('checkout-close').onclick = () => {
+    document.getElementById('checkout-modal-backdrop').classList.remove('active');
+    document.getElementById('checkout-modal').classList.remove('active');
+  };
+  document.getElementById('checkout-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const email = data.get('email');
+    const total = parseFloat(document.getElementById('checkout-amount').innerText);
+    const ref   = 'EMART-'+Math.random().toString().slice(2);
+    payWithPaystack(email, total, ref);
+    // after payment, you can show a styled “Thank you” message in this modal
+    e.target.innerHTML = '<h3>Thank you for your purchase!</h3><p>Your reference is '+ref+'</p>';
+  });
    };
     document.body.addEventListener('click', e=>{
       const btn = e.target.closest('.btn-cart');
@@ -2093,40 +2122,33 @@ document
     }
   });
 
-  // 1) Clicking a deal-card (not its button) opens the modal
-  document.querySelectorAll('.deal-card').forEach(card => {
-    card.addEventListener('click', e => {
-      if (e.target.closest('.btn-deal')) return; // ignore clicks on the button
-      const img         = card.querySelector('img').src;
-      const title       = card.querySelector('h3').innerText;
-      const price       = card.querySelector('.price').innerText.replace('$','₵');
-      const description = card.dataset.description;
-      const features    = card.dataset.features.split(',');
-      openModal({
-        img,
-        title,
-        seller: 'Marketplace',
-        price,
-        stock: 'In Stock',
-        rating: Math.floor(Math.random()*2) + 4,
-        description,
-        features
-      });
-    });
-  });
-
-  // 2) Clicking Add/Remove on deals toggles cart
-  document.querySelectorAll('.btn-deal').forEach(btn => {
-    btn.addEventListener('click', e => {
+ document.querySelector('.deals-grid').addEventListener('click', e => {
+    const dealBtn = e.target.closest('.btn-deal');
+    const dealCard = e.target.closest('.deal-card');
+  if (dealBtn) {
+     // Add/Remove from cart
       e.preventDefault();
-      const card = btn.closest('.deal-card');
+      const card = dealBtn.closest('.deal-card');
       toggleCartItem({
         img:    card.querySelector('img').src,
         title:  card.querySelector('h3').innerText,
         price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
         seller: 'Marketplace'
       });
-    });
+    } else if (dealCard) {
+      // Open details modal
+      const img         = dealCard.querySelector('img').src;
+      const title       = dealCard.querySelector('h3').innerText;
+      const price       = dealCard.querySelector('.price').innerText.replace('$','₵');
+      const description = dealCard.dataset.description;
+      const features    = dealCard.dataset.features.split(',');
+      openModal({
+        img, title, seller: 'Marketplace',
+        price, stock:'In Stock',
+        rating: Math.floor(Math.random()*2)+4,
+        description, features
+      });
+    }
   });
 
   function openVendorModalByName(vendorDisplayName) {
