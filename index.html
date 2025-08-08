@@ -1634,7 +1634,7 @@ html {
         <img src="deal1.jpg" alt="Wireless Headphones" loading="lazy">
         <div class="deal-info">
           <h3>Wireless Headphones</h3>
-          <p class="price">$59.00</p>
+          <p class="price">₵59.00</p>
           <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
       </div>
@@ -1647,7 +1647,7 @@ html {
         <img src="deal2.jpg" alt="Classic Handbag" loading="lazy">
         <div class="deal-info">
           <h3>Classic Handbag</h3>
-          <p class="price">$45.00</p>
+          <p class="price">₵45.00</p>
           <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
       </div>
@@ -1660,7 +1660,7 @@ html {
         <img src="deal3.webp" alt="Leather Boots" loading="lazy">
         <div class="deal-info">
           <h3>Leather Boots</h3>
-          <p class="price">$75.00</p>
+          <p class="price">₵75.00</p>
           <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
       </div>
@@ -1673,7 +1673,7 @@ html {
         <img src="deal4.webp" alt="Rolex Watch" loading="lazy">
         <div class="deal-info">
           <h3>Rolex Watch</h3>
-          <p class="price">$120.00</p>
+          <p class="price">₵120.00</p>
           <button class="btn-deal"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
       </div>
@@ -2302,15 +2302,19 @@ html {
     amount: amount * 100,
     currency: 'GHS',
     ref: reference,
-    recordPurchase(cart, response.reference);
+    callback(response) {
+      // 1) Record the purchase
+      recordPurchase(cart, response.reference);
+
+      // 2) Clear the cart and update UI
       cart = [];
       syncCart();
 
-      // hide checkout modal
+      // 3) Close the checkout modal
       document.getElementById('checkout-modal-backdrop').classList.remove('active');
       document.getElementById('checkout-modal').classList.remove('active');
 
-      // populate & show confirmation modal
+      // 4) Show your new confirmation modal
       document.getElementById('confirmation-ref').innerText = response.reference;
       document.getElementById('confirmation-backdrop').classList.add('active');
       document.getElementById('confirmation-modal').classList.add('active');
@@ -2328,9 +2332,14 @@ html {
   handler.openIframe();
 }
 
-   document.getElementById('confirmation-close').onclick = closeConfirmation;
-    document.getElementById('confirmation-ok').onclick    = closeConfirmation;
-    document.getElementById('confirmation-backdrop').onclick = closeConfirmation;
+   function closeConfirmation(){
+    document.getElementById('confirmation-backdrop').classList.remove('active');
+    document.getElementById('confirmation-modal').classList.remove('active');
+  }
+  document.getElementById('confirmation-close').onclick     = closeConfirmation;
+  document.getElementById('confirmation-ok').onclick        = closeConfirmation;
+  document.getElementById('confirmation-backdrop').onclick  = closeConfirmation;
+
 
     function closeConfirmation(){
       document.getElementById('confirmation-backdrop').classList.remove('active');
