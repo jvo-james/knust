@@ -2003,30 +2003,59 @@ html {
    });
    handler.openIframe();
  }
-     document.getElementById('checkout').onclick = () => {
-     const total = cart.reduce((s,i)=> s + i.price * i.qty, 0);
+      // ─── Top‐Deals grid click + detail modal ───────────────────
+  document.querySelector('.deals-grid').addEventListener('click', e => {
+    const dealBtn  = e.target.closest('.btn-deal');
+    const dealCard = e.target.closest('.deal-card');
+    if (dealBtn) {
+      e.preventDefault();
+      const card = dealBtn.closest('.deal-card');
+      toggleCartItem({
+        img:    card.querySelector('img').src,
+        title:  card.querySelector('h3').innerText,
+        price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
+        seller: 'Marketplace'
+      });
+    } else if (dealCard) {
+      const img         = dealCard.querySelector('img').src;
+      const title       = dealCard.querySelector('h3').innerText;
+      const price       = dealCard.querySelector('.price').innerText.replace('$','₵');
+      const description = dealCard.dataset.description;
+      const features    = dealCard.dataset.features.split(',');
+      openModal({
+        img, title, seller: 'Marketplace',
+        price, stock: 'In Stock',
+        rating: Math.floor(Math.random()*2)+4,
+        description, features
+      });
+    }
+  });
+
+  // ─── Checkout modal open/close + submit ───────────────────
+  document.getElementById('checkout').onclick = () => {
+    const total = cart.reduce((s,i)=> s + i.price*i.qty, 0);
     if (total <= 0) { alert('Your cart is empty.'); return; }
-    // show our checkout form
     document.getElementById('checkout-amount').innerText = total.toFixed(2);
     document.getElementById('checkout-modal-backdrop').classList.add('active');
     document.getElementById('checkout-modal').classList.add('active');
   };
-
-  // handle closing and form submit
   document.getElementById('checkout-close').onclick = () => {
     document.getElementById('checkout-modal-backdrop').classList.remove('active');
     document.getElementById('checkout-modal').classList.remove('active');
   };
   document.getElementById('checkout-form').addEventListener('submit', e => {
     e.preventDefault();
-    const data = new FormData(e.target);
+    const data  = new FormData(e.target);
     const email = data.get('email');
     const total = parseFloat(document.getElementById('checkout-amount').innerText);
-    const ref   = 'EMART-'+Math.random().toString().slice(2);
+    const ref   = 'EMART-' + Math.random().toString().slice(2);
     payWithPaystack(email, total, ref);
-    // after payment, you can show a styled “Thank you” message in this modal
-    e.target.innerHTML = '<h3>Thank you for your purchase!</h3><p>Your reference is '+ref+'</p>';
+    // show a thank-you message
+    e.target.innerHTML = `<h3>Thank you for your purchase!</h3>
+                          <p>Your reference is ${ref}</p>`;
   });
+
+ 
    };
     document.body.addEventListener('click', e=>{
       const btn = e.target.closest('.btn-cart');
@@ -2122,34 +2151,7 @@ document
     }
   });
 
- document.querySelector('.deals-grid').addEventListener('click', e => {
-    const dealBtn = e.target.closest('.btn-deal');
-    const dealCard = e.target.closest('.deal-card');
-  if (dealBtn) {
-     // Add/Remove from cart
-      e.preventDefault();
-      const card = dealBtn.closest('.deal-card');
-      toggleCartItem({
-        img:    card.querySelector('img').src,
-        title:  card.querySelector('h3').innerText,
-        price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
-        seller: 'Marketplace'
-      });
-    } else if (dealCard) {
-      // Open details modal
-      const img         = dealCard.querySelector('img').src;
-      const title       = dealCard.querySelector('h3').innerText;
-      const price       = dealCard.querySelector('.price').innerText.replace('$','₵');
-      const description = dealCard.dataset.description;
-      const features    = dealCard.dataset.features.split(',');
-      openModal({
-        img, title, seller: 'Marketplace',
-        price, stock:'In Stock',
-        rating: Math.floor(Math.random()*2)+4,
-        description, features
-      });
-    }
-  });
+
 
   function openVendorModalByName(vendorDisplayName) {
   // load your vendors list
