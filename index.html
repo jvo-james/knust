@@ -1143,9 +1143,11 @@ html {
 .checkout-modal-content {
   max-width: 100%;
   margin: 0;  
- overflow-y: auto;
+ overflow-y: auto !important;
   padding: 32px 24px;
   position: relative;
+  overflow: visible !important; 
+  max-height: calc(100vh - 100px);
 }
     
 .checkout-modal-content h2 {
@@ -2504,6 +2506,13 @@ document.getElementById('history-detail-backdrop').onclick = () => {
   document.getElementById('history-detail-modal').classList.remove('active');
 };
 
+     document
+     .getElementById('checkout-close')
+     .addEventListener('click', () => {
+       document.getElementById('checkout-modal-backdrop').classList.remove('active');
+       document.getElementById('checkout-modal').classList.remove('active');
+     });
+    
     // 4.4) CATEGORY FILTER
     document.querySelectorAll('.filter-link').forEach(link=>{
       link.addEventListener('click', e=>{
