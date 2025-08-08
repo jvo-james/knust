@@ -1946,6 +1946,8 @@ html {
       else cart.push({...data, qty:1});
       syncCart();
     }
+     window.toggleCartItem = toggleCartItem;
+    window.renderProducts   = renderProducts;
 
     function payWithPaystack(email, amount, reference) {
       var handler = PaystackPop.setup({
@@ -2227,7 +2229,7 @@ html {
     });
 
     // 4) “Sort by” actually sorts
-    document.querySelector('.filters select').addEventListener('change', function(){
+    document.querySelector('.market-bar .filters select').addEventListener('change', function(){
       const sort = this.value;
       let prods = JSON.parse(localStorage.getItem('products')||'[]');
       switch(sort){
@@ -2244,7 +2246,7 @@ html {
           prods.sort(()=>Math.random()-0.5);
       }
       localStorage.setItem('products', JSON.stringify(prods));
-      renderProducts();
+     window.renderProducts();
     });
 
     // 5) Grid/List view toggle
