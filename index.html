@@ -2054,9 +2054,8 @@ html {
     e.target.innerHTML = `<h3>Thank you for your purchase!</h3>
                           <p>Your reference is ${ref}</p>`;
   });
-
- 
-   };
+   }
+  
     document.body.addEventListener('click', e=>{
       const btn = e.target.closest('.btn-cart');
       if (!btn) return;
