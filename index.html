@@ -1131,15 +1131,20 @@ html {
     color: #fff !important;
   }
 
-    .checkout-modal .checkout-modal-content {
-  background: #fff;
-  border-radius: 12px;
-  max-width: 480px;
-  margin: auto;
-  padding: 32px 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  text-align: left;
+  #checkout-modal {
+  width: 90% !important;
+  max-width: 800px !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(1) !important;
 }
+
+.checkout-modal-content {
+  max-width: 100%;
+  margin: 0;  
+  padding: 32px 24px;
+}
+    
 .checkout-modal-content h2 {
   margin-bottom: 24px;
   font-size: 1.8rem;
@@ -1731,6 +1736,14 @@ html {
   </div>
 </div>
 
+<div id="history-detail-backdrop" class="modal-backdrop"></div>
+<div id="history-detail-modal" class="history-modal">
+  <button id="history-detail-close" class="modal-close"><i class="fas fa-times"></i></button>
+  <div class="history-detail-content" style="padding:24px;">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
 
   <footer class="site-footer">
   <div class="footer-container">
@@ -2017,6 +2030,7 @@ html {
     incBtn.onclick = ()=> { qtyInput.value++; };
 
     document.getElementById('products-grid').addEventListener('click', e => {
+      if (e.target.closest('.seller a')) return;
       if (e.target.closest('.btn-cart')) return;
       const card = e.target.closest('.product-card');
       if (!card) return;
@@ -2120,6 +2134,20 @@ html {
       });
     }
 
+     document.querySelectorAll('.btn-deal').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const card  = btn.closest('.deal-card');
+      const img   = card.querySelector('img').src;
+      const title = card.querySelector('h3').innerText;
+      const price = parseFloat(
+        card.querySelector('.price').innerText
+         .replace(/[^0-9\.]/g,'')
+      ) || 0;
+     toggleCartItem({ img, title, price, seller: 'Marketplace' });
+    });
+  });
+    
     function toggleCartItem(data){
       const idx = cart.findIndex(i=>i.title===data.title);
       if (idx > -1) cart.splice(idx,1);
@@ -2169,8 +2197,10 @@ function recordPurchase(items) {
   const history = JSON.parse(localStorage.getItem('purchaseHistory')||'[]');
   history.unshift({
     timestamp: new Date().toISOString(),
+     txnRef,
     items: items.map(i=>({
       title: i.title,
+      img: i.img, 
       qty: i.qty,
       price: i.price
     }))
@@ -2187,9 +2217,12 @@ function openHistoryModal() {
   if (!history.length) {
     list.innerHTML = '<p>No purchases yet.</p>';
   } else {
-    history.forEach(entry => {
+     history.forEach((entry, idx) => {
       const div = document.createElement('div');
       div.className = 'history-entry';
+        div.style.cursor = 'pointer';
+      div.title = 'Click for details';
+      div.dataset.index = idx;
       const when = new Date(entry.timestamp).toLocaleString();
       div.innerHTML = `<h4>🛒 ${when}</h4><ul>
         ${entry.items.map(it=>
@@ -2197,6 +2230,9 @@ function openHistoryModal() {
         ).join('')}
       </ul>`;
       list.appendChild(div);
+    });
+     document.querySelectorAll('.history-entry').forEach(el=>{
+      el.addEventListener('click', () => openHistoryDetail(el.dataset.index));
     });
   }
   document.getElementById('history-modal-backdrop').classList.add('active');
@@ -2223,7 +2259,10 @@ document.getElementById('history-modal-backdrop').onclick = () => {
 // ── INTEGRATE WITH PAYSTACK CALLBACK ─────────────────────────────────
 const originalCallback = PaystackPop.setup; // just to locate
 // Inside your payWithPaystack callback, *before* you `cart = []; syncCart();` add:
-recordPurchase(cart);
+recordPurchase(cart
+              .map(i=>i)
+              response.reference 
+              );
 
 // Finally, call this on load:
 updateHistoryBadge();
@@ -2273,10 +2312,47 @@ updateHistoryBadge();
       const email = data.get('email');
       const total = parseFloat(document.getElementById('checkout-amount').innerText);
       const ref   = 'EMART-' + Math.random().toString().slice(2);
-      payWithPaystack(email, total, ref);
-      e.target.innerHTML = `<h3>Thank you for your purchase!</h3>
-                            <p>Your reference is ${ref}</p>`;
+     payWithPaystack(email, total, ref);
     });
+
+    function openHistoryDetail(index) {
+  const history = JSON.parse(localStorage.getItem('purchaseHistory')||'[]');
+  const entry   = history[index];
+  if (!entry) return;
+  
+  // build detail HTML
+  const container = document.querySelector('#history-detail-modal .history-detail-content');
+  container.innerHTML = `
+    <h2>Transaction Details</h2>
+    <p><strong>Reference:</strong> ${entry.txnRef || 'N/A'}</p>
+    <p><strong>Date:</strong> ${new Date(entry.timestamp).toLocaleString()}</p>
+    <div style="margin:16px 0;">
+      ${entry.items.map(it=>`
+        <div style="display:flex; gap:12px; margin-bottom:12px; align-items:center;">
+          <img src="${it.img}" alt="${it.title}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
+          <div style="flex:1;">
+            <div><strong>${it.title}</strong> ×${it.qty}</div>
+            <div>Unit: ₵${it.price.toFixed(2)}</div>
+            <div>Total: ₵${(it.price * it.qty).toFixed(2)}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <p><strong>Grand Total:</strong> ₵${entry.items.reduce((s,i)=>s+i.price*i.qty,0).toFixed(2)}</p>
+  `;
+  
+  document.getElementById('history-detail-backdrop').classList.add('active');
+  document.getElementById('history-detail-modal').classList.add('active');
+}
+
+document.getElementById('history-detail-close').onclick = () => {
+  document.getElementById('history-detail-backdrop').classList.remove('active');
+  document.getElementById('history-detail-modal').classList.remove('active');
+};
+document.getElementById('history-detail-backdrop').onclick = () => {
+  document.getElementById('history-detail-backdrop').classList.remove('active');
+  document.getElementById('history-detail-modal').classList.remove('active');
+};
 
     // 4.4) CATEGORY FILTER
     document.querySelectorAll('.filter-link').forEach(link=>{
