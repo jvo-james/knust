@@ -13,7 +13,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-<style>
+ <script src="https://js.paystack.co/v1/inline.js"></script>
+  <style>
      * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Poppins',sans-serif; }
     body { padding-top:80px; background:#fafafa; color:#333; line-height:1.5; }
 
@@ -1074,14 +1075,6 @@ html {
     background: #fff;
   }
 
-  /* Header */
-  header {
-    padding: 12px 16px;
-  }
-  #cart-icon-container {
-    transform: scale(1.2);
-  }
-
   /* Hero slider captions */
   .hero-slider .caption {
     bottom: 6%;
@@ -1098,56 +1091,62 @@ html {
     border-radius: 30px;
   }
 
-  /* Section titles */
-  .section-title {
-    font-size: 2rem;
-    margin-bottom: 16px;
+   .hero-slider {
+    overflow: visible; /* allow shadows */
+    position: relative;
   }
-
-  /* Cards */
-  .deal-card, .product-card, .category-card {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  .hero-slider .slide img {
+    border-radius: 16px;           /* soft corners */
+    box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    transform: scale(1.02);        /* slight zoom */
+    transition: transform .6s ease;
   }
-  .deal-card img, .product-card img, .category-card img {
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
+  .hero-slider .slide.active img {
+    transform: scale(1);
   }
-
-  /* Buttons */
-  .btn-cart, .btn-deal, #modal-add-cart, .btn-load-more {
-    width: 100%;
-    padding: 14px;
-    font-size: 1rem;
-    border-radius: 30px;
-  }
-
-  /* Grid tweaks */
-  .products-grid, .deals-grid, .categories-grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px;
-  }
-
-  /* Modal */
-  #product-modal {
-    width: 95%;
-    top: 50%;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  .modal-content {
-    flex-direction: column;
-    padding: 1rem;
-  }
-  .modal-media img {
-    max-height: 200px;
+  .hero-slider .caption {
+    backdrop-filter: blur(8px);     /* frosted glass effect */
+    background: rgba(255,255,255,0.4);
+    color: #111;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    padding: 1.2rem;
     border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   }
-  .modal-info {
-    padding: 1rem;
-    gap: 1rem;
+  .hero-slider .caption h2 {
+    font-size: 2rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
   }
-
+  .hero-slider .caption p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .btn-hero {
+    display: inline-block;
+    padding: 1rem 1.6rem;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    transition: transform .3s, box-shadow .3s;
+  }
+  .btn-hero:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  }
+  .slider-dots span {
+    width: 12px; height: 12px;
+    margin: 0 6px;
+    background: rgba(255,255,255,0.6);
+    transition: background .3s, transform .3s;
+  }
+  .slider-dots span.active {
+    background: #ff3860;
+    transform: scale(1.3);
+  }
+  
   /* Footer */
   .site-footer {
     padding: 32px 16px;
@@ -1970,6 +1969,36 @@ html {
       syncCart();
     }
 
+    function payWithPaystack(email, amount₵, reference) {
+   var handler = PaystackPop.setup({
+     key: 'pk_test_YOUR_PUBLIC_KEY',       // ← replace with your Paystack public key
+     email: email,
+     amount: amount₵ * 100,                // convert ₵ to kobo
+     currency: 'GHS',
+     ref: reference,
+     callback: function(response){
+       alert('Payment complete! Reference: ' + response.reference);
+       // you can clear cart here if successful
+       cart = [];
+       syncCart();
+     },
+     onClose: function(){
+       alert('Transaction was not completed, window closed.');
+     }
+   });
+   handler.openIframe();
+ }
+     document.getElementById('checkout').onclick = () => {
+     const total = cart.reduce((s,i)=> s + i.price * i.qty, 0);
+     if (total <= 0) {
+       alert('Your cart is empty. Add items before checkout.');
+       return;
+     }
+     const userEmail = prompt('Enter your email for receipt:'); 
+     if (!userEmail) return alert('Email is required.');
+     const ref = 'EMART-' + Math.floor((Math.random() * 1e12));
+     payWithPaystack(userEmail, total, ref);
+   };
     document.body.addEventListener('click', e=>{
       const btn = e.target.closest('.btn-cart');
       if (!btn) return;
@@ -2064,44 +2093,41 @@ document
     }
   });
 
-  // treat deal-cards the same as product-cards
-document.querySelectorAll('.deal-card').forEach(card => {
-  card.addEventListener('click', e => {
-    if (e.target.closest('.btn-deal')) return; // let cart button handle it
-
-    // pull in data-attributes for description & features
-    const img         = card.querySelector('img').src;
-    const title       = card.querySelector('h3').innerText;
-    const price       = card.querySelector('.price').innerText.replace('$','₵');
-    const description = card.dataset.description;
-    const features    = card.dataset.features.split(',');
-
-    openModal({
-      img,
-      title,
-      seller: 'Marketplace',
-      price,
-      stock: 'In Stock',
-      rating: Math.floor(Math.random()*2) + 4,
-      description,
-      features
+  // 1) Clicking a deal-card (not its button) opens the modal
+  document.querySelectorAll('.deal-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('.btn-deal')) return; // ignore clicks on the button
+      const img         = card.querySelector('img').src;
+      const title       = card.querySelector('h3').innerText;
+      const price       = card.querySelector('.price').innerText.replace('$','₵');
+      const description = card.dataset.description;
+      const features    = card.dataset.features.split(',');
+      openModal({
+        img,
+        title,
+        seller: 'Marketplace',
+        price,
+        stock: 'In Stock',
+        rating: Math.floor(Math.random()*2) + 4,
+        description,
+        features
+      });
     });
   });
-});
 
-// deal-card “Add to Cart”
-document.body.addEventListener('click', e => {
-  const btn = e.target.closest('.btn-deal');
-  if (!btn) return;
-  const card = btn.closest('.deal-card');
-  const data = {
-    img:    card.querySelector('img').src,
-    title:  card.querySelector('h3').innerText,
-    price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
-    seller: 'Marketplace'
-  };
-  toggleCartItem(data);
-});
+  // 2) Clicking Add/Remove on deals toggles cart
+  document.querySelectorAll('.btn-deal').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const card = btn.closest('.deal-card');
+      toggleCartItem({
+        img:    card.querySelector('img').src,
+        title:  card.querySelector('h3').innerText,
+        price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
+        seller: 'Marketplace'
+      });
+    });
+  });
 
   function openVendorModalByName(vendorDisplayName) {
   // load your vendors list
