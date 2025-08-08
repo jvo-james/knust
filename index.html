@@ -1130,6 +1130,129 @@ html {
   #cart-sidebar .cart-header h2 span {
     color: #fff !important;
   }
+
+    .checkout-modal .checkout-modal-content {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 480px;
+  margin: auto;
+  padding: 32px 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  text-align: left;
+}
+.checkout-modal-content h2 {
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  color: #ff3860;
+  text-align: center;
+}
+#checkout-form .form-group {
+  margin-bottom: 16px;
+}
+#checkout-form .form-group.small {
+  width: 48%;
+}
+#checkout-form .form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 4%;
+}
+#checkout-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+#checkout-form input,
+#checkout-form textarea,
+#checkout-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color .2s, box-shadow .2s;
+}
+#checkout-form input:focus,
+#checkout-form textarea:focus,
+#checkout-form select:focus {
+  outline: none;
+  border-color: #ff3860;
+  box-shadow: 0 0 0 2px rgba(255,56,96,0.2);
+}
+.btn-checkout {
+  margin-top: 12px;
+  width: 100%;
+  padding: 14px;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #ff3860 0%, #e02e56 100%);
+  color: #fff;
+  border: none;
+  transition: opacity .2s, transform .2s;
+}
+.btn-checkout:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+}
+.modal-close {
+  color: #333;
+}
+
+    .checkout-message {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: none;
+}
+.checkout-message.success {
+  background: #e6f9ee;
+  color: #057a3b;
+  border: 1px solid #a5e9bf;
+}
+.checkout-message.error {
+  background: #fdecea;
+  color: #9f3a38;
+  border: 1px solid #f5c2c0;
+}
+
+.history-modal {
+  position: fixed; top:50%; left:50%;
+  transform: translate(-50%,-50%) scale(0.8);
+  width: 90%; max-width:600px;
+  background: #fff; border-radius:12px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.2);
+  opacity:0; visibility:hidden; transition: all .3s;
+  z-index:3001; overflow:auto; max-height: 80vh;
+  padding: 24px;
+}
+.history-modal.active {
+  opacity:1; visibility:visible;
+  transform: translate(-50%,-50%) scale(1);
+}
+.history-content h2 {
+  margin-bottom:16px; font-size:1.6rem; color:#222;
+}
+#history-list {
+  display: flex; flex-direction: column; gap:16px;
+}
+.history-entry {
+  border:1px solid #eee; border-radius:8px;
+  padding:12px 16px; background:#fafafa;
+}
+.history-entry h4 {
+  font-size:1rem; margin-bottom:8px; color:#555;
+}
+.history-entry ul {
+  list-style: none; padding-left:0; margin:0;
+}
+.history-entry ul li {
+  padding:4px 0; border-bottom:1px dashed #ddd;
+  display:flex; justify-content: space-between;
+}
+.history-entry ul li:last-child { border-bottom:none; }
+
 </style>
   </style>
 </head>
@@ -1147,7 +1270,17 @@ html {
       </div>
       <div class="header-icons">
        <a href="vendor.html" target="_blank" style="text-decoration: none;"> <i class="fas fa-user"></i> Vendor Portal</a>
-        <i class="fas fa-heart"></i>
+        <div id="history-icon-container" style="position: relative; display: inline-block; cursor: pointer;">
+  <i id="history-icon" class="fas fa-history"></i>
+  <span id="history-badge"
+        style="
+          position: absolute; top: -6px; right: -6px;
+          background: #ff3860; color: #fff;
+          font-size: 0.7rem; width: 18px; height: 18px;
+          line-height: 18px; text-align: center;
+          border-radius: 50%;
+        ">0</span>
+</div>
         <div id="cart-icon-container" style="position: relative; display: inline-block;">
           <i class="fas fa-shopping-cart" id="cart-icon"></i>
           <span id="cart-badge"
@@ -1518,18 +1651,56 @@ html {
   <!-- CART SIDEBAR & BACKDROP -->
 <div id="cart-backdrop"></div>
 <div id="checkout-modal-backdrop" class="modal-backdrop"></div>
-<div id="checkout-modal" class="vendor-modal">
+<div id="checkout-modal-backdrop" class="modal-backdrop"></div>
+<div id="checkout-modal" class="vendor-modal checkout-modal">
   <button id="checkout-close" class="modal-close"><i class="fas fa-times"></i></button>
-  <div class="vendor-modal-content">
+  <div class="checkout-modal-content">
     <h2>Checkout Details</h2>
+<div id="checkout-message" class="checkout-message" aria-live="polite"></div>   
     <form id="checkout-form">
-      <label>Name:<input type="text" name="name" required></label>
-      <label>Email:<input type="email" name="email" required></label>
-      <label>Address:<textarea name="address" required></textarea></label>
-      <button type="submit" class="btn-hero">Pay ₵<span id="checkout-amount">0.00</span></button>
+      <div class="form-group">
+        <label for="chk-name">Full Name</label>
+        <input type="text" id="chk-name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="chk-email">Email Address</label>
+        <input type="email" id="chk-email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="chk-phone">Phone Number</label>
+        <input type="tel" id="chk-phone" name="phone" placeholder="+233 ..." required>
+      </div>
+      <div class="form-group">
+        <label for="chk-address">Street Address</label>
+        <textarea id="chk-address" name="address" rows="2" required></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group small">
+          <label for="chk-city">City</label>
+          <input type="text" id="chk-city" name="city" required>
+        </div>
+        <div class="form-group small">
+          <label for="chk-zip">Postal Code</label>
+          <input type="text" id="chk-zip" name="zip" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="chk-country">Country</label>
+        <select id="chk-country" name="country" required>
+          <option value="">Select Country</option>
+          <option>Ghana</option>
+          <option>Nigeria</option>
+          <option>Kenya</option>
+          <!-- …etc… -->
+        </select>
+      </div>
+      <button type="submit" class="btn-hero btn-checkout">
+        Pay ₵<span id="checkout-amount">0.00</span>
+      </button>
     </form>
   </div>
 </div>
+
 <aside id="cart-sidebar">
   <div class="cart-header">
     <h2>Your Cart (<span id="cart-count">0</span>)</h2>
@@ -1550,6 +1721,15 @@ html {
     <button id="checkout">Proceed to Checkout</button>
   </div>
 </aside>
+
+  <div id="history-modal-backdrop" class="modal-backdrop"></div>
+<div id="history-modal" class="history-modal">
+  <button id="history-close" class="modal-close"><i class="fas fa-times"></i></button>
+  <div class="history-content">
+    <h2>🕘 Your Purchase History</h2>
+    <div id="history-list"></div>
+  </div>
+</div>
 
 
   <footer class="site-footer">
@@ -1949,20 +2129,104 @@ html {
      window.toggleCartItem = toggleCartItem;
     window.renderProducts   = renderProducts;
 
-    function payWithPaystack(email, amount, reference) {
-      var handler = PaystackPop.setup({
-        key: 'pk_test_297586e51710e83d3c159bfe71ff45c7e23411fa',
-        email, amount: amount * 100, currency: 'GHS', ref: reference,
-        callback: function(response){
-          alert('Payment complete! Reference: ' + response.reference);
-          cart = []; syncCart();
-        },
-        onClose: function(){
-          alert('Transaction was not completed, window closed.');
-        }
-      });
-      handler.openIframe();
+   function payWithPaystack(email, amount, reference) {
+  const msgDiv = document.getElementById('checkout-message');
+  // clear any existing
+  msgDiv.style.display = 'none';
+  msgDiv.className = 'checkout-message';
+  msgDiv.textContent = '';
+
+  const handler = PaystackPop.setup({
+    key: 'pk_test_297586e51710e83d3c159bfe71ff45c7e23411fa',
+    email,
+    amount: amount * 100,
+    currency: 'GHS',
+    ref: reference,
+    callback(response) {
+      // Payment was successful
+      msgDiv.classList.add('success');
+      msgDiv.textContent = `✔️ Payment succeeded! Reference: ${response.reference}`;
+      msgDiv.style.display = 'block';
+      // Clear cart and update UI
+      cart = [];
+      syncCart();
+    },
+    onClose() {
+      // Only show error if callback didn't already fire success
+      if (!msgDiv.classList.contains('success')) {
+        msgDiv.classList.add('error');
+        msgDiv.textContent = '❌ Payment was not completed. Please try again.';
+        msgDiv.style.display = 'block';
+      }
     }
+  });
+
+  handler.openIframe();
+}
+
+    // ── RECORD PURCHASES ───────────────────────────────────────────────────
+function recordPurchase(items) {
+  const history = JSON.parse(localStorage.getItem('purchaseHistory')||'[]');
+  history.unshift({
+    timestamp: new Date().toISOString(),
+    items: items.map(i=>({
+      title: i.title,
+      qty: i.qty,
+      price: i.price
+    }))
+  });
+  localStorage.setItem('purchaseHistory', JSON.stringify(history));
+  updateHistoryBadge();
+}
+
+// ── SHOW HISTORY ───────────────────────────────────────────────────────
+function openHistoryModal() {
+  const list = document.getElementById('history-list');
+  list.innerHTML = '';
+  const history = JSON.parse(localStorage.getItem('purchaseHistory')||'[]');
+  if (!history.length) {
+    list.innerHTML = '<p>No purchases yet.</p>';
+  } else {
+    history.forEach(entry => {
+      const div = document.createElement('div');
+      div.className = 'history-entry';
+      const when = new Date(entry.timestamp).toLocaleString();
+      div.innerHTML = `<h4>🛒 ${when}</h4><ul>
+        ${entry.items.map(it=>
+          `<li><span>${it.title} ×${it.qty}</span><span>₵${(it.price*it.qty).toFixed(2)}</span></li>`
+        ).join('')}
+      </ul>`;
+      list.appendChild(div);
+    });
+  }
+  document.getElementById('history-modal-backdrop').classList.add('active');
+  document.getElementById('history-modal').classList.add('active');
+}
+
+// ── HISTORY BADGE ─────────────────────────────────────────────────────
+function updateHistoryBadge() {
+  const history = JSON.parse(localStorage.getItem('purchaseHistory')||'[]');
+  document.getElementById('history-badge').textContent = history.length;
+}
+
+// ── HOOKUP HISTORY BUTTON ─────────────────────────────────────────────
+document.getElementById('history-icon').addEventListener('click', openHistoryModal);
+document.getElementById('history-close').onclick = () => {
+  document.getElementById('history-modal-backdrop').classList.remove('active');
+  document.getElementById('history-modal').classList.remove('active');
+};
+document.getElementById('history-modal-backdrop').onclick = () => {
+  document.getElementById('history-modal-backdrop').classList.remove('active');
+  document.getElementById('history-modal').classList.remove('active');
+};
+
+// ── INTEGRATE WITH PAYSTACK CALLBACK ─────────────────────────────────
+const originalCallback = PaystackPop.setup; // just to locate
+// Inside your payWithPaystack callback, *before* you `cart = []; syncCart();` add:
+recordPurchase(cart);
+
+// Finally, call this on load:
+updateHistoryBadge();
 
     // ─── Top-Deals grid click + detail modal ─────────────────
     document.querySelector('.deals-grid').addEventListener('click', e => {
@@ -1974,7 +2238,7 @@ html {
         toggleCartItem({
           img:    card.querySelector('img').src,
           title:  card.querySelector('h3').innerText,
-          price:  parseFloat(card.querySelector('.price').innerText.replace('$','')),
+          price:  parseFloat(card.querySelector('.price').innerText.replace('$','')) || 0,
           seller: 'Marketplace'
         });
       } else if (dealCard) {
