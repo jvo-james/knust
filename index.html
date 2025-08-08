@@ -1969,11 +1969,11 @@ html {
       syncCart();
     }
 
-    function payWithPaystack(email, amount₵, reference) {
+   function payWithPaystack(email, amount, reference) {
    var handler = PaystackPop.setup({
-     key: 'pk_test_297586e51710e83d3c159bfe71ff45c7e23411fa',       // ← replace with your Paystack public key
+     key: 'pk_test_297586e51710e83d3c159bfe71ff45c7e23411fa',     
      email: email,
-     amount: amount₵ * 100,                // convert ₵ to kobo
+     amount: amount * 100,                 // convert ₵ to kobo
      currency: 'GHS',
      ref: reference,
      callback: function(response){
