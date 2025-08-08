@@ -2201,14 +2201,14 @@ html {
           applyBtn     = document.getElementById('apply-coupon'),
           couponInput  = document.getElementById('coupon-code');
 
-   let cart = [];
-  const fmt = v => '₵'+v.toFixed(2);         
-   try {
-     cart = JSON.parse(localStorage.getItem('cart')||'[]');
-   } catch {
-     cart = [];
-   }
-   syncCart(); 
+    let cart = [];
+    try {
+    cart = JSON.parse(localStorage.getItem('cart')||'[]');
+  } catch {
+    cart = [];
+  }
+    syncCart();
+    const fmt = v => '₵'+v.toFixed(2);
 
     function openCart(){ cartSidebar.classList.add('active'); cartBackdrop.classList.add('active'); }
     function closeCart(){ cartSidebar.classList.remove('active'); cartBackdrop.classList.remove('active'); }
@@ -2410,18 +2410,16 @@ function updateHistoryBadge() {
   document.getElementById('history-badge').textContent = history.length;
 }
 
- document.getElementById('history-icon')
-      .addEventListener('click', openHistoryModal);
-    document.getElementById('history-close')
-      .addEventListener('click', () => {
-        document.getElementById('history-modal-backdrop').classList.remove('active');
-        document.getElementById('history-modal').classList.remove('active');
-      });
-    document.getElementById('history-modal-backdrop')
-      .addEventListener('click', () => {
-        document.getElementById('history-modal-backdrop').classList.remove('active');
-        document.getElementById('history-modal').classList.remove('active');
-      });
+// ── HOOKUP HISTORY BUTTON ─────────────────────────────────────────────
+document.getElementById('history-icon').addEventListener('click', openHistoryModal);
+document.getElementById('history-close').onclick = () => {
+  document.getElementById('history-modal-backdrop').classList.remove('active');
+  document.getElementById('history-modal').classList.remove('active');
+};
+document.getElementById('history-modal-backdrop').onclick = () => {
+  document.getElementById('history-modal-backdrop').classList.remove('active');
+  document.getElementById('history-modal').classList.remove('active');
+};
 
 
 updateHistoryBadge();
