@@ -2212,9 +2212,7 @@ html {
 
     function openCart(){ cartSidebar.classList.add('active'); cartBackdrop.classList.add('active'); }
     function closeCart(){ cartSidebar.classList.remove('active'); cartBackdrop.classList.remove('active'); }
-    cartIcon.onclick     = openCart;
-    cartCloseBtn.onclick = closeCart;
-    cartBackdrop.onclick = closeCart;
+    
 
     function updateSummary(){
       const subtotal = cart.reduce((s,i)=> s + i.price*i.qty, 0),
@@ -2410,19 +2408,6 @@ function updateHistoryBadge() {
   document.getElementById('history-badge').textContent = history.length;
 }
 
- document.getElementById('history-icon')
-      .addEventListener('click', openHistoryModal);
-    document.getElementById('history-close')
-      .addEventListener('click', () => {
-        document.getElementById('history-modal-backdrop').classList.remove('active');
-        document.getElementById('history-modal').classList.remove('active');
-      });
-    document.getElementById('history-modal-backdrop')
-      .addEventListener('click', () => {
-        document.getElementById('history-modal-backdrop').classList.remove('active');
-        document.getElementById('history-modal').classList.remove('active');
-      });
-
 
 updateHistoryBadge();
 
@@ -2566,6 +2551,55 @@ document.getElementById('history-detail-backdrop').onclick = () => {
       alert(`Thanks for subscribing with ${email}!`);
       e.target.reset();
     });
+        // ── HOOKUP HISTORY ICON & MODAL ───────────────────────────────
+    const histIcon = document.getElementById('history-icon'),
+          histBackdrop = document.getElementById('history-modal-backdrop'),
+          histModal = document.getElementById('history-modal'),
+          histClose = document.getElementById('history-close');
+
+    histIcon.addEventListener('click', openHistoryModal);
+    histClose .addEventListener('click', () => {
+      histBackdrop.classList.remove('active');
+      histModal.classList.remove('active');
+    });
+    histBackdrop.addEventListener('click', () => {
+      histBackdrop.classList.remove('active');
+      histModal.classList.remove('active');
+    });
+
+    // ── HOOKUP CART ICON & SIDEBAR ─────────────────────────────────
+    const cartIcon     = document.getElementById('cart-icon'),
+          cartBackdrop = document.getElementById('cart-backdrop'),
+          cartSidebar  = document.getElementById('cart-sidebar'),
+          cartCloseBtn = document.getElementById('cart-close');
+
+    cartIcon.addEventListener('click', () => {
+      cartSidebar.classList.add('active');
+      cartBackdrop.classList.add('active');
+    });
+    cartCloseBtn.addEventListener('click', () => {
+      cartSidebar.classList.remove('active');
+      cartBackdrop.classList.remove('active');
+    });
+    cartBackdrop.addEventListener('click', () => {
+      cartSidebar.classList.remove('active');
+      cartBackdrop.classList.remove('active');
+    });
+
+    // ── CATEGORY FILTER LINKS ───────────────────────────────────────
+    document.querySelectorAll('.filter-link').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.filter-link').forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+        const cat = link.dataset.cat;
+        document.querySelectorAll('.product-card, .deal-card').forEach(c => {
+          c.style.display = (cat==='all' || c.dataset.category===cat) ? '' : 'none';
+        });
+      });
+    });
+    document.querySelector('.filter-link[data-cat="all"]').click();
+
   } // ← closes initUI()
 
   // ─── 5) INITIALIZE ON LOAD & STORAGE EVENTS ─────────────────────────
