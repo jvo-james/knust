@@ -1216,6 +1216,9 @@ html {
   color: #333;
 }
 
+     #checkout-modal {
+    overflow: auto;
+  }
     .checkout-message {
   margin-bottom: 16px;
   padding: 12px 16px;
@@ -2454,10 +2457,18 @@ updateHistoryBadge();
       document.getElementById('checkout-modal-backdrop').classList.add('active');
       document.getElementById('checkout-modal').classList.add('active');
     };
-    document.getElementById('checkout-close').onclick = () => {
-      document.getElementById('checkout-modal-backdrop').classList.remove('active');
-      document.getElementById('checkout-modal').classList.remove('active');
-    };
+   const chkClose    = document.getElementById('checkout-close'),
+          chkBackdrop = document.getElementById('checkout-modal-backdrop'),
+          chkModal    = document.getElementById('checkout-modal');
+
+    chkClose.addEventListener('click', () => {
+      chkBackdrop.classList.remove('active');
+      chkModal.classList.remove('active');
+    });
+    chkBackdrop.addEventListener('click', () => {
+      chkBackdrop.classList.remove('active');
+      chkModal.classList.remove('active');
+    });
     document.getElementById('checkout-form').addEventListener('submit', e => {
       e.preventDefault();
       const data  = new FormData(e.target);
